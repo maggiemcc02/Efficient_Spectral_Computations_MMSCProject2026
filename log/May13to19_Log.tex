@@ -1,0 +1,174 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs for May $13^{th}$ to $19^{th}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting May 13}
+
+Today, we discussed some background, motivations, and goals for the project. Below are some summary jot notes, some project goals, an immediate to-do list, and my plan for this week.
+
+\subsection{Background Notes}
+\begin{itemize}
+    \item The standard approach for computing spectra is to discretize the operator and perform an eigensolve. A matrix can only have a finite-dimensional spectrum (a purely point spectrum), while an infinite-dimensional linear operator may have a spectrum comprised of the point spectrum (eigenvalues), residual spectrum, and continuous spectrum.  
+    \item In Matt Colbrook's algorithm, we loop over the complex plane and solve a discretized eigenvalue problem at each grid point. In particular, we perform an eigensolve for $(A - zI)^*(A-zI)$ for each grid point $z \in \mathbb{C}.$
+    \item In Matt's algorithm, the discrete eigensolve of $(A - zI)^*(A-zI)$ gives a bound on $\text{dist}(z, sp(A)).$
+    \item When the discretization of the eigensolve is coarse, this bound may not be great. 
+    \item Furthermore, this method is expensive because of the combinatorial explosion of solving an eigenproblem at each grid point. 
+    \item A famous example is the curl-curl eigenvalue problem. With Lagrange elements, you obtain the wrong eigenvalues. With a structured mesh, you get spurious eigenvalues. With Nédélec finite elements, you get good results. I want to explore this example myself. Patrick mentioned that he coded it up. 
+\end{itemize}
+
+
+\subsection{Project Ideas and Goals}
+
+\begin{itemize}
+    \item Lots of reading (a thorough literature review).
+    \item Implement Matt Colbrook's algorithm in Firedrake. First, we will treat each grid point, i.e., each chosen $z \in \mathbb{C},$ independently, and implement the eigensolves in parallel.
+    \item Explore ways in which we could use information about nearby eigensolves to our advantage. For example, the eigenvector obtained at a nearby eigensolve may make a good initial guess. In this way, each `parallel team' makes use of local information in their portion of the discretized complex plane. 
+    \item Coarse discretizations lead to a bound on $\text{dist}(z, sp(A))$ that may not be tight. We could try to improve this using goal-based adaptivity focused on the smallest eigenvalue of the eigensolve.
+    \item In doing this goal-based adaptivity work, we may revive the previous MMSC student's goal-based adaptivity code for eigensolves. We may clean it up to firedrake's standards. 
+    \item We may explore other ideas, such as multi-level strategies for eigensolves and/or the algorithms for pseudospectra. 
+\end{itemize}
+
+\subsection{Immediate To-Do List}
+
+\begin{enumerate}
+    \item Create a Git repo for the thesis where I will keep logs of the meetings, weekly progress, codes, write-ups, etc.
+    \item Work through some background material on spectral theory, to progress towards an understanding of Matt Colbrook's algorithm. 
+    \begin{enumerate}
+        \item The first two chapters of Matt Colbrook's text seem to comprise the relevant background material. 
+        \item The first chapter of Nick Trefethen's text seems like a nice introduction to spectra and pseudospectra. 
+        \item Umberto's course has an overview of important theory.
+    \end{enumerate}
+    \item Review/Learn about the benefits of discretizing the square operator. 
+    \item Learn about the discretization of eigenproblems using finite elements. 
+    \begin{enumerate}
+        \item Boffi text is the main resource for this.
+        \item Umberto's course discusses this, and has problem sheets! 
+        \item Bits of Matt and Nick's texts may be helpful here as well. 
+        \item A goal would be to work through some examples from Umberto's course and explore the `curl-curl eigenproblem' example. 
+    \end{enumerate}
+\end{enumerate}
+
+
+\subsection{My Plan for This Week}
+
+
+This is my immediate plan, time permitting.
+
+\begin{enumerate}
+
+    \item Set up the repo and create a plan for how I would like to organize everything for the summer. 
+    \item Work through some spectral theory background in Matt's book, Nick's book, and Umberto's course. I suspect that this may take me a few days.
+    \item Work through some background information on solving eigenvalue problems using finite elements. I suspect that this may take me a few days as well.
+    \item Work through some examples in Umberto's course and/or the curl-curl example. Assuming that I have worked through the relevant background material, this should hopefully not take too long. However, I may not get too far with it this week. 
+\end{enumerate}
+
+
+\section{Daily Logs}
+
+\textbf{Tuesday}
+
+    
+    \begin{itemize} 
+        \item Spent time breaking down the key aspects of the project description in an effort to understand some of the key ideas and goals.
+        \item Read about the spectrum of finite-dimensional matrices in constrast with infinite-dimensional operators. Explored the different ways $(A-zI)$ may fail to have a bounded inverse. 
+        \item Reviewed some basic spectral theory from Kreyszig's Functional Analysis text. 
+    \end{itemize}
+    
+\textbf{Wednesday}
+    
+    \begin{itemize}
+        \item Prepped for meeting with Patrick.
+        \item Had meeting with Patrick, made some notes after about the meeting contents.
+        \item Created a repo for the project. 
+        \item Created a log for the meeting that contains some goals for the project, and some goals for this week.
+        \item Spent some more time reviewing the spectrum of a linear operator. Worked on distinguishing the point spectrum, the continuous spectrum, and the residual spectrum. I still do not fully understand the residual spectrum.
+        \item Started going through Nick's text. I made some notes on the preface and the first half of the first chapter. I will continue from here in the morning. 
+    \end{itemize}
+
+\textbf{Thursday}
+    
+    \begin{itemize}
+        \item Spent the morning, into the afternoon, finishing up with the first chapter of Nick's text. This took me longer then expected. I found myself bouncing back and forth between the text and some functional analysis review. 
+        \item Reviewed Patrick's research advice, made note of some topics I will need to brush up on at some point (git conflicts, MPI, etc).
+        \item Moved on to Umberto's first lecture (pre-computation lectures) for some more review. Took a slight detour to review the open mapping theorem, closed mapping theorem, and Hilbert adjoints. Hoping to complete the second lecture tomorrow morning.
+        \item Tomorrow, I plan to transition to the introductory content in Matt Colbrook's text. This includes his preliminary appendix and the first chapter. I doubt I will get through all of that tomorrow. 
+        \item Hoping that on the weekend and/or Monday, I can write up some notes on key concepts I have learned. This should help with the meeting on Tuesday and with my own understanding going forward.
+    \end{itemize}
+
+
+\textbf{Friday}
+    
+    \begin{itemize}
+        \item Today did not go as planned. I made slow progress through my to-do list, but I think I learned alot!
+        \item I spent almost the whole day working through the second lecture from Umberto. I really wanted to pick apart some of the proofs in an effort to identify gaps in my understanding. At first glance, many of the proofs seemed simple. However, to fully understand them, I had to take deeper dives into some functional analysis review.  Thus, most of the day was spent going back and forth between Umberto's lectures and Kreyszig's functional analysis text. In doing so, I think I have been able to better understand the content in Nick's text, much of which is reformulated in Umberto's second lecture, perhaps with a slightly more technical funcational-analytic tone. Some concepts I reviewed today include compact operators, closed operators, the bounded inverse theorem, Hilbert vs. Banach vs. formal adjoints, Liouville's theorem, spectral theorem for normal operators, Riesz Ball theorem, Riesz lemma, and more! 
+        \item I think that now(ish) may be a good time to stop and write up some background notes on key functional analysis tools, spectra, and pseudospectra. Hopefully this will help me consolidate the material before moving forward. 
+        \item Thus, over the weekend and/or on Monday, I will pick out anything I have missed in the review section of Matt's text and start to write up some notes. 
+        \item After that, I will either jump straight into Chapter One of Matt's text or start learning about finite element discretizations of eigenvalue problems. I hope I can make a start at this before the next meeting on Tuesday.
+    \end{itemize}
+
+
+\textbf{Weekend (Sunday)}
+    
+    \begin{itemize}
+        \item I began to type up some of my written notes. By the end of the day I had typed up the functional analysis review notes.
+    \end{itemize}
+
+\textbf{Monday}
+    
+    \begin{itemize}
+        \item In the morning I finished up a proof I had skipped in Umberto's Lecture.
+        \item I then went through the preliminary section in Matt's book. I mainly wanted to identify any background information that I had not yet come across. I also wanted to understand his definition of the spectrum and how it compared to the definitions I had read in the functional analysis text, Nick's text, and Umberto's lecture. 
+        \item I am still not confident in comparing these definitions. So far, I think that Nick's definition is stronger than Kreyszig's, but that they are equivalent for closed operators. 
+        \item I then moved on to type up notes on the (hopefully) relevant spectral theory. This involved unifying Umberto's first two lectures, the first chapter of Nick's text, and the preliminary section of Matt's text. 
+        \item I started to realize I was not going to get everything typed up today. I started to state results and omit the proofs in my notes (which I hope to add in later). I also did not make it the pseudospectrum discussion. 
+        \item Going forward, I want to finish these notes. I also want to determine which topics I should dive further into, and which are not so important. 
+        \item Tomorrow, I hope to clarify what I should learn next. Should I dive into the finite element discretization of eigenvalue problems or should I learn about Matt's algorithm? I have to keep in mind that I have to give a 10 minute talk on the scope of the project in the first week of June. Thus, understanding Matt's algorithm before diving into the finite element discretization may be better for constructing a talk (if it is possible to learn the algorithm without the relevant finite element understanding).
+    \end{itemize}
+
+
+\end{document}
