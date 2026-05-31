@@ -9,6 +9,7 @@
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{positioning, arrows.meta}
+\usetikzlibrary{arrows.meta,calc} 
 % \definecolor{oxfordblue}{RGB}{0,33,71}
 % colours
 \definecolor{softblue}{RGB}{232,238,246}
@@ -86,7 +87,7 @@ $$ A(u_1, u_2, \dots) = (0, u_1, u_2, \dots),$$
 has a spectrum equal to the closed unit disk, but it has no eigenvalues. 
 
 
-% The standard approach in infinite dimensions is to discretise the problem, compute the spectra of the corresponding finite-dimensional operator, and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
+% The standard approach in infinite dimensions is to discretize the problem, compute the spectra of the corresponding finite-dimensional operator, and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
 
 % \vspace{1em}
 
@@ -97,7 +98,7 @@ has a spectrum equal to the closed unit disk, but it has no eigenvalues.
 
 % \begin{frame}{Computing $\text{Sp}(A)$ in infinite dimensions}
 
-% The standard approach in infinite dimensions is to discretise the problem, compute the spectra of the corresponding finite-dimensional operator, $A_h,$ and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
+% The standard approach in infinite dimensions is to discretize the problem, compute the spectra of the corresponding finite-dimensional operator, $A_h,$ and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
 % \vspace{1em}
 % $$
 % A
@@ -120,12 +121,12 @@ has a spectrum equal to the closed unit disk, but it has no eigenvalues.
 
 \begin{column}{0.60\textwidth}
 
-The standard approach in infinite dimensions is to discretise $A$ with an $n$-dimensional operator, $A_h,$ and hope that $\text{Sp}(A_h)$ approaches $\text{Sp}(A).$
+The standard approach in infinite dimensions is to discretize $A$ with an $n$-dimensional operator, $A_h,$ and hope that $\text{Sp}(A_h)$ approaches $\text{Sp}(A).$
 
-% to discretise the problem, compute the spectra of the corresponding finite-dimensional operator, $A_h,$ and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
+% to discretize the problem, compute the spectra of the corresponding finite-dimensional operator, $A_h,$ and hope that the set of computed eigenvalues approaches $\text{Sp}(A).$ 
 % the problem with a finite-dimensional operator, $A_h,$ solve for $\text{Sp}(A_h),$ and hope that  $\text{Sp}(A_h),$
 % \begin{itemize}
-%     \item to discretise the problem 
+%     \item to discretize the problem 
 %     \item compute the spectra of the corresponding finite-dimensional operator, $A_h,$ and
 %     \item hope that the set of computed eigenvalues approaches $\text{Sp}(A).$
 % \end{itemize}
@@ -237,12 +238,12 @@ To use the finite element method, we
 
 % \begin{frame}{Dangerous pitfalls}
 
-% \textbf{Spectral pollution:} The discretised operator has eigenvalues that converge to $z \notin \text{Sp}(A).$
+% \textbf{Spectral pollution:} The discretized operator has eigenvalues that converge to $z \notin \text{Sp}(A).$
 
 % \vspace{1em}
 
-% \textbf{Spectral invisibility:} Discretising the operator causes us to miss parts of its spectrum,
-% even as the size of the discretisation increases.
+% \textbf{Spectral invisibility:} discretizing the operator causes us to miss parts of its spectrum,
+% even as the size of the discretization increases.
 
 % \vspace{1em}
 
@@ -262,13 +263,13 @@ To use the finite element method, we
 \small
 
 \textbf{Spectral pollution:}  
-The discretised operator has eigenvalues that converge to $z \notin \text{Sp}(A).$
+The discretized operator has eigenvalues that converge to $z \notin \text{Sp}(A).$
 
 \vspace{2em}
 
 \textbf{Spectral invisibility:}  
-Discretising the operator causes us to miss parts of its spectrum,
-even as the size of the discretisation increases.
+discretizing the operator causes us to miss parts of its spectrum,
+even as the size of the discretization increases.
 
 
 \vspace{2em}
@@ -434,10 +435,10 @@ In general, whether spectral pollution occurs depends on the choice of mesh and 
 
 
 \begin{frame}{The Remedy}
-    % A reliable algorithm for computing $\text{Sp}(A)$ should converge as the size of the discretisation, $n,$ tends towards infinity and guarantee that any point of the output is close to $\text{Sp}(A),$ up to an arbitrary small error tolerance. 
+    % A reliable algorithm for computing $\text{Sp}(A)$ should converge as the size of the discretization, $n,$ tends towards infinity and guarantee that any point of the output is close to $\text{Sp}(A),$ up to an arbitrary small error tolerance. 
     % \end{itemize}
     % \begin{itemize}
-    %     \item  converge as the size of the discretisation, $n,$ tends towards infinity.
+    %     \item  converge as the size of the discretization, $n,$ tends towards infinity.
     %     \item  guarantee that any point of the output is close to $\text{Sp}(A),$ up to an arbitrary small error tolerance. 
     % \end{itemize}
 
@@ -446,7 +447,7 @@ In general, whether spectral pollution occurs depends on the choice of mesh and 
     \begin{column}{0.62\textwidth}
        % Matthew Colbrook at Cambridge has proposed an algorithm for infinite-dimensional spectral computation. In certain cases, his method converges to $\text{Sp}(A)$ and provides a local error bound, $E(n,z),$ on the distance to the spectrum, $ \text{dist}(z, \text{Sp}(A)) \le E(n, z).$  
 
-    Matthew Colbrook at Cambridge has proposed an algorithm that, in certain cases, converges to $\text{Sp}(A)$ and provides a local error bound, $E(n,z),$ on the distance to the spectrum, $ \text{dist}(z, \text{Sp}(A)) \le E(n, z).$  
+    Matthew Colbrook at Cambridge has proposed an algorithm that, in certain cases, converges to $\text{Sp}(A)$ and provides a local error bound on the distance to the spectrum, $ \text{dist}(z, \text{Sp}(A)) \le d_{n,z}.$ 
     % In certain cases, this algorithm can be proven to converge to the correct spectrum, so that neither spectral pollution nor spectral invisibility occur.
 
     \vspace{1em}
@@ -509,67 +510,384 @@ $$ \text{Sp}(A) = \{ z \in \mathbb{C} \mid \gamma(z, A) = 0 \}.$$
 % \end{enumerate}
 
 
+% \end{frame}
+
+
+
+% \begin{frame}{The General Algorithm}
+
+% \begin{center}
+% \begin{tikzpicture}[
+%     node distance=0.45cm,
+%     box/.style={
+%         draw,
+%         rounded corners,
+%         align=center,
+%         % text width=0.7\textwidth,
+%         minimum width=9.0cm,
+%         minimum height=0.85cm,
+%         font=\footnotesize,
+%         inner sep=5pt
+%     },
+%     sidebox/.style={
+%         draw,
+%         rounded corners,
+%         align=center,
+%         text width=0.20\textwidth,
+%         minimum height=0.85cm,
+%         font=\footnotesize,
+%         inner sep=5pt
+%     },
+%     arrow/.style={->, thick}
+% ]
+
+
+% \node[box, draw=darkblue, fill=softblue]  (grid) {
+% Discretize the complex plane with a uniform grid \\ covering a disc of radius $M,$ denoted $\text{Grid}(M).$
+% };
+
+% \node[box, draw=darkpink, fill=softpink, below=of grid] (compute) { For each $z\in\text{Grid}(M),$ compute an approximation \\ of $\gamma(z, A),$ and the associated bound $ E(n, z).$
+% };
+
+% \node[sidebox, draw=darkyellow, fill=softyellow, right=0.5cm of compute] (eigvals) {
+% This often requires an approximation of the smallest eigenvalues of $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$}
+
+
+% \node[box, draw=darkgreen, fill = softgreen, below=of compute] (local) {
+% When $z$ is sufficiently close to the spectrum,  i.e., when $E(n, z)$ is \\ sufficiently small, seek local minimizers of $E(n, \cdot)$ over the set of \\ $w \in \text{Grid}(M)$ that are at a distance of at most $E(n, z)$ from $z.$
+% };
+
+% \node[box, draw=darkpurple, fill = softpurple,below=of local] (output) {
+% The collection of local minimizers is the approximation of $\operatorname{Sp}(A)$.
+% };
+
+% \draw[arrow] (grid) -- (compute);
+% \draw[arrow] (compute) -- (local);
+% \draw[arrow] (local) -- (output);
+
+% \draw[arrow] (compute.east) -- (eigvals.west);
+
+% \end{tikzpicture}
+% \end{center}
+
+% \end{frame}
+
+
+\begin{frame}{The Algorithm: 1. Discretization}
+
+\begin{itemize}
+    \item To approximate $\operatorname{Sp}(A)$, first discretize the complex plane with a uniform grid covering a disc of radius $M$, denoted $\operatorname{Grid}(M)$.
+\end{itemize}
+% To approximate $\operatorname{Sp}(A)$, first discretize the complex plane with a uniform grid covering a disc of radius $M$, denoted $\operatorname{Grid}(M)$.
+
+\vspace{1em}
+
+\centering
+\tikzset{ axis/.style={thick, gray!70, -{Latex[length=2mm]}}, specpt/.style={circle, fill=red!80!black, inner sep=1.7pt}, gridpt/.style={circle, fill=black!55, inner sep=1.2pt}, testpt/.style={circle, fill=green!60!black, draw=green!50!black, inner sep=2pt}, minpt/.style={circle, fill=magenta!90, draw=magenta!90, inner sep=2pt}, disc/.style={dashed, gray!70, thick}, lab/.style={font=\small}, }
+
+\begin{tikzpicture}[scale=1]
+    % disc
+    \draw[disc] (0,0) circle (1.55);
+
+    % axes
+    \draw[axis] (-2,0) -- (2.2,0);
+    \draw[axis] (0,-2) -- (0,2.2);
+
+    % grid points
+    \foreach \x in {-1.2,-0.6,0,0.6,1.2}{
+        \foreach \y in {-1.2,-0.6,0,0.6,1.2}{
+            \pgfmathsetmacro{\r}{\x*\x+\y*\y}
+            \ifdim \r pt < 2.41pt
+                \node[gridpt] at (\x,\y) {};
+            \fi
+        }
+    }
+
+    % isolated spectral points
+    \node[specpt] at (-1.05,1.15) {};
+    \node[specpt] at (-1.20,0.75) {};
+    \node[specpt] at (-0.72,0.86) {};
+
+    % spectral curve
+    \draw[red!80!black, thick]
+        (-0.45,-1.35)
+        .. controls (-0.30,-0.70) and (0.20,-0.55) ..
+        (0.75,-0.45)
+        .. controls (1.10,-0.40) and (1.10,-0.15) ..
+        (1.35,0.18);
+
+    % labels
+    \node[black!55] at (1.05,1.82) {$\operatorname{Grid}(M)$};
+    \node[text=red!80!black, font=\small] at (-1.15,1.55) {$\operatorname{Sp}(A)$};
+\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{The Algorithm: 2. Auxillary Eigenproblems}
+
+\begin{itemize}
+    \item For each $z \in \text{Grid}(M),$ compute an approximation $\Phi_n(z, A) \approx \gamma(z, A)$ and the associated bound on the distance to the spectrum, $d_{n,z}.$ 
+    \vspace{0.5em}
+    \item This often requires approximating the smallest eigenvalues of the $n$-dimensional discretizations of $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$
+\end{itemize}
+
+% For each $z \in \text{Grid}(M),$ compute an approximation of $\gamma(z, A),$ and the associated bound on $\text{dist}(z, \text{Sp}(A)),$ $d_{n,z}.$ 
+
+% \vspace{1em}
+
+% This often requires an approximation of the smallest eigenvalues of $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$
+
+\vspace{0.5em}
+
+\centering
+
+\tikzset{ axis/.style={thick, gray!70, -{Latex[length=2mm]}}, specpt/.style={circle, fill=red!80!black, inner sep=1.7pt}, gridpt/.style={circle, fill=black!55, inner sep=1.2pt}, testpt/.style={circle, fill=green!60!black, draw=green!50!black, inner sep=2pt}, minpt/.style={circle, fill=magenta!90, draw=magenta!90, inner sep=2pt}, disc/.style={dashed, gray!70, thick}, lab/.style={font=\small}, }
+\begin{tikzpicture}[scale=1]
+\path[use as bounding box] (-2.2,-2.1) rectangle (2.3,2.25);
+    % disc
+    \draw[disc] (0,0) circle (1.55);
+
+    % axes
+    \draw[axis] (-2,0) -- (2.2,0);
+    \draw[axis] (0,-2) -- (0,2.2);
+
+    % grid points
+    \foreach \x in {-1.2,-0.6,0,0.6,1.2}{
+        \foreach \y in {-1.2,-0.6,0,0.6,1.2}{
+            \pgfmathsetmacro{\r}{\x*\x+\y*\y}
+            \ifdim \r pt < 2.41pt
+                \node[gridpt] at (\x,\y) {};
+            \fi
+        }
+    }
+
+    % isolated spectral points
+    \node[specpt] at (-1.05,1.15) {};
+    \node[specpt] at (-1.20,0.75) {};
+    \node[specpt] at (-0.72,0.86) {};
+
+    % spectral curve
+    \draw[red!80!black, thick]
+        (-0.45,-1.35)
+        .. controls (-0.30,-0.70) and (0.20,-0.55) ..
+        (0.75,-0.45)
+        .. controls (1.10,-0.40) and (1.10,-0.15) ..
+        (1.35,0.18);
+
+    % selected z --- now just a green grid point
+    \coordinate (z) at (0.6,0.6);
+    \node[circle, fill=green!60!black, draw=green!50!black, inner sep=2.2pt] at (z) {};
+    \node[lab, below left=1pt, text=green!50!black] at (z) {$z$};
+
+    % annotation node
+    \node[
+        align=left,
+        text=green!50!black,
+        anchor=west,
+        font=\small
+    ] (ann) at (1.85,1.25)
+    {Compute \\ $\Phi_n(z,A)$ and $d_{n,z}.$};
+
+    % arrow
+    \draw[->, green!60!black, thick]
+        (ann.west) to[out=200,in=25] ($(z)+(0.08,0.03)$);
+\end{tikzpicture}
+
 \end{frame}
 
 
+\begin{frame}{The Algorithm: 3. Local Minimization}
 
-\begin{frame}{The General Algorithm}
+\begin{itemize}
+    \item When $z$ is sufficiently close to the spectrum seek local minimizers of $\Phi_n(\cdot, A)$ over the set of $w \in \text{Grid}(M)$ that are at a distance of at most $d_{n,z}$ from $z.$ 
+    \vspace{0.5em}
+    \item The collection of local minimizers is the approximation of $\text{Sp}(A).$
+\end{itemize}
 
-\begin{center}
-\begin{tikzpicture}[
-    node distance=0.45cm,
-    box/.style={
-        draw,
-        rounded corners,
-        align=center,
-        % text width=0.7\textwidth,
-        minimum width=9.0cm,
-        minimum height=0.85cm,
-        font=\footnotesize,
-        inner sep=5pt
-    },
-    sidebox/.style={
-        draw,
-        rounded corners,
-        align=center,
-        text width=0.20\textwidth,
-        minimum height=0.85cm,
-        font=\footnotesize,
-        inner sep=5pt
-    },
-    arrow/.style={->, thick}
-]
+% When $z$ is sufficiently close to the spectrum, seek local minimizers of $\gamma(\cdot, A)$ over the set of $w \in \text{Grid}(M)$ that are at a distance of at most $d_{n,z}$ from $z.$ 
 
+% \vspace{1em}
 
-\node[box, draw=darkblue, fill=softblue]  (grid) {
-Discretize the complex plane with a uniform grid \\ covering a disc of radius $M,$ denoted $\text{Grid}(M).$
-};
+% The collection of local minimizers is the approximation of $\text{Sp}(A).$
 
-\node[box, draw=darkpink, fill=softpink, below=of grid] (compute) { For each $z\in\text{Grid}(M),$ compute an approximation \\ of $\gamma(z, A),$ and the associated bound $ E(n, z).$
-};
+\vspace{0.5em}
 
-\node[sidebox, draw=darkyellow, fill=softyellow, right=0.5cm of compute] (eigvals) {
-This often requires an approximation of the smallest eigenvalues of $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$}
+\centering
+\begin{tikzpicture}[scale=1]
+\path[use as bounding box] (-5.2,-2.0) rectangle (5.2,2.2);
 
+    \path[use as bounding box] (-3.0,-2.1) rectangle (6.4,2.25);
 
-\node[box, draw=darkgreen, fill = softgreen, below=of compute] (local) {
-When $z$ is sufficiently close to the spectrum,  i.e., when $E(n, z)$ is \\ sufficiently small, seek local minimizers of $E(n, \cdot)$ over the set of \\ $w \in \text{Grid}(M)$ that are at a distance of at most $E(n, z)$ from $z.$
-};
+    % colors
+    \colorlet{annotblue}{blue}
+    \colorlet{orangeann}{orange!85!black}
 
-\node[box, draw=darkpurple, fill = softpurple,below=of local] (output) {
-The collection of local minimizers is the approximation of $\operatorname{Sp}(A)$.
-};
+    % main disc
+    \draw[dashed, gray!60, thick] (0,0) circle (1.55);
 
-\draw[arrow] (grid) -- (compute);
-\draw[arrow] (compute) -- (local);
-\draw[arrow] (local) -- (output);
+    % axes
+    \draw[thick, gray!60, ->] (-2.2,0) -- (2.35,0);
+    \draw[thick, gray!60, ->] (0,-1.9) -- (0,2.1);
 
-\draw[arrow] (compute.east) -- (eigvals.west);
+    % grid points
+    \foreach \x in {-1.2,-0.6,0,0.6,1.2}{
+        \foreach \y in {-1.2,-0.6,0,0.6,1.2}{
+            \pgfmathsetmacro{\r}{\x*\x+\y*\y}
+            \ifdim \r pt < 2.41pt
+                \node[circle, fill=gray!65, inner sep=1.4pt] at (\x,\y) {};
+            \fi
+        }
+    }
+
+    % true spectrum
+    \node[circle, fill=red!85!black, inner sep=2pt] at (-1.05,1.15) {};
+    \node[circle, fill=red!85!black, inner sep=2pt] at (-1.18,0.78) {};
+    \node[circle, fill=red!85!black, inner sep=2pt] at (-0.72,0.95) {};
+
+    \draw[red!85!black, thick]
+        (-0.35,-1.25)
+        .. controls (-0.20,-0.70) and (0.25,-0.55) ..
+        (0.82,-0.45)
+        .. controls (1.20,-0.38) and (1.22,-0.12) ..
+        (1.42,0.25);
+
+    % chosen z
+    \coordinate (z) at (0,0);
+    \node[circle, fill=green!60!black, draw=green!40!black, inner sep=2.5pt] at (z) {};
+    \node[text=green!50!black, font=\small] at (0.20,-0.28) {$z$};
+
+    % local search ball
+    \draw[annotblue, thick, dashed] (z) circle (0.72);
+    \node[text=annotblue, font=\scriptsize] at (0.04,0.88) {$B(z,d_{n,z})$};
+
+    % selected local minimizer
+    \coordinate (w) at (0,-0.6);
+    \node[circle, fill=orangeann, draw=orangeann, inner sep=2.5pt] at (w) {};
+    \node[text=orangeann, font=\small] at (-0.34,-0.42) {$w_*$};
+
+    % orange explanatory text
+    \node[
+        text=orangeann,
+        align=left,
+        anchor=west,
+        font=\small,
+        text width=4.6cm
+    ] (orangeText) at (2.25,-0.25)
+    {
+        Choose the $w_*$ that \\ minimizes $\Phi_n(\cdot, A)$  over \\
+        $B(z,d_{n,z})\cap \operatorname{Grid}(M).$
+    };
+
+    % orange arrow ending near the search ball
+    \coordinate (orangeend) at ($(z)+(280:0.80)$);
+
+    \draw[->, orangeann, thick]
+        (orangeText.west)
+        .. controls (2.00,-0.35) and (1.05,-1.05) ..
+        (orangeend);
 
 \end{tikzpicture}
-\end{center}
 
+% \centering
+% \begin{tikzpicture}[scale=1]
+% \path[use as bounding box] (-5.2,-2.0) rectangle (5.2,2.2);
+%     % colors
+%     \colorlet{annotblue}{blue}
+%     \colorlet{orangeann}{orange!85!black}
+
+%     % main disc
+%     \draw[dashed, gray!60, thick] (0,0) circle (1.55);
+
+%     % axes
+%     \draw[thick, gray!60, ->] (-2.2,0) -- (2.35,0);
+%     \draw[thick, gray!60, ->] (0,-1.9) -- (0,2.1);
+
+%     % grid points
+%     \foreach \x in {-1.2,-0.6,0,0.6,1.2}{
+%         \foreach \y in {-1.2,-0.6,0,0.6,1.2}{
+%             \pgfmathsetmacro{\r}{\x*\x+\y*\y}
+%             \ifdim \r pt < 2.41pt
+%                 \node[circle, fill=gray!65, inner sep=1.4pt] at (\x,\y) {};
+%             \fi
+%         }
+%     }
+
+%     % true spectrum
+%     \node[circle, fill=red!85!black, inner sep=2pt] at (-1.05,1.15) {};
+%     \node[circle, fill=red!85!black, inner sep=2pt] at (-1.18,0.78) {};
+%     \node[circle, fill=red!85!black, inner sep=2pt] at (-0.72,0.95) {};
+
+%     \draw[red!85!black, thick]
+%         (-0.35,-1.25)
+%         .. controls (-0.20,-0.70) and (0.25,-0.55) ..
+%         (0.82,-0.45)
+%         .. controls (1.20,-0.38) and (1.22,-0.12) ..
+%         (1.42,0.25);
+
+%     % chosen z: center of small ball
+%     \coordinate (z) at (0,0);
+%     \node[circle, fill=green!60!black, draw=green!40!black, inner sep=2.5pt] at (z) {};
+%     \node[text=green!50!black] at (0.18,-0.26) {$z$};
+
+%     % small ball B(z,E_n(z))
+%     \draw[annotblue, thick] (z) circle (0.72);
+%     \node[text=annotblue, font=\scriptsize] at (0.2,0.88) {$B(z,d_{n,z})$};
+
+%     % local minimizer w_*
+%     \coordinate (w) at (0,-0.6);
+%     \node[circle, fill=orangeann, draw=orangeann, inner sep=2.5pt] at (w) {};
+%     \node[text=orangeann] at (-0.3,-0.4) {$w_*$};
+
+%     % point on the ball for the blue arrow
+%     \coordinate (ballpt) at ($(z)+(25:0.72)$);
+
+%     % % blue explanatory text
+%     % \node[
+%     %     text=annotblue,
+%     %     align=left,
+%     %     anchor=west,
+%     %     font=\small
+%     % ] (blueText) at (2.55,1.45)
+%     % {locally minimize $\gamma(\cdot, A)$ over \\ $B(z,d_{n,z})\cap\text{Grid(M)}$.};
+
+%     % % blue arrow: points to the ball
+%     % \draw[->, annotblue, thick]
+%     %     (blueText.west)
+%     %     .. controls (2.15,1.55) and (1.35,1.25) ..
+%     %     (ballpt);
+
+%     % orange explanatory text
+%     \node[
+%         text=orangeann,
+%         align=left,
+%         anchor=west,
+%         font=\small
+%     ] (orangeText) at (2.55,-0.45)
+%     {$w_* = \min_{w \in B(z,d_{n,z})\cap\text{Grid(M)}} \gamma(w, A)$ \\
+%       is chosen for
+%      the approximate spectrum.};
+
+% % orange arrow: terminates on the lower-left part of the blue circle
+% % endpoint on the blue circle, just to the right of the bottom
+% % endpoint on the blue circle
+% % endpoint on the blue circle, just to the right of w_*
+% \coordinate (orangeend) at ($(z)+(280:0.8)$);
+
+% % smooth orange arrow with head pointing up-left toward w_*
+% \draw[->, orangeann, thick]
+%     (orangeText.west)
+%     .. controls (1.90,-0.5) and (0.9,-2) ..
+%     (orangeend);
+
+    
+% \end{tikzpicture}
+
+    
 \end{frame}
+
+
+
+
 
 
 
@@ -578,9 +896,9 @@ The collection of local minimizers is the approximation of $\operatorname{Sp}(A)
 
 \textbf{Motivating challenges:}
 \begin{enumerate}
-    \item To compute $E(n,z),$ we solve eigenproblems at each $z \in \text{Grid}(M).$ This is expensive.
+    \item To compute $d_{n,z},$ we solve eigenproblems at each $z \in \text{Grid}(M).$ This is expensive.
     \vspace{0.5em}
-    \item If the discretization of an eigenproblem is too coarse, $E(n,z)$ does not tightly bound $\text{dist}(z, \text{Sp}(A)).$ 
+    \item If the discretization of an eigenproblem is too coarse, $d_{n,z}$ does not tightly bound $\text{dist}(z, \text{Sp}(A)).$ 
 \end{enumerate}
 % To compute $E(n,z),$ we solve eigenproblems at each $z \in Grid(N).$ If the discretization of the eigenproblem is too coarse, $E(n,z)$ does not tightly bound $\text{dist}(z, \text{Sp(A)}).$ 
 
@@ -646,7 +964,7 @@ The collection of local minimizers is the approximation of $\operatorname{Sp}(A)
 \textbf{Recent work:}
 \begin{itemize}
     \item Learning about the spectra and pseudospectra of linear operators.
-    \item Learning about the discretisation and computation of the spectra of operators using the finite element method. 
+    \item Learning about the discretization and computation of the spectra of operators using the finite element method. 
 \end{itemize}
 
 % \textbf{Next steps:}
