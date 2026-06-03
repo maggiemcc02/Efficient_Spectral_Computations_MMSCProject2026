@@ -103,6 +103,9 @@ Consider a linear operator $A$ on a Hilbert space $H.$ The spectrum of $A$ is
 \end{frame}
 
 \begin{frame}{$\operatorname{Sp}(A)$ in Finite and Infinite Dimensions}
+\begin{overlayarea}{\textwidth}{\textheight}
+
+\vspace{0.1cm}
 
 \only<1->{
 \begin{specbox}{blue}{Definition}
@@ -121,7 +124,7 @@ z\in\mathbb{C}
 \vspace{0.3em}
 
 \begin{specbox}{green!45!black}{Finite dimensions}
-In finite dimensions, $A$ is an $n\times n$ matrix and $\operatorname{Sp}(A)$ is the set of eigenvalues of $A,$ i.e.,
+In finite dimensions, $A$ is an $n\times n$ matrix and $\operatorname{Sp}(A)$ is the set of eigenvalues of $A$:
 \[
 \operatorname{Sp}(A)
 =
@@ -143,6 +146,7 @@ It can have both discrete and continuous parts, making it much harder to compute
 \end{specbox}
 }
 
+\end{overlayarea}
 \end{frame}
 
 
@@ -567,6 +571,7 @@ $$ \omega^2 = n^2 + m^2 \qquad \text{for } n, m \in \mathbb{N}_0, \qquad (m,n) \
 
 
 \begin{frame}{An Example of Spectral Pollution: The Maxwell Eigenproblem}
+\begin{overlayarea}{\textwidth}{\textheight}
 
 \uncover<1->{
 Using standard Lagrange continuous piecewise linear elements yields spectral pollution:
@@ -594,11 +599,11 @@ Using standard Lagrange continuous piecewise linear elements yields spectral pol
 \\
 \midrule
 
-\uncover<2->{$-2.220446\cdot 10^{-16}$}
+\uncover<2->{$\approx 10^{-16}$}
 &
-\uncover<3->{$2.220446\cdot 10^{-16}$}
+\uncover<3->{$\approx 10^{-16}$}
 &
-\uncover<4->{$2.220446\cdot 10^{-16}$}
+\uncover<4->{$\approx 10^{-16}$}
 &
 \uncover<5->{$0$}
 \\
@@ -698,6 +703,7 @@ Using standard Lagrange continuous piecewise linear elements yields spectral pol
 Whether spectral pollution occurs depends on the choice of mesh and finite elements.
 }
 
+\end{overlayarea}
 \end{frame}
 
 
@@ -1046,13 +1052,13 @@ node[midway, below=4pt, text=gray!70] {\large refine};
 \end{frame}
 
 \begin{frame}{Motivating Challenges}
-    \only<1->{
+    \visible<1->{
 \begin{specbox}{green!45!black}{The Success of Colbrook's Algorithm}
 Under certain conditions on $A,$ Colbrook's algorithm yields a convergent approximation of $\text{Sp}(A)$ that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility.
 \end{specbox} 
 }
 
-\only<2->{
+\visible<2->{
 \vspace{0.3em}
 
 \begin{specbox}{red}{Motivating Challenges}
@@ -1066,13 +1072,13 @@ Under certain conditions on $A,$ Colbrook's algorithm yields a convergent approx
 \end{frame}
 
 \begin{frame}{Project Motivation}
-\only<1->{
+\visible<1->{
 \begin{specbox}{blue}{Guiding Question}
     How can we exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm to solve them efficiently? 
 \end{specbox}
 }
 \vspace{1em}
-\only<2->{
+\visible<2->{
 \begin{specbox}{blue}{Follow-Up Questions}
     \begin{enumerate}
         \item Can \textbf{multilevel methods} be used to reduce the cost of solving the eigenproblem associated with each \(z \in \operatorname{Grid}(n)\)?
