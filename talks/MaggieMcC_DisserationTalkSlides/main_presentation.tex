@@ -33,7 +33,17 @@
 \definecolor{RoadGreen}{RGB}{0,100,0}
 \definecolor{RoadRed}{RGB}{200,0,0}
 
-
+\definecolor{OxfordBlue}{RGB}{0,33,71}
+\definecolor{SoftBlue}{RGB}{232,241,250}
+\definecolor{SoftGreen}{RGB}{239,248,241}
+\definecolor{SoftGold}{RGB}{255,247,230}
+\definecolor{SoftRed}{RGB}{252,238,238}
+\definecolor{TextGrey}{RGB}{84,92,105}
+\definecolor{TimelineDone}{RGB}{76,160,88}
+\definecolor{TimelineTheory}{RGB}{210,77,73}
+\definecolor{TimelineModel}{RGB}{54,127,199}
+\definecolor{TimelineVerify}{RGB}{235,154,52}
+\definecolor{TimelineWrite}{RGB}{119,90,178}
 
 \usepackage[most]{tcolorbox}
 \newtcolorbox{specbox}[2]{
@@ -491,7 +501,7 @@ In infinite dimensions, $\text{Sp}(A)$ may contain continuous or essential compo
     \draw[->] (6.2,1.15) -- (5.4,0.97);
     \node at (7.4,1.15) {spurious limit};
 
-    \node at (\W/2,0.25) {\(\operatorname{Sp}(A_h)\)};
+    \node at (\W/2,0.25) {\(\operatorname{Sp}(A_n)\)};
     \draw[decorate,decoration={brace,mirror,amplitude=5pt}] (1.7,0.75) -- (9.1,0.75);
 \end{scope}
 
@@ -516,7 +526,7 @@ In infinite dimensions, $\text{Sp}(A)$ may contain continuous or essential compo
     \draw[->] (3.1,1.1) -- (3.1,1.40);
     \node at (3.25,0.9) {missed spectrum};
 
-    \node at (7.68,0.25) {\(\operatorname{Sp}(A_h)\)};
+    \node at (7.68,0.25) {\(\operatorname{Sp}(A_n)\)};
     \draw[decorate,decoration={brace,mirror,amplitude=5pt}] (6,0.8) -- (9,0.8);
 \end{scope}
 
@@ -1089,119 +1099,567 @@ Under certain conditions on $A,$ Colbrook's algorithm yields a convergent approx
     \end{enumerate}
 \end{specbox}
 }
-
-
 \end{frame}
 
-\begin{frame}[t]{Project Roadmap}
+\begin{frame}{Tentative project timeline: May--August 2026}
+\scriptsize
 
-\vspace{-0.4em}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.42\textwidth}
+\textbf{\textcolor{OxfordBlue}{Completed work}}
+\vspace{0.04cm}
 
+\noindent\textbf{\textcolor{OxfordBlue}{1}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm} Learned about the spectra and pseudospectra of operators.\end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{2}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm}Learned about approximating spectra with the finite element method.
+\end{minipage}
+\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{3}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm} Implemented examples using Firedrake.\end{minipage}\par\vspace{0.015cm}
+
+\vspace{0.05cm}
+\textbf{\textcolor{OxfordBlue}{Planned work}}
+\vspace{0.04cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{4}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm} Literature review of Colbrook's algorithm, adaptive eigensolvers, and multilevel methods.\end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{5}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineModel, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm}Implement each method. \end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{6}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm}Explore the combination of Colbrook's algorithm with an adaptive eigensolver.\end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{7}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm} Explore the addition of a multilevel method.\end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{8}}\hspace{0.07cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm}Construct representative examples and results for the report.\end{minipage}\par\vspace{0.015cm}
+
+\noindent\textbf{\textcolor{OxfordBlue}{9}}\hspace{0.035cm}
+\noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+\hspace{0.08cm}\begin{minipage}[t]{4.45cm} Write the report.\end{minipage}\par\vspace{0.015cm}
+\end{column}
+
+\begin{column}{0.56\textwidth}
 \begin{center}
 \begin{tikzpicture}[
-    >=Latex,
-    every node/.style={font=\footnotesize},
-    phasebox/.style={
-        rounded corners=7pt,
-        very thick,
-        text width=3.3cm,
-        align=left,
-        inner sep=8pt
-    },
-    arrow/.style={
-        very thick,
-        black,
-        -{Latex[length=2.2mm]},
-        shorten <=2pt,
-        shorten >=2pt
-    }
+x=0.41cm,
+y=0.43cm,
+font=\tiny
 ]
+\node[font=\scriptsize\bfseries] at (8.5,0.72) {Weekly review};
 
-\path[use as bounding box] (-6.1,-2.85) rectangle (6.1,2.85);
+% Month and week headers
+\foreach \x/\lab in {2.5/May,6.5/June,10.5/July,14.5/August}{
+\node[font=\scriptsize\bfseries, text=OxfordBlue] at (\x,0.10) {\lab};
+}
+\foreach \x in {4.5,8.5,12.5}{
+\draw[TextGrey!35] (\x,-0.20) -- (\x,-9.30);
+}
+\foreach \w in {1,...,16}{
+\node[text=TextGrey] at (\w,-0.45) {\w};
+}
 
-%------------------------------------------------
-% Box 1
-%------------------------------------------------
-\node<1->[
-    phasebox,
-draw=RoadGreen,
-fill=RoadGreen!5
-] (box1) at (-4.25,0) {
-\begin{minipage}[t][5.05cm][t]{3cm}
-    \centering
-    {\large\bfseries Recent work\par}
+% Row numbers
+\foreach \n/\y in {1/-1.10,2/-2.10,3/-3.10,4/-4.10,5/-5.10,6/-6.10,7/-7.10,8/-8.10,9/-9.10}{
+\node[anchor=east, font=\tiny, text=OxfordBlue] at (0.35,\y) {\n};
+}
 
-    \vspace{1em}
+% Background grid
+\foreach \y in {-1.10,-2.10,-3.10,-4.10,-5.10,-6.10,-7.10,-8.10,-9.10}{
+\foreach \w in {1,...,16}{
+\draw[fill=TextGrey!8, draw=TextGrey!25, line width=0.25pt]
+(\w-0.46,\y-0.39) rectangle (\w+0.46,\y+0.39);
+}
+}
 
-    I have been learning about:
-    \vspace{0.35em}
+% Completed work
+\foreach \w in {1,2,3,4}{
+\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-1.49) rectangle (\w+0.46,-0.71);
+}
+\foreach \w in {3,4,5}{
+\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-2.49) rectangle (\w+0.46,-1.71);
+}
+\foreach \w in {4,5}{
+\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-3.49) rectangle (\w+0.46,-2.71);
+}
+% \foreach \w in {1,2,3,4}{
+% \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+% (\w-0.46,-1.49) rectangle (\w+0.46,-0.71);
+% }
+% \foreach \w in {3,4}{
+% \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+% (\w-0.46,-2.49) rectangle (\w+0.46,-1.71);
+% }
+% \foreach \w in {4}{
+% \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+% (\w-0.46,-3.49) rectangle (\w+0.46,-2.71);
+% }
 
-    \RaggedRight
-    \begin{itemize}\itemsep0.6em
-    
-        \item spectra and pseudospectra of linear operators
-        \item approximating spectra with the finite element method
-    \end{itemize}
-\end{minipage}
-};
+% Literature review
+\foreach \w in {5,6,7,8,9,10,11,12,13,14}{
+\draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-4.49) rectangle (\w+0.46,-3.71);
+}
 
-%------------------------------------------------
-% Box 2
-%------------------------------------------------
-\node<2->[
-    phasebox,
-draw=RoadBlue,
-fill=RoadBlue!5
-] (box2) at (0,0) {
-\begin{minipage}[t][5.05cm][t]{3cm}
-    \centering
-    {\large\bfseries Next steps\par}
+% Implement each method
+\foreach \w in {7,8,9,10,11,12}{
+\draw[fill=TimelineModel, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-5.49) rectangle (\w+0.46,-4.71);
+}
 
-    \vspace{1.25em}
+% Colbrook + adaptive eigensolve
+\foreach \w in {9,10,11,12}{
+\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-6.49) rectangle (\w+0.46,-5.71);
+}
 
-    \RaggedRight
-    Literature review and implementation of:
+% Multilevel method
+\foreach \w in {11,12,13,14}{
+\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-7.49) rectangle (\w+0.46,-6.71);
+}
 
-    \vspace{0.35em}
+% Examples/results
+\foreach \w in {11,12,13,14,15,16}{
+\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-8.49) rectangle (\w+0.46,-7.71);
+}
 
-    \begin{itemize}\itemsep0.35em
-        \item Colbrook's algorithm
-        \item multilevel methods for eigenproblems
-        \item adaptive eigensolvers
-    \end{itemize}
-\end{minipage}
-};
+% Write report
+\foreach \w in {13,14,15,16}{
+\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+(\w-0.46,-9.49) rectangle (\w+0.46,-8.71);
+}
 
-%------------------------------------------------
-% Box 3
-%------------------------------------------------
-\node<3->[
-    phasebox,
-draw=RoadRed,
-fill=RoadRed!5
-] (box3) at (4.25,0) {
-\begin{minipage}[t][5.05cm][t]{3cm}
-    \centering
-    {\large\bfseries Long-term goal\par}
-
-    \vspace{2.5em}
-
-    \centering
-    To explore an adaptive multilevel method for efficiently solving the auxiliary eigenproblems in Colbrook's algorithm.
-\end{minipage}
-};
-
-%------------------------------------------------
-% Arrows
-%------------------------------------------------
-% \draw<2->[arrow] (box1.east) -- (box2.west);
-% \draw<3->[arrow] (box2.east) -- (box3.west);
-
+\draw[OxfordBlue, thick] (0.70,-0.72) -- (16.30,-0.72);
 \end{tikzpicture}
 \end{center}
+\end{column}
+\end{columns}
 
+\note{}
 \end{frame}
 
+
+% \begin{frame}[t]{Project Roadmap}
+
+% \vspace{-0.4em}
+
+% \begin{center}
+% \begin{tikzpicture}[
+%     >=Latex,
+%     every node/.style={font=\footnotesize},
+%     phasebox/.style={
+%         rounded corners=7pt,
+%         very thick,
+%         text width=3.3cm,
+%         align=left,
+%         inner sep=8pt
+%     },
+%     arrow/.style={
+%         very thick,
+%         black,
+%         -{Latex[length=2.2mm]},
+%         shorten <=2pt,
+%         shorten >=2pt
+%     }
+% ]
+
+% \path[use as bounding box] (-6.1,-2.85) rectangle (6.1,2.85);
+
+% %------------------------------------------------
+% % Box 1
+% %------------------------------------------------
+% \node<1->[
+%     phasebox,
+% draw=RoadGreen,
+% fill=RoadGreen!5
+% ] (box1) at (-4.25,0) {
+% \begin{minipage}[t][5.05cm][t]{3cm}
+%     \centering
+%     {\large\bfseries Recent work\par}
+
+%     \vspace{1em}
+
+%     I have been learning about:
+%     \vspace{0.35em}
+
+%     \RaggedRight
+%     \begin{itemize}\itemsep0.6em
+    
+%         \item spectra and pseudospectra of linear operators
+%         \item approximating spectra with the finite element method
+%     \end{itemize}
+% \end{minipage}
+% };
+
+% %------------------------------------------------
+% % Box 2
+% %------------------------------------------------
+% \node<2->[
+%     phasebox,
+% draw=RoadBlue,
+% fill=RoadBlue!5
+% ] (box2) at (0,0) {
+% \begin{minipage}[t][5.05cm][t]{3cm}
+%     \centering
+%     {\large\bfseries Next steps\par}
+
+%     \vspace{1.25em}
+
+%     \RaggedRight
+%     Literature review and implementation of:
+
+%     \vspace{0.35em}
+
+%     \begin{itemize}\itemsep0.35em
+%         \item Colbrook's algorithm
+%         \item multilevel methods for eigenproblems
+%         \item adaptive eigensolvers
+%     \end{itemize}
+% \end{minipage}
+% };
+
+% %------------------------------------------------
+% % Box 3
+% %------------------------------------------------
+% \node<3->[
+%     phasebox,
+% draw=RoadRed,
+% fill=RoadRed!5
+% ] (box3) at (4.25,0) {
+% \begin{minipage}[t][5.05cm][t]{3cm}
+%     \centering
+%     {\large\bfseries Long-term goal\par}
+
+%     \vspace{2.5em}
+
+%     \centering
+%     To explore an adaptive multilevel method for efficiently solving the auxiliary eigenproblems in Colbrook's algorithm.
+% \end{minipage}
+% };
+
+% %------------------------------------------------
+% % Arrows
+% %------------------------------------------------
+% % \draw<2->[arrow] (box1.east) -- (box2.west);
+% % \draw<3->[arrow] (box2.east) -- (box3.west);
+
+% \end{tikzpicture}
+% \end{center}
+
+% \end{frame}
+
+
+
+% \begin{frame}{Tentative project timeline: May--August 2026}
+% \scriptsize
+
+% \begin{columns}[T,onlytextwidth]
+% \begin{column}{0.42\textwidth}
+% \textbf{\textcolor{OxfordBlue}{Completed work}}
+% \vspace{0.04cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{1}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Learned about the spectra and pseudospectra of operators.\end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{2}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Learned about approximating spectra with the finite element method.
+% \end{minipage}
+% \par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{3}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Implemented examples using Firedrake.\end{minipage}\par\vspace{0.015cm}
+
+% \vspace{0.05cm}
+% \textbf{\textcolor{OxfordBlue}{Planned work}}
+% \vspace{0.04cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{4}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Literature review of Colbrook's algorithm, adaptive eigensolvers, and multilevel methods.\end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{5}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineModel, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Implement each method. \end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{6}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Explore the combination of Colbrook's algorithm with an adaptive eigensolve.\end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{7}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Explore the addition of a multilevel method.\end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{8}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Construct exemplary examples and results for the report.\end{minipage}\par\vspace{0.015cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{9}}\hspace{0.035cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Write the report.\end{minipage}\par\vspace{0.015cm}
+% \end{column}
+
+% \begin{column}{0.56\textwidth}
+% \begin{center}
+% \begin{tikzpicture}[
+%     x=0.41cm,
+%     y=0.43cm,
+%     font=\tiny
+% ]
+% \node[font=\scriptsize\bfseries] at (8.5,0.72) {Weekly review};
+
+% % Month and week headers
+% \foreach \x/\lab in {2.5/May,6.5/June,10.5/July,14.5/August}{
+%   \node[font=\scriptsize\bfseries, text=OxfordBlue] at (\x,0.10) {\lab};
+% }
+% \foreach \x in {4.5,8.5,12.5}{
+%   \draw[TextGrey!35] (\x,-0.20) -- (\x,-9.30);
+% }
+% \foreach \w in {1,...,16}{
+%   \node[text=TextGrey] at (\w,-0.45) {\w};
+% }
+
+% % Row numbers
+% \foreach \n/\y in {1/-1.10,2/-2.10,3/-3.10,4/-4.10,5/-5.10,6/-6.10,7/-7.10,8/-8.10,9/-9.10}{
+%   \node[anchor=east, font=\tiny, text=OxfordBlue] at (0.35,\y) {\n};
+% }
+
+% % Background grid
+% \foreach \y in {-1.10,-2.10,-3.10,-4.10,-5.10,-6.10,-7.10,-8.10,-9.10}{
+%   \foreach \w in {1,...,16}{
+%     \draw[fill=TextGrey!8, draw=TextGrey!25, line width=0.25pt]
+%       (\w-0.46,\y-0.39) rectangle (\w+0.46,\y+0.39);
+%   }
+% }
+
+% % Completed work
+% \foreach \w in {1,2,3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-1.49) rectangle (\w+0.46,-0.71);
+% }
+% \foreach \w in {2,3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-2.49) rectangle (\w+0.46,-1.71);
+% }
+% \foreach \w in {3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-3.49) rectangle (\w+0.46,-2.71);
+% }
+
+% % Literature review
+% \foreach \w in {5,6,7,8,9,10,11,12,13,14}{
+%   \draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-4.49) rectangle (\w+0.46,-3.71);
+% }
+
+% % Implement each method
+% \foreach \w in {5,6,7,8,9,10,11,12}{
+%   \draw[fill=TimelineModel, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-5.49) rectangle (\w+0.46,-4.71);
+% }
+
+% % Colbrook + adaptive eigensolve
+% \foreach \w in {7,8,9,10,11,12}{
+%   \draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-6.49) rectangle (\w+0.46,-5.71);
+% }
+
+% % Multilevel method
+% \foreach \w in {10,11,12,13,14}{
+%   \draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-7.49) rectangle (\w+0.46,-6.71);
+% }
+
+% % Examples/results
+% \foreach \w in {11,12,13,14,15,16}{
+%   \draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-8.49) rectangle (\w+0.46,-7.71);
+% }
+
+% % Write report
+% \foreach \w in {13,14,15,16}{
+%   \draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-9.49) rectangle (\w+0.46,-8.71);
+% }
+
+% \draw[OxfordBlue, thick] (0.70,-0.72) -- (16.30,-0.72);
+% \end{tikzpicture}
+% \end{center}
+% \end{column}
+% \end{columns}
+
+% % \vspace{-0.1cm}
+% % \begin{center}
+% % \textcolor{TextGrey}{\scriptsize This is a tentative plan and may be revised.}
+% % \end{center}
+
+% \note{}
+% \end{frame}
+
+
+% \begin{frame}{Project timeline: May--August 2026}
+% \scriptsize
+
+
+% %COMPLETED
+
+% \begin{columns}[T,onlytextwidth]
+% \begin{column}{0.42\textwidth}
+% \textbf{\textcolor{OxfordBlue}{Completed work}}
+% \vspace{0.04cm}
+
+% \noindent\textbf{\textcolor{OxfordBlue}{1}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Read about the spectra of operators.\end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{2}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Read about approximating spectra with the finite element method.
+% \end{minipage}
+% \par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{3}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineDone, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Implemented examples using Firedrake.\end{minipage}\par\vspace{0.015cm}
+
+% \vspace{0.05cm}
+% \textbf{\textcolor{OxfordBlue}{Planned work}}
+% \vspace{0.04cm}
+
+% % PLANNED 
+
+% % PLANNED 
+
+% \noindent\textbf{\textcolor{OxfordBlue}{4}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Literature review of Colbrook's algorithm, adaptive eigensolvers, and multilevel methods.\end{minipage}\par\vspace{0.015cm}
+% % \noindent\textbf{\textcolor{OxfordBlue}{5}}\hspace{0.07cm}
+% % \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineModel, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% % \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Implement Colbrook's algorithm.\end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{5}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineModel, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Implement each method. \end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{6}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm}Explore the combination of Colbrook's algorithm with an adaptive eigensolve.\end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{7}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Explore the addition of a multilevel method.\end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{8}}\hspace{0.07cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Construct exemplary examples and results for the report.\end{minipage}\par\vspace{0.015cm}
+% \noindent\textbf{\textcolor{OxfordBlue}{9}}\hspace{0.035cm}
+% \noindent\tikz[baseline=-0.45ex]\draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.35pt] (0,0) rectangle (0.17,0.17);
+% \hspace{0.08cm}\begin{minipage}[t]{4.45cm} Write the report.\end{minipage}\par\vspace{0.015cm}
+% \end{column}
+
+% \begin{column}{0.56\textwidth}
+% \begin{center}
+% \begin{tikzpicture}[
+%     x=0.41cm,
+%     y=0.43cm,
+%     font=\tiny
+% ]
+% \node[font=\scriptsize\bfseries] at (8.5,0.72) {Weekly review};
+
+% % Month and week headers
+% \foreach \x/\lab in {2.5/May,6.5/June,10.5/July,14.5/August}{
+%   \node[font=\scriptsize\bfseries, text=OxfordBlue] at (\x,0.10) {\lab};
+% }
+% \foreach \x in {4.5,8.5,12.5}{
+%   \draw[TextGrey!35] (\x,-0.20) -- (\x,-10.30);
+% }
+% \foreach \w in {1,...,16}{
+%   \node[text=TextGrey] at (\w,-0.45) {\w};
+% }
+
+% % Row numbers
+% \foreach \n/\y in {1/-1.10,2/-2.10,3/-3.10,4/-4.10,5/-5.10,6/-6.10,7/-7.10,8/-8.10,9/-9.10,10/-10.10}{
+%   \node[anchor=east, font=\tiny, text=OxfordBlue] at (0.35,\y) {\n};
+% }
+
+% % Background grid
+% \foreach \y in {-1.10,-2.10,-3.10,-4.10,-5.10,-6.10,-7.10,-8.10,-9.10,-10.10}{
+%   \foreach \w in {1,...,16}{
+%     \draw[fill=TextGrey!8, draw=TextGrey!25, line width=0.25pt]
+%       (\w-0.46,\y-0.39) rectangle (\w+0.46,\y+0.39);
+%   }
+% }
+
+% % Time blocks
+% \foreach \w in {1,2,3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-1.49) rectangle (\w+0.46,-0.71);
+% }
+% \foreach \w in {2,3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-2.49) rectangle (\w+0.46,-1.71);
+% }
+% \foreach \w in {3,4}{
+%   \draw[fill=TimelineDone, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-3.49) rectangle (\w+0.46,-2.71);
+% }
+% \foreach \w in {5,6,7,8,9,10,11,12,13,14}{
+%   \draw[fill=TimelineTheory, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-4.49) rectangle (\w+0.46,-3.71);
+% }
+% \foreach \w in {5,6,7,8}{
+%   \draw[fill=TimelineModel, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-5.49) rectangle (\w+0.46,-4.71);
+% }
+% \foreach \w in {7,8,9,10,11,12}{
+%   \draw[fill=TimelineModel, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-6.49) rectangle (\w+0.46,-5.71);
+% }
+% \foreach \w in {8,9,10,11,12}{
+%   \draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-7.49) rectangle (\w+0.46,-6.71);
+% }
+% \foreach \w in {9,10,11,12,13,14}{
+%   \draw[fill=TimelineVerify, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-8.49) rectangle (\w+0.46,-7.71);
+% }
+% \foreach \w in {11,12,13,14,15,16}{
+%   \draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-9.49) rectangle (\w+0.46,-8.71);
+% }
+% \foreach \w in {13,14,15,16}{
+%   \draw[fill=TimelineWrite, draw=OxfordBlue, line width=0.45pt]
+%     (\w-0.46,-10.49) rectangle (\w+0.46,-9.71);
+% }
+
+% \draw[OxfordBlue, thick] (0.70,-0.72) -- (16.30,-0.72);
+% \end{tikzpicture}
+% \end{center}
+% \end{column}
+% \end{columns}
+
+% \vspace{-0.05cm}
+% \begin{center}
+% \textcolor{TextGrey}{\scriptsize This is a tentative plan and may be revised.}
+% \end{center}
+
+
+% \note{}
+% \end{frame}
 
 
 
