@@ -80,7 +80,7 @@
 
 % \textbf{TOMORROW - Normal operators, spectra and pseudo spectra results, finish Umberto's second lecture, prep for meeting, review Matt's preliminaries.}
 
-In the following, the numbers in parentheses refer to the relevant page number in Kreyszig's functional analysis text \cite{krey}. 
+% In the following, the numbers in parentheses refer to the relevant page number in Kreyszig's functional analysis text \cite{krey}. 
 
 \section{Functional Analysis Review}
 
@@ -173,7 +173,7 @@ Often, we will make use of the Neumann series, defined in the following theorem:
 \begin{theorem}[{Neumann Series \cite[7.3-1]{krey}}]  \label{neum}
     Let $T \in B(X, X),$ where $X$ is a Banach space. If $\|T\|_{B(X, X)} < 1,$ then $(I - T)^{-1}$ exists as a bounded linear operator on the whole space $X.$ Furthermore, 
     \begin{equation}
-        (I - T)^{-1} = \sum_{j=1}^{\infty} T^j = I + T + T^2 + \dots,
+        (I - T)^{-1} = \sum_{j=0}^{\infty} T^j = I + T + T^2 + \dots,
     \end{equation}
     where the series on the right is convergent in the norm on $B(X, X).$
 \end{theorem}
@@ -197,7 +197,7 @@ Before defining the Adjoint of a linear operator, we first recall the definition
 \begin{definition}[{Dual space \cite[2.10-3]{krey}}] 
     Let $X$ be a normed space. The set of all bounded linear functionals on X is the normed space $X^*,$ referred to as the dual space of $X.$ The dual space is equipped with the following norm:
     \begin{equation}
-        \| f \| = \sup_{\substack{x \in X \\ \|x\|_X =1}} | f(x) |. 
+        \| f \|_{X^*} = \sup_{\substack{x \in X \\ \|x\|_X =1}} | f(x) |. 
     \end{equation}
 \end{definition} 
 
@@ -473,7 +473,10 @@ In this setting, the spectrum of $T$ is defined as follows
     \end{equation}
     The complement of $\sigma(T)$ is called the resolvent set, denoted $\rho(T) = \mathbb{C} \setminus \sigma(T).$
 \end{definition}
-We note that this definition of $\sigma(T)$ is stronger than the definition of $\sigma(T)$ in Definition \ref{K spectrum}. In Definition \ref{K spectrum}, $z$ is a spectral value of $T$ when either $R_T(z)$ does not exist, $R_T(z)$ is not bounded, or $D(R_T(z))$ is not dense in $H.$ However, in Defintion \ref{BI spec}, $z$ is a spectral value of $T$ if either $R_T(z)$ does not exist or $R_T(z)$ exists and is not bounded. This difference is due to our definition of bounded invertibility, which forces the inverse of $T_z$ to be defined on the full Hilbert space. Thus, when considering bounded invertibility, we assume that when $R_T(z)$ exists, $D(R_T(z)) = H.$ 
+% We note that this definition of $\sigma(T)$ is stronger than the definition of $\sigma(T)$ in Definition \ref{K spectrum}. 
+In Definition \ref{K spectrum}, $z$ is a spectral value of $T$ when either $R_T(z)$ does not exist, $R_T(z)$ is not bounded, or $D(R_T(z))$ is not dense in $H.$ However, in Defintion \ref{BI spec}, $z$ is a spectral value of $T$ if either $R_T(z)$ does not exist or $R_T(z)$ exists and is not bounded. This difference is due to our definition of bounded invertibility, which forces the inverse of $T_z$ to be defined on the full Hilbert space.
+
+% Thus, when considering bounded invertibility, we assume that when $R_T(z)$ exists, $D(R_T(z)) = H.$ 
 
 % In both cases, the resolvent set is defined as $\rho(T) = \mathbb{C} - \sigma(T).$ 
 
@@ -568,7 +571,7 @@ This is a geometric series that converges because $|z|>\|T\|.$ In particular,
 \begin{equation}
     \| R_T(z) \| \le |z|^{-1} \left(\frac{1}{1 - |z|^{-1} \|T\|}\right) = \frac{1}{|z| - \|T\|}.
 \end{equation}
-From this, we can see that when $|z| \ge \|T\| + 1,$ $\|R_T(z)\| \le 1.$ Furthermore, as $|z| \rightarrow \infty,$ $\|R_T(z)\| \rightarrow 0.$ Inside the disk, $|z| \le \|T\| + 1,$ $R_T(z)$ is analytic, and is thus continuous. Since this disk is compact, $R_T(z)$ is bounded on the disk. 
+From this, we can see that when $|z| \ge \|T\| + 1,$ $\|R_T(z)\| \le 1.$ Furthermore, as $|z| \rightarrow \infty,$ $\|R_T(z)\| \rightarrow 0.$ Inside the disk, $|z| \le \|T\| + 1,$ $R_T(z)$ is analytic, and is thus continuous. Since this disk is compact, $R_T(z)$ is bounded on the disk\footnote{I am not sure if I actually need the $+1$ here or if the Neumann series is enough (Neumann series says $R_T(z)$ is bounded on the disk $|z| > \|T\|$)}. 
 
 Now, we have that $R_T(z)$ is bounded and entire on the whole plane. Liouville's Theorem says that a bounded entire function must be constant. Thus, $R_t(z)$ must be constant. But, since $R_T(z)$ decays as $|z| \rightarrow \infty,$ this constant must be zero. This is impossible, because $R_t(z)$ is the inverse of $T_z.$ Thus, we have reached the desired contradiction and so $\sigma(T) \ne \emptyset.$
 
@@ -578,7 +581,7 @@ Now, we have that $R_T(z)$ is bounded and entire on the whole plane. Liouville's
 
 \subsection{Eigenvalues}
 
-As before, $z \in \mathbb{C}$ is an eigenvalue of $T$ if $T_z = T - zI$ is not injective, i.e., $N(T_z) \ne \{0\}.$ We use $\Gamma(T)$ to denote the set of eigenvalue of $T.$ For each $z \in \Gamma(T),$ the corresponding null space of $T_z,$ $N(T_z),$ is the eigenspace of $T$ corresponding to $z.$ Notice that $\Gamma(T)\subset \sigma(T).$ However, there may exist $z \in \sigma(T) \setminus \Gamma(T).$ For example, consider the right shift operator $T_r : l^2 \rightarrow l^2$ that maps $(u_1, u_2, \dots)$ to $(0, u_1, u2, \dots).$ The only possible eigenvector of $T_r$ is the zero vector. Thus, $\Gamma(T_r) = \emptyset.$ However, since $T_r$ is a bounded operator, $\sigma(T_r)$ is nonempty\footnote{I have omitted a discussion of the ascent of a nonzero eigenvalue of a compact operator $T.$ This can be found in my written notes.}.
+As before, $z \in \mathbb{C}$ is an eigenvalue of $T$ if $T_z = T - zI$ is not injective, i.e., $N(T_z) \ne \{0\}.$ We use $\Gamma(T)$ to denote the set of eigenvalues of $T.$ For each $z \in \Gamma(T),$ the corresponding null space of $T_z,$ $N(T_z),$ is the eigenspace of $T$ corresponding to $z.$ Notice that $\Gamma(T)\subset \sigma(T).$ However, there may exist $z \in \sigma(T) \setminus \Gamma(T).$ For example, consider the right shift operator $T_r : l^2 \rightarrow l^2$ that maps $(u_1, u_2, \dots)$ to $(0, u_1, u_2, \dots).$ The only possible eigenvector of $T_r$ is the zero vector. Thus, $\Gamma(T_r) = \emptyset.$ However, since $T_r$ is a bounded operator, $\sigma(T_r)$ is nonempty\footnote{I have omitted a discussion of the ascent of a nonzero eigenvalue of a compact operator $T.$ This can be found in my written notes.}.
 
 \subsection{The Norm of the Resolvent}
 
@@ -1044,6 +1047,27 @@ As expected, we can use the $\epsilon$-pseudospectrum to define $\epsilon$-eigen
 \end{definition}
 
 When $z$ is an eigenvalue of $T$ then $\|T_z \, x \| = 0 < \epsilon.$ Thus, $\Gamma(T) \subset \Gamma_{\epsilon}(T).$ Furthermore, the third definition of $\sigma_{\epsilon}(T)$ in Definition \ref{pseudo def} shows that every $\epsilon$-eigenvalue of $T$ is in $\sigma_{\epsilon}(T),$ Therefore, $\Gamma_{\epsilon}(T) \subset \sigma_{\epsilon}(T).$
+
+
+To conclude our introduction to pseudospectra, we state the following result for the spectra and pseudospectra of adjoints:
+\begin{theorem}[{Spectra of the Adjoint \cite[Theorem 4.4, page 581, respectively]{Nick, Matt}}]
+    Let $A$ be a closed and densely defined operator on the Banach space $X.$  Then, for any \(z \in \mathbb C\), and \(\varepsilon > 0\), we have
+\[
+\left\|(\overline{z}-A^*)^{-1}\right\|
+=
+\left\|(z-A)^{-1}\right\|,
+\qquad
+\sigma(A^*)=\overline{\sigma(A)},
+\qquad
+\sigma_{\varepsilon}(A^*)=\overline{\sigma_{\varepsilon}(A)}.
+\]
+Moreover, suppose \(A\) has an \(\varepsilon\)-pseudoeigenvector
+\(u\in\mathcal D(A)\) corresponding to the \(\varepsilon\)-pseudoeigenvalue \(z\).
+If \(z\notin\sigma(A)\), then \(A^*\) has an \(\varepsilon\)-pseudoeigenvector
+\(f\in\mathcal D(A^*)\) corresponding to the \(\varepsilon\)-pseudoeigenvalue
+\(\overline{z}\).
+\end{theorem}
+
 
 
 
