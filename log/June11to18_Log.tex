@@ -1,0 +1,130 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs from June $11^{\text{nd}}$ to June $18^{\text{th}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting June 11}
+
+\subsection{Summary of last week's work:}
+
+
+
+
+\begin{enumerate}
+    \item For the first half of last week, I was working on the presentation and practicing it.
+    \item Then, I finished up some Boffi typed notes and transitioned to the first chapter of Matt's text.
+\end{enumerate}
+
+
+
+\subsection{Meeting Notes}
+
+\begin{itemize}
+   \item Maybe some of my typed up notes are over the top. Prioritize learning rather than perfectly typed notes. 
+   \item Chatted about the Maxwell eigenproblem and edge elements. Umberto came to explainas well. He said it has to do with edge elements providing the needed discrete compactness. To learn more, see his Cambridge slides \href{https://www.uzerbinati.eu/assets/slides/cambridge.pdf}{here} or my handwritten notes on the discussion.
+   \item Asked about essential spectra. Patrick suggested I ask Matt about it. 
+   \item Really start to think about the transition from theory to computation. Get through Matt's chapter three and implement some examples. Start with Maxwell, in which a coarse discretization gives poor bounds. Eventually, we will estimate the error in this bound and decide whether to use an adaptive eigensolve. 
+   \item The pull request for the adaptive eigensolver is in the process but slow. We will work with a branch that has a goal-adapted eigensolver. 
+   \item For my meeting with Matt, explain I am new to this topic (a couple of weeks of background) and what we are doing. Bring forth any questions (such as essential spectra). Maybe ask him to go through his talk on it with me. 
+   \item Boffi here next week. Email Kaibo to arrange a meeting.
+   \item Meeting next week is Thursday at 10 in person. 
+\end{itemize}
+
+
+\subsection{This Week's Plan}
+
+\begin{enumerate}
+
+    \item Go through Chapter 3 (Friday and early next week).
+    \item Implement some examples (Tuesday and Wednesday).
+    \item Transition to chapters 1 and 3 in Matt's text. 
+    
+
+\end{enumerate}
+
+
+\section{Daily Logs}
+
+\textbf{Thursday}
+
+\begin{enumerate}
+    \item Meeting with Patrick (notes above).
+    \item Matt's talk.
+    \item Meeting with Matt.
+    \item In between meetings and talks, I prepped for the meetings and began working through Ch.3 in Matt's text.
+\end{enumerate}
+
+\textbf{Friday}
+
+\begin{enumerate}
+    \item Worked through Ch.3 of Matt's text. Did not get too far - only got up to \texttt{CompSpec}.
+\end{enumerate}
+
+\textbf{Monday}
+
+\begin{enumerate}
+    \item Continued to work through Ch.3. Got to the end of Operator Folding.
+\end{enumerate}
+
+\textbf{Tuesday}
+
+\begin{enumerate}
+    \item Made some summary notes on key points in Ch.3.
+    \item Began to analyze the Maxwell example and Patrick's codes for Matt's algorithm.
+\end{enumerate}
+
+\textbf{Wednesday}
+
+\begin{enumerate}
+    \item Worked out how I was going to attempt the minimization for the Maxwell problem (self-adjoint).
+    \item Attempted a first implementation -- realized that I had Firedrake download issues (complex vs. noncomplex mode). Attempted to overcome these issues. So far, I think I have been succesful!
+    \item Played around with the code, output, etc. Attempted to fix any bugs that arose. 
+    \item Updated the repo and re-tested. 
+\end{enumerate}
+
+\end{document}
