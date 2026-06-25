@@ -14,7 +14,8 @@ import os
 
 
 # Set a triangular mesh like in Matt's example (Fig 3.22)
-N = 128
+N = 32
+
 mesh = SquareMesh(N, N, pi, quadrilateral=False) 
 
 # Decide if you want edge elements or Lagrange elements to discretize the space for E
