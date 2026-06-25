@@ -87,7 +87,7 @@ a = (
       inner(rot_s(E), rot_s(F))*dx
     + inner(rot_v(H), rot_v(G))*dx
       # -2 z A terms
-    -u 2 * z * inner(j*rot_v(H), F)*dx
+    - 2 * z * inner(j*rot_v(H), F)*dx
     + 2 * z * inner(j*rot_s(E), G)*dx
       # |z|^2 M terms
     + conj(z) * z * inner(E, F)*dx
