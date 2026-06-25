@@ -1,0 +1,127 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs from June $18^{\text{th}}$ to June $25^{\text{th}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting June 18}
+
+
+% \subsection{Summary of last week's work:}
+
+
+
+
+% \begin{enumerate}
+% \end{enumerate}
+
+
+
+\subsection{Meeting Notes}
+
+\begin{itemize}
+    \item Could reach out to Matt to ask for a reference/proof for $\sigma_{\text{inf}}(B) = \sqrt{\sigma_{\text{inf}}(B^*B)}$ and for the Rayleigh quotient results in infinite dimensions. These results are both readily available in finite dimensions.
+    \item Need the continuous basis to be a core - these is most likely a property of the Hilbert space (dont worry about it). 
+    \item Do not worry to much about SCI. In general, we need three limits and in some cases we can get down to one.
+    \item Focus on PseudoSpec instead of the minimization. For a general implementation later, we will force the user to input a $g$ sequence instead of having to choose it ourselves. 
+    \item The spectral discretization works for the primal Maxwell problem (not mixed) because you have just one element so there is no continuity to enforce. 
+    \item Next, we want to use DWR to improve $\Phi_n(z, A).$
+    \item Next meeting is Thursday June 25 at 10 am.
+\end{itemize}
+
+
+
+\subsection{This Week's Plan}
+
+\begin{enumerate}
+    \item Work through some DWR literature in general and for Eigenproblems.
+    \item Use DWR to compute an error estimare for the computed eigenvalue for the folded operator. This should allow us to attain a better $\Phi_n(z, A).$ Plot this to see!
+
+\end{enumerate}
+
+
+\section{Daily Logs}
+
+\textbf{Thursday}
+
+\begin{enumerate}
+    \item Meeting with Patrick (notes above).
+    \item Prepped for Boffi meeting.
+    \item Boffi talk.
+    \item More Boffi prep and meeting.
+\end{enumerate}
+
+\textbf{Friday}
+
+\begin{enumerate}
+    \item Started going through Ranacher text. Got through Ch.1 and most of Ch.2 My family arrived today for a visit!
+\end{enumerate}
+
+\textbf{Monday}
+
+\begin{enumerate}
+    \item Worked through bits of Chapter 2 and 3.
+    \item Started Ch.4.
+\end{enumerate}
+
+\textbf{Tuesday}
+
+\begin{enumerate}
+    \item Worked through Ch.4 and Ch.6.
+    \item Started Ch.7 (eigenvalue problems).
+\end{enumerate}
+
+\textbf{Wednesday}
+
+\begin{enumerate}
+
+\item Finished relevant parts of Ch.7 (7.1)
+\item Attempted to `translate' the method of 7.1 to the Maxwell folded operator eigenvalue problem in Matt's algorithm (see notes).
+\item Attempted an implementation - lots of questions and issues arose!
+\end{enumerate}
+
+\end{document}
