@@ -195,6 +195,8 @@ for curr_z in grid:
 
     z.assign(curr_z) # set z as current grid point
 
+
+    print(BLUE % f"FOR GRID POINT z = {curr_z}:")
     print(BLUE % f"Primal Solve:")
 
 
