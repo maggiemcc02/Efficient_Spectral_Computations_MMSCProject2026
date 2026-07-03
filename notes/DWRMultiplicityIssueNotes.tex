@@ -1,0 +1,301 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx} % Required for inserting images
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% Define environments
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{definition}{Definition}
+% \newtheorem{lemma}{Lemma}
+% \newtheorem{corollary}{Corollary}
+
+
+
+\title{Notes on Applying DWR to Matt's Folded Operator Problem for Maxwell }
+\author{Maggie McCarthy}
+\date{June 2026}
+
+
+\begin{document}
+
+\maketitle
+
+\section{DWR for Eigenproblems; The Question of Multiplicity.}
+
+Here, I state the relevant results and discussion in Rannacher and Bangerth's text, \textit{Adaptive Finite Element Methods for Differential Equations}. 
+
+
+In Chapter 6, Rannacher and Bangerth consider the general nonlinear problem:
+\begin{equation}\label{A}
+    A(u)(\psi) = 0 \qquad \forall \psi \in V,
+\end{equation}
+and its Galerkin approximation
+\begin{equation}\label{Ah}
+    A(u_h)(\psi_h) = 0 \qquad \forall \psi_h \in V_h \subset V.
+\end{equation}
+The aim is to estimate the error $J(u)-J(u_h)$, where $J(\cdot)$ is some quantity of interest that can be computed from the solution. For example, $J(u_h)$ may be a computed eigenvalue or eigenfunction.
+
+To estimate the error $J(u)-J(u_h),$ they employ the Euler-Lagrange method of constrained optimization (page 73). In doing so, the resulting error estimate is given in the following result: 
+\begin{proposition}[Proposition 6.2 in Rannacher and Bangerth]\label{6.2}
+For any solution of equations \eqref{A} and \eqref{Ah}, we have the error representation
+\[
+J(u)-J(u_h)
+=
+\frac{1}{2}\rho(u_h)(z-\psi_h)
++
+\frac{1}{2}\rho^{*}(u_h,z_h)(u-\varphi_h)
++
+\mathcal{R}^{(3)}_h,
+\]
+with arbitrary \(\varphi_h,\psi_h\in V_h\), and the primal and dual residuals
+\[
+\rho(u_h)(\cdot):=-\mathcal{A}(u_h)(\cdot),
+\]
+\[
+\rho^{*}(u_h,z_h)(\cdot)
+:=
+J'(u_h)(\cdot)-\mathcal{A}'(u_h)(\cdot,z_h).
+\]
+The remainder term \(\mathcal{R}^{(3)}_h\) is cubic in the primal and dual errors
+\[
+e:=u-u_h,
+\qquad
+e^{*}:=z-z_h,
+\]
+and is given by
+\begin{equation}
+\begin{aligned}
+\mathcal{R}^{(3)}_h
+&=
+\frac{1}{2}
+\int_0^1
+\Big\{
+J'''(u_h+se)(e,e,e)
+\\ &-
+\mathcal{A}'''(u_h+se)(e,e,e,z_h+se^{*})
+\\ &- 
+3\mathcal{A}''(u_h+se)(e,e,e^{*})
+\Big\}
+s(s-1)\,ds.
+\end{aligned}
+\end{equation}
+\end{proposition}
+Following the proof of this result, Rannacher and Bangerth make two important remarks:
+
+``\textbf{Remark 6.3.}
+The derivation of the error representations $\dots$ does not require the uniqueness of solutions; this is important, for example, for the application to eigenvalue problems. In cases with non-unique solutions, the a priori assumption $x_h \to x$ ($h \to 0$) makes the result meaningful as then the remainder term can be assumed to be small."
+
+``\textbf{Remark 6.4.}
+The actual evaluation of the error identity requires guesses for the primal and dual solutions $u$ and $z$ which are usually computed from the Galerkin approximations $u_h$ and $z_h$ by some post-processing as described in Section 4.1."
+
+% These remarks seem to indicate that the error representation can be applied to the computation of eigenvalues, assuming that we know or can compute some approximation of the eigenfunction $\mathbf{x}$ that $\mathbf{x_h}$ approximates. However, some key questions remain: How do we handle multiplicity? How do we compute an approximation of the eigenfunction $\mathbf{x}$ that is approximated by $\mathbf{x_h}$?
+
+These remarks seem to indicate that the error representation can be applied to eigenvalue computations, provided that we know, or can compute, a sufficiently accurate approximation of the exact eigenfunction $x$ corresponding to the discrete eigenfunction $x_h$. However, some key questions remain: How do we handle the case in which the eigenvalue has multiplicity greater than one? Moreover, in that setting, how do we compute a higher-order approximation of the particular exact eigenfunction $x$ that is being approximated by $x_h$?
+
+In Chapter 7, the results of Chapter 6 are applied to eigenvalue problems. In particular, Rannacher and Bangerth consider the following eigenproblem: find a $u \in V$ and a $\lambda \in \mathbb{C}$ such that
+\begin{equation}
+    Au = \lambda M u,
+\end{equation}
+where $A$ and $M$ are linear operators in the complex Hilbert space $V.$ The corresponding variational formulation is 
+\begin{equation} \label{primal}
+    a(u, \psi) = \lambda m(u, \psi) \qquad \forall \psi \in V,
+\end{equation}
+where they  assume that $m(u, u)=1.$ The corresponding adjoint problem is to find the eigenpair $U^* = \{u^*, \lambda^*\}$ such that
+\begin{equation} \label{dual}
+   a(\phi, u^*) = \overline \lambda^* m(\phi, u^*) \qquad \forall \phi \in V, 
+\end{equation}
+where they enforce the normalization $m(u, u^*) = 1.$
+To apply Proposition \ref{6.2}, they define 
+\begin{equation}
+    A(U)(\Psi) = \lambda m(u, \psi) - a(u, \psi) + \overline \nu \{m(u, u) - 1\},
+\end{equation}
+where $U = \{u, \lambda\} \in V \times \mathbb{C}$ and $\Psi = \{\psi, \nu\} \in  V \times \mathbb{C},$ and the corresponding Galerkin approximation
+\begin{equation}
+    A(U_h)(\Psi_h) = \lambda_h m(u_h, \psi_h) - a(u_h, \psi_h) + \overline \nu_h \{m(u_h, u_h) - 1\},
+\end{equation}
+where $V_h \subset V,$ $U_h = \{u_h, \lambda_h\} \in V_h \times \mathbb{C},$ and $\Psi_h = \{\psi_h, \nu_h\} \in  V_h \times \mathbb{C}.$
+Furthermore, they consider the output functional $J(\cdot)$ such that
+\begin{equation}
+    J(U) = \lambda m(u, u) = \lambda.
+\end{equation}
+By applying Proposition \ref{6.2}, they deduce the following result:
+
+
+\begin{proposition}[Proposition 7.1 in Rannacher and Bangerth]
+With the primal and dual eigenvalue residuals
+\begin{equation}
+\rho(u_h,\lambda_h)(\cdot)
+:= a(u_h,\cdot) - \lambda_h m(u_h,\cdot),
+\end{equation} 
+\begin{equation}
+\rho^*(u_h^*,\lambda_h^*)(\cdot)
+:= a(\cdot,u_h^*) - \overline{\lambda_h^*} m(\cdot,u_h^*),
+\end{equation}
+we have the error representation
+\begin{equation}\label{err}
+\lambda - \lambda_h
+=
+\frac{1}{2}\rho(u_h,\lambda_h)(u^*-\psi_h)
++
+\frac{1}{2}\rho^*(u_h^*,\lambda_h^*)(u-\varphi_h)
++
+\mathcal{R}_h,
+\end{equation}
+for arbitrary $\psi_h,\varphi_h\in V_h$, with the cubic remainder term
+\begin{equation}
+\mathcal{R}_h
+=
+\frac{1}{2}(\lambda-\lambda_h)
+m(u-u_h,u^*-u_h^*).
+\end{equation}
+\end{proposition}
+Following the proof of this result, Rannacher and Bangerth claim that the error representation \eqref{err} holds true without any assumption on the
+multiplicity of the eigenvalue or its defect (Remark 7.2, page 85). In the case of a simple eigenvalue, the procedure is clear: one could solve the eigenproblem in an enriched space, normalize the resulting eigenfunction, and then align its sign with $u_h.$ If the eigenvalue of interest has multiplicity greater than one, the computed eigenfunction $u_h$ may be any linear combination of the basis functions for the corresponding eigenspace. Thus, it is not clear how to compute a higher-order approximation to represent the exact eigenfunction $u$ that corresponds to the computed eigenfunction $u_h.$ 
+
+
+% However, I believe that there are still some practical questions to be addressed.
+
+% However, in the present setting, the numerical results suggest that the smallest eigenvalue of the folded operator has multiplicity greater than one. Thus, we may need to reconsider how the enriched approximation of $u$ should be computed for the construction of \eqref{err}. 
+
+
+
+
+% \begin{itemize}
+%     \item proposition 7.1
+%     \item The remark about multiplicity
+%     \item How will we handle multiplicity? How can compute an enriched approximation of u that corresponds to uh? Will we have to deal with eigenspaces? Or somehow project uh into a richer eigenspace?
+%     \item Project vs Interpolate
+%     \item The issue in computing u+ - Ih u+ (need to be in same space - Vh or enriched?). 
+%     \item Where can I find the DWR Firedrake branch - what did they do about multiplicity?
+% \end{itemize}
+
+\section{Applying DWR to Matt's Algorithm for the 2D Maxwell Problem}
+
+
+In applying Matt's algorithm for approximating the spectrum of a closed and densely defined operator $A$, we compute the smallest spectral value of the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ 
+
+For the two-dimensional Maxwell problem, $A$ is self-adjoint. Thus, the two folded operators coincide and we seek the smallest spectral value of $(A-zI)^*(A-zI).$ In particular, after discretization via the finite element method, we seek the Galerkin approximation $\{u_h, \lambda_h\} \in V_h \times \mathbb{R}$ that satisfies
+\begin{equation} \label{max}
+    \langle (A-zI) u_h, (A-zI) \psi_h \rangle = \lambda_h \langle u_h, \psi_h \rangle \qquad \forall \psi_h \in V_h,
+\end{equation}
+where $\langle \cdot, \cdot \rangle$ denotes the $L^2(\Omega)$ inner product, $\Omega = (0, \pi)^2,$ and $V_h$ is a finite-dimensional subspace of $V = H_0(\text{rot}; \Omega) \times H(\text{\textbf{rot}};\Omega).$
+
+In the notation of \eqref{err}, we take $a(\cdot, \cdot) = \langle (A-zI) \cdot, (A-zI) \cdot \rangle$ and $m(\cdot, \cdot) = \langle\cdot, \cdot \rangle.$ Since $A$ is self adjoint, $a(\cdot, \cdot)$ is symmetric and the dual problem \eqref{dual} coincides with the primal problem \eqref{primal}. Thus, omitting the cubic remainder term in \eqref{err}, the error representation of interest is as follows. 
+\begin{equation} \label{max err}
+    \lambda- \lambda_h = \rho(u_h, \lambda_h)(u - \psi_h) = \langle (A-zI)u_h, (A-zI)(u - \psi_h)\rangle - \lambda_h \langle u_h, u - \psi_h \rangle. 
+\end{equation}
+
+To implement this in Firedrake, we 
+\begin{enumerate}
+    \item Approximate the smallest $\lambda_h$ and a corresponding $u_h$ that solve \eqref{max}.
+    \item Compute a better approximation $u_h^+$ of the eigenfunction $u$ associated with $u_h$ in some enriched space $V_h^+ \subset V$ (Section 4.1, page 43, of Rannacher and Bangerth). 
+    \item Assemble the following error representation:
+    \begin{equation}
+        \lambda - \lambda_h = \langle (A-zI)u_h, (A-zI)(u_h^+ - I_h u_h^+)\rangle - \lambda_h \langle u_h, u_h^+ - I_h u_h^+ \rangle, 
+    \end{equation}
+    where $I_h$ interpolates $u_h^+$ onto $V_h.$
+\end{enumerate}
+
+The issue is in the implementation of Step 2. The results of my current implementation suggest that the smallest $\lambda_h$ has multiplicity greater than one. Thus, the associated $u_h$ can be any linear combination of the basis functions for the corresponding eigenspace. In this case, we need to decide how we will compute a $u_h^+$ that corresponds to the eigenfunction that $u_h$ approximates. I am not sure what the best approach is for computing the correct $u_h^+.$ Is there a way to guarantee that the enriched solve converges to the enriched version of $u_h$? Can we somehow switch from a consideration of eigenfunctions to eigenspaces in \eqref{max err}?
+
+\section{Follow-Up Questions}
+
+Here I list some other questions that I have:
+
+\begin{enumerate}
+    \item I think it makes sense to assemble the error representation \eqref{max err} in the enriched space. To do this using Firedrake, do I need to `lift' $u_h$ and $I_h u_h^+$ to the enriched space (via interpolation)?
+    \item How is multiplicity accounted for in the goal-based adaptive eigensolver in the branch of Firedrake (which I still need to find and explore)? 
+    \item With SLEPc default tolerance, an eigensolve stagnates and won't converge near \texttt{1e-8}. To overcome this issue, I set \texttt{eps\_tol} to \texttt{1e-8}. In doing so, have I glazed over an underlying issue? 
+\end{enumerate}
+
+% Recall the mixed formulation of the Maxwell problem posed on $\Omega = (0, \pi)^2,$ in which we  
+%  seek $\omega \in \mathbb{R} \setminus \{0\}$ and nonzero $(\mathbf{E}, H) \in H_0(\text{rot}; \Omega) \times H(\text{\textbf{rot}}; \Omega)$ such that 
+% \begin{equation}
+%     \begin{aligned}
+% \operatorname{rot} \textbf{E} &= i \, \omega \, H
+% && \text{in } \Omega,\\
+% \operatorname{\textbf{rot}} H &= -i\, \omega \,  \textbf{E}
+% && \text{in } \Omega,\\
+% \textbf{E}\cdot \textbf{t} &= 0,
+% && \text{on } \partial\Omega,
+% \end{aligned}
+% \end{equation}
+% where 
+% \begin{equation}
+%     \operatorname{rot} \mathbf{E}
+% =
+% \frac{\partial E_2}{\partial x}
+% -
+% \frac{\partial E_1}{\partial y},
+% \qquad
+% \operatorname{\textbf{rot}} H
+% =
+% \begin{pmatrix}
+% \frac{\partial H}{\partial y}\\
+% -\frac{\partial H}{\partial x}
+% \end{pmatrix},
+% \end{equation}
+% and $\mathbf{t}$ is the unit tangent to $\partial \Omega.$ Here, $H_0(\text{rot}; \Omega)$ is the space of functions in $(L^2(\Omega))^2$ who have vanishing tangential trace on $\partial \Omega$ and whose $\text{rot}$ is in $L^2(\Omega).$ Similarly, $H(\text{\textbf{rot}}; \Omega)$ is the space of functions in $L^2(\Omega)$ with $\text{\textbf{rot}}$ in $(L^2(\Omega))^2.$ 
+
+
+\end{document}
