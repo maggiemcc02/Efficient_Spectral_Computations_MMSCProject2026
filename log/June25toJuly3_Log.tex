@@ -1,0 +1,209 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs from June $25^{\text{th}}$ to July $3^{\text{rd}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting June 25}
+
+
+% \subsection{Summary of last week's work:}
+
+
+
+
+% \begin{enumerate}
+% \end{enumerate}
+
+
+
+\subsection{Meeting Notes}
+
+\begin{itemize}
+    \item Met with Umberto and Patrick. The meeting got cut off a bit too soon.
+    \item Discussed my current implementation of DWR for the folded operator eigenproblem in Matt's algorithm. It soon became clear that there was more work to be done in the treatment of the eigenfunctions for the DWR estimate. In particular, the DWR estimate did not seem to work for for the Maxwell problem near $z=2$ and $z=4.$ These are eigenvalues of the Maxwell operator with multiplicity. This observation sparked an exploration of how to handle multiplicity in a DWR estimate.
+    \item Patrick wanted me to add in code to save the computed eigenfunctions to be viewed in Paraview. 
+    \item There is a goal adapted eigensolve Firedrake branch (Joe Flood's thesis). I could compare my code to that implementation.
+    \item I should explore what Rannacher says about multiplicity. 
+\end{itemize}
+
+
+
+\subsection{This Week's Plan}
+
+\begin{enumerate}
+    \item A bit up in the air - I need to explore and hopefully remedy the issue of applying DWR to a non-simple eigenvalue.
+\end{enumerate}
+
+
+\section{Daily Logs}
+
+\textbf{Thursday}
+
+\begin{enumerate}
+    \item Meeting with Patrick and Umberto (notes above).
+    \item Post-meeting notes.
+    \item Made the desired code changes. 
+    \item Experimented with the matching of the first lower-degree eigenfunction and the first enriched eigenfunction. Aligning signs seemed to make a big difference (false result - see next).
+    \item Printed out approximately 10 discrete eigenvalues in the lower-degree and enriched space. These results seem to indicate that for some (maybe even all) values of $z,$ the smallest eigenvalue of the folded operator may have multiplicity greater than one. This is an issue - how does DWR handle multiplicity?
+    \item Went back to the Rannacher and Bangerth paper to see what they say about multiplicity. I started to write up a note about my observations and questions to send to Patrick.
+\end{enumerate}
+
+\textbf{Friday}
+
+\begin{enumerate}
+    \item Continued my exploration of the handling of multiplicity in DWR by analyzing the Rannacher and Bangerth text.
+
+    \item I completed my note for Patrick (and for Umberto). While I waited for a repsonse, I started reading about Arnoldi, Lanczos, and Kyrlov Schur in SLEPSc. From this, I learned that ...
+    
+    \item The key observations and questions in my note for Patrick were:
+
+    \begin{enumerate}
+
+    \item \textbf{The DWR error representation can be applied to eigenvalue computations, provided that we know, or can compute, a sufficiently accurate approximation of the exact eigenfunction $x$ corresponding to the discrete eigenfunction $x_h$. However, some key questions remain: How do we handle the case in which the eigenvalue has multiplicity greater than one? Moreover, in that setting, how do we compute a higher-order approximation of the particular exact eigenfunction $u$ that is being approximated by $u_h$?}
+    
+    \item \textbf{The results of my current implementation suggest that the smallest $\lambda_h$ has multiplicity greater than one. Thus, the associated $u_h$ can be any linear combination of the basis functions for the corresponding eigenspace. In this case, we need to decide how we will compute a $u_h^+$ that corresponds to the eigenfunction that $u_h$ approximates. I am not sure what the best approach is for computing the correct $u_h^+.$ Is there a way to guarantee that the enriched solve converges to the enriched version of $u_h$? Can we somehow switch from a consideration of eigenfunctions to eigenspaces in the error estimate?}
+
+    \item I think it makes sense to assemble the error representation in the enriched space. To do this using Firedrake, do I need to `lift' $u_h$ and $I_h u_h^+$ to the enriched space (via interpolation)?
+    
+    \item How is multiplicity accounted for in the goal-based adaptive eigensolver in the branch of Firedrake (which I still need to find and explore)? 
+    
+    \item With SLEPc default tolerance, an eigensolve stagnates and won't converge near \texttt{1e-8}. To overcome this issue, I set \texttt{eps\_tol} to \texttt{1e-8}. In doing so, have I glazed over an underlying issue? 
+    \end{enumerate}
+
+    \item Patrick's answers (via slack) were:
+    \begin{enumerate}
+        \item I agree this is a practical implementation problem. The DWR theory doesn't require the eigenvalues to be simple, but the formula in practice does! Your thought that we should switch from eigenfunctions to eigenspaces is really interesting. Can we express the DWR estimate in terms of e.g. projections onto eigenspaces? Or what other kinds of tools representing the eigenspace could the error estimate be expressed in terms of?
+
+        \item Joseph Flood's thesis considers the Maxwell eigenvalue problem with multiple eigenvalues. He has a remark about how he dealt with it on page 47. He is on this Slack and still replies. Shall I ask him to give you access to his git repository? His code survives \href{https://github.com/firedrakeproject/firedrake/blob/pefarrell/goal-adaptive-eigensolver/firedrake/adaptive_variational_solver.py }{here} (GoalAdaptiveEigensolver). Another option: can we just solve the primal problem only at an enriched degree (getting whatever eigenfunction we get) and then interpolate it into the lower-degree space, not solving the lower-degree primal problem? Then we don't have to match them? This will affect the localization for the adaptive process, but I don't think it should affect the global error estimate for the eigenvalue (this no longer seems like the most natural approach).
+
+        \item Answer to (c): If you have a UFL expression, it can depend on functions from different function spaces/degrees, no problem. No manual lifting or interpolation required. This response made me realize that the issue was that I was assigning $u_h^+ - I_h u_h^+$ to a function instead of interpolating it -- that is where the error was coming from. I did not need to lift Ih $u_h^+$ back to the enriched space. 
+
+        \item Answer to (d): Maybe there is something in Joe's thesis? That is where the Firedrake code comes from.
+        
+        \item Answer to (e): I expect the reason why SLEPc is stagnating is the same: the convergence of iterative methods like Krylov-Schur depends on the gap between the eigenvalue you're approximating and its nearest neighbour, and that is problematic for multiple eigenvalues. It may be the case that other eigenvalue algorithms (like contour integral methods?) might not struggle in the same way in this setting
+    \end{enumerate}
+\end{enumerate}
+
+\textbf{Monday}
+
+\begin{enumerate}
+    \item Went through Joe's thesis to see how he handles multiplicity in the Maxwell example. He claims the following:
+    \begin{itshape}A proper treatment of eigenvalues of multiplicity $> 1$ is a straightforward extension to Algorithm 4. Firstly, the computed eigenbasis for the enriched eigenspace must be m-orthonormalized against the computed eigenbasis for the finite element solution. This will ensure that $e$ (or $e^*$ if nonsymmetric is used) is computed correctly. Secondly, we compute error indicators for the entire eigenspace, instead of flip-flopping between whatever basis function comes first at each iteration. The error indicators can then be combined on each cell as
+    $$ \eta_K^2 = \sum_j^d \eta_{K, j}^2$$
+    \textit{where $d$ is the dimension of the eigenspace (and the multiplicity of the eigenvalue). This combined estimator remains consistent regardless of the basis returned by SLEPc.}\end{itshape}
+    \item It is not clear from this how he is able to determine the multiplicity of the discrete eigenvalues (he probably already knows this for Maxwell). It is also not clear what the m-orthogonalization procedure is. 
+    \item Joe seems to reference the Rannacher and Becker text often. I am going to carve out some time to read parts of that text (at some point).
+    \item I spent the rest of the day exploring/trying to create a procedure for aligning the eigenbasis in the lower-degree space with the eigenbasis in the enriched space. Assuming that we have two bases which are m-orthogonormal, the furthest I got was that maybe the Orthogonal Procrustes Problem would help us with the alignment. This problem is described in \href{https://pages.stat.wisc.edu/~bwu62/771/golub1996.pdf}{Golub's Matrix Computation text} on page 601 (Section 12.4.1). To apply it in our setting, the idea seems to be as follows:
+    the idea seems to be as follows (I am still working this out)(See my handwritten notes for an indepth explanation / working proof):
+
+    \begin{enumerate}
+        \item Let $\lambda$ be an eigenvalue of multiplicity $k,$ approximated by the discrete eigenvalues $\lambda_h^1, \dots, \lambda_h^k$. Consider the two computed eigenbases $Q$ and $W$ where $Q$ holds the computed lower-degree eigenbasis, say $u_h^1, \dots, u_h^k$, and $W$ holds the computed enriched eigenbasis, say $w_h^1, \dots, w_h^k.$ We assume (or do computations to ensure) that each basis is m-orthonormal. (where the eigenproblem is $a(u, v) = \lambda m(u, v)$).
+        \item Compute the overlap matrix $C$, where $C_{i,j} = m(u_h^i, w_h^j)$. Ideally, we would like $C = I.$
+        \item We seek a unitary $R$ such that $WR$ is aligned with $Q$ and the corresponding overlap matrix, $C \overline R$ is close to the identity (where the presence of the conjugate depends on the inner product convention). 
+        \item Setting $X = \overline R$ we solve $\min_{X^*X = I} \| CX - I \|_{F}$ which has solution $X = VU^*$, where $C = U \Sigma V^*$ is the SVD of $C.$
+    \end{enumerate}
+
+    \item To numerically test for multiplicity, I tried using a tolerance test, i.e., $|\lambda_h^{i}-\lambda_h^{j}| < TOL,$ which seems dangerous and does not seem to give the same results at the lower-degree and enriched levels. Patrick confirmed this (on Tuesday) by saying that he thinks ```Krylov-Schur methods inherently will struggle to distinguish multiple eigenvalues from tightly clustered individual eigenvalues. Using tolerances will always be brittle and undesirable."
+    \item I also tried a gap calculation (guided by Chat) in which you take all discrete eigenvalues whose distance to its next neighbour is less than some value times the distance to the first eigenvalue. This again was unreliable and produced different multiplicities at the lower-degree and enriched levels. 
+    \item On Tuesday, Patrick claimed that ``there are other methods that can tell them apart. The ones I know are FEAST/CISS (which involve computing contour integrals in the complex plane---you have to know where the eigenvalues are, roughly), and I believe LOBPCG also does it (but I'm not sure---we should check!)."
+
+    
+\end{enumerate}
+
+\textbf{Tuesday}
+
+\begin{enumerate}
+    \item Spent more time understanding this Procrustes approach and finding the relevent reference (Golub). This was the best I could find (so far) for how to align two bases. 
+    \item Throughout all of this work,\textbf{ there is an underlying issue. How do we decide which nearby discrete eigenvalues should be treated as belonging to a cluster of eigenvalues or as an eigenvalue of true multiplicity greater than one?} 
+    \item I wrote out my open questions on the board. The first step is figuring out how to distinguish multiplicity from eigenvalue clusters. The second step is aligning the two m-orthonormal eigenbases. Maybe this is with the Procrustes procedure, or maybe there is a better approach. The third step is computing the DWR estimate for each eigenbasis pair. How would be do this? Would be build off of what Joe has? Use an average? Compute one estimate using the whole eigenbasis? Each of these steps is an unanswered question. 
+    \item I relayed these questions to Patrick. He followed up with the following:
+    \begin{itemize}
+
+        \item Good question about how to treat the eigenvalue across levels. My first thought would have been to use the eigenvalue from the finer level, but that doesn't seem that natural either.
+
+        \item I bumped into Wolfgang Bangerth (co-author of that book) at the conference I'm attending and I asked him about DWR for multiple eigenvalues. He didn't remember anything useful and didn't have any references that treated this case, alas. (But I tried!)
+        
+        \item I don't know whether he (Joe) coded it or tried it or whether it was ever implemented, unfortunately. I think we are reaching the limits of what is already known. We could ask him on slack (you could make a chat with him and me and ask?).
+        \item I think Krylov-Schur methods inherently will struggle to distinguish multiple eigenvalues from tightly clustered individual eigenvalues. Using tolerances will always be brittle and undesirable. However, I think there are other methods that can tell them apart. The ones I know are FEAST/CISS (which involve computing contour integrals in the complex plane---you have to know where the eigenvalues are, roughly), and I believe LOBPCG also does it (but I'm not sure---we should check!)
+        \item I think this is a really interesting question (DWR for multiple eigenvalues) and its resolution could be a very nice chapter in an MSc thesis
+    \end{itemize}
+
+
+    \item I spent some time trying to analytically predict the multiplicity of the eigenvalues of the folded operator. In doing so, I found that when $A$ is self-adjoint, the folded problem is $(A-zI)^2u = \mu u.$ if $A$ has multiplicity has an eigenvalue $\lambda$ of multiplicity $k,$ then $(A-zI)^2$ has eigenvalue $(\lambda - z)^2$ of the same multiplicity (each eigenvector for $\lambda$ is an eigenvector for $(\lambda - z)^2$). We can have other eigenvalues of $A$ that map to the eigenvalue $(\lambda - z)^2.$ Solving $(\xi - z)^2 = (\lambda - z)^2$ we find that $\xi = \lambda$ or $\xi = 2z-\lambda.$ Thus, if both $\lambda$ and $2z-\lambda$ are eigenvalues of $A,$ then $(\lambda - z)^2$ is an eigenvalue of the folded operator with multiplicity equal to the sum of the multiplicities of $\lambda$ and $2z-\lambda.$ The only exception is when $\lambda = z.$ In that case, $\lambda$ and $2z-\lambda$ collapse into one eigenvalue, and the multiplicity of the folded operator is equal to the multiplicity of $\lambda =z.$ With these observations in mind, we can see that we definitely need to be able to handle multiplicity when trying to compute the DWR estimate for the folded operator, especially when $A$ is the Maxwell operator!!
+
+    \item With all of these observations, we definitely need to figure out how to adapt the DWR estimate to handle non-simple eigenvalues. Patrick suspects that this is something we are going to have to figure out. To confirm this, I started doing some backwards referencing to see if any related papers cited Rannacher and Bangerth or Rannacher and Heuveline. Patrick said we could also reach out to \href{https://emcl.iwr.uni-heidelberg.de/}{Heuveline} who should know.
+
+    \item I created a Slack chat with Patrick, Joe Flood, and I where I asked him about the issues. No response yet.
+
+
+\end{enumerate}
+
+\textbf{Wednesday}
+
+\begin{enumerate}
+    \item QUESTION - will we ever get the lower-degree and the enriched multiplciites to match? What happens when we deal with the zero eigenvalue of the Maxwell operator? In that case, a better discretization (enriched space) should approximate more zeros?? This may be some sort of counter example to our enriched-space approach. (Boffi page 30, 31)
+
+    \item Spent some time making some notes on current ideas and questions in this file. 
+
+    \item Read through Becker text and Heuveline text to see if anything of use. This gave me an idea. They mention the `local higher-order approximation' approach as an alternative to the enriched solve approach. This involves taking $u_h \in V_h$ and performing a patchwise higher-order interpolation to obtain a better approximation as a stand-in for $u.$ Then, in the residual, you use $I_h^+ u_h,$ where $I_h^+$ is the special patch-wise interpolant. Joe (and Bangerth) also mention this approach. Joe claims that the interpolation startegy is in a Rognes and Logg paper (I printed this out).
+
+    \item Started trying to piece together the paper trail for a posteriori error estimates for clustered eigenvalues. This is a bit complicated and new to me. I started going through the Dai paper, which I am still trying to understand. 
+
+    \item I found a 2026 thesis which talks about adapting DWR for multiple eigenvalues. They take two approaches. For one example, they take the maximum error estimate for a cluster as their estimate (Ch.2). For another, they take the sum (Ch.2). They awknowledge the limitations of their approach and claim that ``A more cluster-robust DWR estimator might need to be developed to overcome ...[their] issue[s]."
+\end{enumerate}
+
+\textbf{Thursday}
+\begin{enumerate}
+    \item Finished up with the Dai paper.
+    \item Went through the Gallistl and Bonito papers. The Gallistl builds on the Dai paper by moving from multiple eigenvalues to eigenvalue clusters (more practical). However, he does this only for CG1. Bonito extends this to higher degree spaces.
+    \item Looked at the CISS and LOBPCG documentation. CISS needs a specified space to look for the eigenvalues and uses a contour integration approach. LOBPCG computes a block of the smallest eigenpairs (locally optimal block preconditioned conjugate gradient). For CISS you need a space that encaptures the multiple discrete eigenvalues. For LOBPCG you need to request enough eigenpairs to capture the multiplicity in the computed block. 
+    \item Met with Umberto for a long time and implemented a least squares alignment of $u_h$ with the computed enriched eigenbasis. These results seem promising.
+\end{enumerate}
+
+
+\end{document}
