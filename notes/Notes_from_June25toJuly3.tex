@@ -1,0 +1,487 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Meeting Notes July $3$}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{What I have been up to}
+
+\textbf{Meeting last week:}
+\begin{itemize}
+    \item In our meeting last week, we looked at my current (incorrect) DWR results for Matt's algorithm (2D Maxwell) and tried to diagnose the issues. It did not take us long to start discussing the alignment of the eigenvector in the lower-degree and enriched spaces. 
+
+    \item After making some discussed changes to the code (save eigenfunctions, clean up), I explored whether or not the smallest eigenvalue of the folded operator has multiplicity $> 1.$ It soon was revealed that this was the case. Thus, I began searching for an adaptation of DWR for multiple eigenvalues.
+\end{itemize}
+
+
+\textbf{My exploration:}
+
+\begin{itemize}
+    \item I went back to the Bangerth and Rannacher text and found some relevant remarks (see DWR note), which indicate that multiplicity is not a theoretical issue but a practical issue - how do we align $u_h$ with an enriched solution $u_h^+$?
+    \item I spent some time with the technical reports in SLEPSc to get a better understanding of the eigenfunctions they compute. 
+    \item Went through Joe Flood's thesis. He discusses the need to orthogonalize the lower-degree and enriched eigenbases, but does not say how, and he may not have implemented it. 
+    \item Joe referenced the Becker and Rannacher text a lot, so I looked there. I did not learn much new information.
+    \item I then explored potential methods for aligning the two eigenbases (making them m-orthogonal to each other). I came across the Orthogonal Procrustes problem and tried to adapt it to this setting.
+    \item I tried to test for multiplicity with a tolerance. The results did not match for the lower-degree and enriched spaces, which may be expected since the enriched space should better capture multiplicities. Patrick confirmed that a tolerance test may never be satisfactory because Kyrlov-Schur will struggle to distinguish multiple eigenvalues from highly clustered individual eigenvalues. He suggested FEAST/CISS or LOBPCG. I read some of the documentation for these methods, but did not implement them.
+    \item I also tried determining multiplicities with a gap calculation which did not seem any better. 
+    \item Bangerth did not seem to know of any references for treating multiplicity in DWR (Patrick chatted with him).
+    \item I spent some time trying to understand the expected multiplicity behaviour of the folded operator. These notes are below.
+    \item There is an issue with $z$ values near zero, which are mapped to by the zero frequency of the Maxwell operator, which has a large (theoretically infinite) multiplicity. How will we treat these eigenspaces? The enriched solve should compute more zeros than the lower-degree solve. How will we perform the least squares alignment (see below)? 
+    \item I went through the Rannacher and Heuveline text to see if there is anything relevant. This reminded me of the other proposed method for a better approximation of $u$ for DWR, namely, using a patch-wise higher-order interpolation. This is explored in the Rognes and Logg paper. I briefly read it, but did not do much with it. Do we want to explore this approach? Joe doesn't because it was not a focus for his thesis, and it's not a readily available method in Firedrake.
+    \item I went through the main literature on a posteriori error bounds for clustered eigenvalues (Dai et al., Gallistl, Bonito). I was trying to see if any methods/ideas could be reused. I am not sure if anything from themay be needed to address these issuess that adapts DWR for multiplicity. In one case, they take the maximum of the DWR error estimates for the whole eigenspace. In another case, they take the sum. However, they observe oscillations in the DWR results and claim that a more cluster-robust DWR estimator might need to be developed to overcome the issues they observe.
+    \item I met with Umberto on Thursday to try and figure this out. He suggested, and we implemented, a least squares approach where we align the single $u_h$ with a vector in the span of the computed enriched eigenbasis. This is discussed below. 
+\end{itemize}
+
+\section{Questions that remain}
+
+\begin{enumerate}
+    \item Do we want to align just the first eigenvector in the lower-degree space, or the whole eigenbasis?
+    \item Do we want to use the enriched space approach of explore the patch-wise interpolation approach?
+    \item Should we be using a tolerance test for computing multiplicity? What tolerance? What multiplicity count should we take (lower-degree or enriched)? Should we swap to CISS or LOBPCG? 
+    \item Can we prove a continuous dependence on the tolerance for the multiplicity? 
+    \item Should we be aligning the eigenvectors using the $L_2$ inner product? 
+    \item What should we do about the Maxwell zero eigenvalue? 
+    \item Are the computed multiplicities matching what we expect?
+    \item Why does DWR not perform well for $N=32$ and $z>2.5$? Answer : Coarse mesh does not resolve eigenvalue frequencies well enough at the coarser discretization.
+    \item Is there anything we can use from the a posteriori residual bound papers for clustered eigenvalues?
+     \item Kij indexing (my own clarification question).
+    \item Should I use $u_h$ or $u_{h, \text{lift}}$ in the residual calculation? Using $u_h$ works and aligns with the DWR results. 
+    \item Should I be using \texttt{eigenfunction(0)[0]} in the mixed Maxwell setting?
+\end{enumerate}
+
+
+
+\section{Notes on the multiplicity issue}
+
+\textbf{Note:} I used Chat to help me transfer my handwritten notes to the notes in this section. I will need to rewrite myself for the thesis (if needed).
+
+
+\subsection{The expected multiplicities}
+
+
+Let $A$ denote the Maxwell operator in the mixed formulation. Suppose
+$(\lambda_j,u_j)$ is an eigenpair of $A$, so that
+\begin{equation}
+    A u_j = \lambda_j u_j .
+\end{equation}
+For a fixed $z\in \text{Grid}(n)$, define the folded operator
+\begin{equation}
+    F_z = (A-zI)^2.
+\end{equation}
+We want to understand how the eigenvalues and eigenfunctions of $A$ map to
+the eigenvalues and eigenfunctions of $F_z$.
+
+To do so, let's first apply $A-zI$ to $u_j$:
+\begin{equation}
+    (A-zI)u_j = A u_j - z u_j
+    = \lambda_j u_j - z u_j
+    = (\lambda_j-z)u_j .
+\end{equation}
+Applying $A-zI$ a second time gives
+\begin{equation}
+    (A-zI)^2 u_j
+    = (A-zI)\bigl((\lambda_j-z)u_j\bigr)
+    = (\lambda_j-z)(A-zI)u_j
+    = (\lambda_j-z)^2 u_j .
+\end{equation}
+Therefore every eigenfunction of $A$ is also an eigenfunction of the folded
+operator $F_z$, with folded eigenvalue
+\begin{equation}
+    \mu_j(z) = (\lambda_j-z)^2 .
+\end{equation}
+% Consequently,
+% \begin{equation}
+%     \lambda_j \longmapsto (\lambda_j-z)^2 .
+% \end{equation}
+% The important point is that the folded eigenvalue measures the squared distance
+% between the original eigenvalue $\lambda_j$ and the shift $z$.
+
+\subsection{What is the smallest folded eigenvalue?}
+
+The smallest eigenvalue of the folded operator is
+\begin{equation}
+    \mu_{\min}(z) = \min_j (\lambda_j-z)^2 .
+\end{equation}
+Thus, the smallest folded eigenvalue comes from whichever eigenvalue of $A$ is
+closest to $z$.
+
+If $\lambda_j$ is the unique eigenvalue of $A$ closest to $z$, then the
+multiplicity of $\mu_{\min}(z)$ is just the multiplicity of $\lambda_j$.
+For example, if $\lambda=3$ has multiplicity $2$, then $(3-z)^2$
+has multiplicity $2$ as a folded eigenvalue. For example, at $z=3$, the
+folded operator has a zero eigenvalue of multiplicity $2$.
+
+Now suppose two nearby eigenvalues of $A$ are $\lambda_1=2,$ and $\lambda_2 = 3.$
+Under the folded operator, these map to $(2-z)^2$ and $(3-z)^2,$ respectively.
+If $z$ is closer to $2$, then $(2-z)^2$ is the smallest folded eigenvalue. If
+$z$ is closer to $3$, then $(3-z)^2$ is the smallest folded eigenvalue.
+
+However, a switch occurs at the midpoint, $z = \frac{2+3}{2} = 2.5,$ where
+$(2-2.5)^2 = (3-2.5)^2.$
+In this case, both eigenvalues of $A$ contribute to the same smallest folded eigenvalue and the eigenspace for $\mu_{\min}(z)$ contains the eigenspace for $\lambda_1$ and $\lambda_2,$ and the multiplicities add.
+
+% More generally, if
+% \begin{equation}
+%     S_z := \min_{\lambda \in \Gamma(A)} |\lambda-z|,
+% \end{equation}
+% then
+% \[
+%     E_{\mu_{\min}(z)}(F_z)
+%     = \bigoplus_{\lambda\in S_z} E_{\lambda}(A),
+% \]
+% and therefore
+% \[
+%     \mult\bigl(\mu_{\min}(z)\bigr)
+%     = \sum_{\lambda\in S_z} \mult(\lambda).
+% \]
+% Away from midpoint ties, the set $S_z$ has one element. At a midpoint tie, it
+% has two elements, so the multiplicities add.
+
+\subsection{Example: What happens near $z=3$?}
+
+For the Maxwell operator, near $z=3$, the nearby Maxwell eigenvalues $\omega$
+are
+\begin{equation}
+    \sqrt{8} \approx 2.828,
+    \qquad
+    3,
+    \qquad
+    \sqrt{10} \approx 3.162,
+\end{equation}
+with multiplicities,
+\begin{center}
+\begin{tabular}{|c| c |c|}
+\toprule
+$\omega$ & Source $(m,n)$ & Multiplicity \\
+\midrule
+$\sqrt{8}\approx 2.828$ & $(2,2)$ & $1$ \\
+$3$ & $(3,0),(0,3)$ & $2$ \\
+$\sqrt{10}\approx 3.162$ & $(1,3),(3,1)$ & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The relevant midpoints are
+\begin{equation}
+    \frac{\sqrt{8}+3}{2} \approx 2.914,
+    \qquad
+    \frac{3+\sqrt{10}}{2} \approx 3.081 .
+\end{equation}
+Therefore,
+\begin{itemize}
+    \item If $z$ is closest to $3$ and is not at a midpoint, then
+    $\mu_{\min}(z)=(3-z)^2$
+    with multiplicity $2$.
+
+    \item If $z\approx 2.914$, then
+    $$(3-z)^2 \approx (\sqrt{8}-z)^2,$$
+    and the multiplicities add to give $3.$
+
+    \item If $z\approx 3.081$, then $(3-z)^2 \approx (\sqrt{10}-z)^2,$ and the multiplicities add to give $4.$
+\end{itemize}
+
+\section{Expected Implementation Results: What do we expect for $z\in[0.8,4]$?}
+
+As discussed, for the folded operator $F_z,$
+the multiplicity of the smallest folded eigenvalue is the multiplicity of the
+Maxwell eigenvalue of $A$ closest to $z$. The Maxwell eigenvalues in this range
+come from $\omega_{m,n}=\sqrt{m^2+n^2}.$
+
+
+Between $0.8$ and $4$, the relevant Maxwell eigenvalues are:
+
+\begin{center}
+\begin{tabular}{|c| c| c|}
+\toprule
+$\omega$ & $(m,n)$ values & Multiplicity \\
+\midrule
+$1$ & $(1,0),(0,1)$ & $2$ \\
+$\sqrt{2}\approx 1.414$ & $(1,1)$ & $1$ \\
+$2$ & $(2,0),(0,2)$ & $2$ \\
+$\sqrt{5}\approx 2.236$ & $(1,2),(2,1)$ & $2$ \\
+$\sqrt{8}\approx 2.828$ & $(2,2)$ & $1$ \\
+$3$ & $(3,0),(0,3)$ & $2$ \\
+$\sqrt{10}\approx 3.162$ & $(1,3),(3,1)$ & $2$ \\
+$\sqrt{13}\approx 3.606$ & $(2,3),(3,2)$ & $2$ \\
+$4$ & $(4,0),(0,4)$ & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The midpoint values at which we expect the multiplicities to switch are:
+\begin{equation}
+\begin{aligned}
+    m_1 &= \frac{1+\sqrt{2}}{2} \approx 1.207, \\
+    m_2 &= \frac{\sqrt{2}+2}{2} \approx 1.707, \\
+    m_3 &= \frac{2+\sqrt{5}}{2} \approx 2.118, \\
+    m_4 &= \frac{\sqrt{5}+\sqrt{8}}{2} \approx 2.532, \\
+    m_5 &= \frac{\sqrt{8}+3}{2} \approx 2.914, \\
+    m_6 &= \frac{3+\sqrt{10}}{2} \approx 3.081, \\
+    m_7 &= \frac{\sqrt{10}+\sqrt{13}}{2} \approx 3.384, \\
+    m_8 &= \frac{\sqrt{13}+4}{2} \approx 3.803 .
+\end{aligned}
+\end{equation}
+
+\newpage
+Hence, the expected multiplicity of the smallest folded operator eigenvalue is:
+\begin{center}
+\small
+\begin{longtable}{|c| c| c|}
+\toprule
+$z$ range & Nearest Maxwell eigenvalue(s) & Expected multiplicity of $\mu_{\min}$ \\
+\midrule
+\endhead
+$[0.8,m_1)$ & $1$ & $2$ \\
+$z=m_1\approx 1.207$ & $1$ and $\sqrt{2}$ & $2+1=3$ \\
+$(m_1,m_2)$ & $\sqrt{2}$ & $1$ \\
+$z=m_2\approx 1.707$ & $\sqrt{2}$ and $2$ & $1+2=3$ \\
+$(m_2,m_3)$ & $2$ & $2$ \\
+$z=m_3\approx 2.118$ & $2$ and $\sqrt{5}$ & $2+2=4$ \\
+$(m_3,m_4)$ & $\sqrt{5}$ & $2$ \\
+$z=m_4\approx 2.532$ & $\sqrt{5}$ and $\sqrt{8}$ & $2+1=3$ \\
+$(m_4,m_5)$ & $\sqrt{8}$ & $1$ \\
+$z=m_5\approx 2.914$ & $\sqrt{8}$ and $3$ & $1+2=3$ \\
+$(m_5,m_6)$ & $3$ & $2$ \\
+$z=m_6\approx 3.081$ & $3$ and $\sqrt{10}$ & $2+2=4$ \\
+$(m_6,m_7)$ & $\sqrt{10}$ & $2$ \\
+$z=m_7\approx 3.384$ & $\sqrt{10}$ and $\sqrt{13}$ & $2+2=4$ \\
+$(m_7,m_8)$ & $\sqrt{13}$ & $2$ \\
+$z=m_8\approx 3.803$ & $\sqrt{13}$ and $4$ & $2+2=4$ \\
+$(m_8,4]$ & $4$ & $2$ \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+Thus, as $z$ moves through the interval, the expected multiplicity is constant
+between midpoint values. At the midpoint values themselves, the expected
+multiplicity jumps up because two neighbouring Maxwell eigenspaces contribute to
+the same smallest folded eigenvalue.
+
+
+
+\section{Umberto and I's current attempt at a resolution}
+
+\textbf{Note:} I used Chat to help me transfer my handwritten notes to the notes in this section. I will need to rewrite myself for the thesis (if needed).
+
+\subsection{Motivation}
+
+We have the lower-degree eigenvector
+\begin{equation}
+    u_h = (E_h,H_h),
+\end{equation}
+and the enriched eigenbasis
+\begin{equation}
+    u^+_{h,1},\ldots,u^+_{h,k},
+\end{equation}
+where the multiplicity is \(k\), and
+\begin{equation}
+    u^+_{h,j} = (E^+_{h,j},H^+_{h,j}).
+\end{equation}
+
+The goal is to find a vector in the enriched eigenspace that best matches \(u_h\). Thus, we want to build the best linear combination
+\begin{equation}
+    u^+_* = x_1 u^+_{h,1} + \cdots + x_k u^+_{h,k}
+           = \sum_{j=1}^k x_j u^+_{h,j},
+\end{equation}
+so that this \(u^+_*\) is as close as possible to \(u_h\).
+
+We need this because a computed eigenfunction could be any arbitrary linear combination of vectors in the eigenspace. Thus \(u_h\) and the individual enriched eigenvectors \(u^+_{h,j}\) are not necessarily aligned.
+
+\subsection{The chosen inner product}
+
+We will enforce closeness in the \(L^2\)-sense. Thus, for  $u = (E,H)$ and $ v=(F,G),$ the natural inner product is the following:
+\begin{equation}
+\begin{aligned}
+    (u,v)
+    &= \bigl( (E,H),(F,G) \bigr) \\
+    &= \int_{\Omega} E \cdot \overline{F}\,dx
+       + \int_{\Omega} H \cdot \overline{G}\,dx \\
+    &= (E,F)_{L^2}+ (H,G)_{L^2} .
+\end{aligned}
+\end{equation}
+Here, the convention is that the inner product is linear in the first argument and conjugate-linear in the second argument. The corresponding norm is
+\begin{equation}
+    \|u\|^2
+    = \int_{\Omega} |E|^2\,dx
+      + \int_{\Omega} |H|^2\,dx.
+\end{equation}
+In particular, if $u_h = (E_h, H_h)$ approximates \(u=(E,H)\), then
+\begin{equation}
+    \|u-u_h\|^2
+    = \int_{\Omega} |E-E_h|^2\,dx
+      + \int_{\Omega} |H-H_h|^2\,dx.
+\end{equation}
+
+\subsection{The least squares problem}
+
+We want to find coefficients \(x_1,\ldots,x_k\) that satisfy
+\begin{equation}
+    \min_{x_1,\ldots,x_k}
+    \left\| u_h - \sum_{j=1}^k x_j u^+_{h,j} \right\|^2.
+\end{equation}
+Equivalently, we want to find the vector in
+\begin{equation}
+    \operatorname{span}\{u^+_{h,1},\ldots,u^+_{h,k}\}
+\end{equation}
+that is closest to \(u_h\). 
+% In other words, this procedure projects \(u_h\) onto the enriched eigenspace.
+
+\subsection{The matrix equation}
+
+Let \(u^+_*\) be the solution, i.e.,
+\begin{equation}
+    u^+_* = \sum_{j=1}^k x_j u^+_{h,j}.
+\end{equation}
+The error, or residual, is
+\begin{equation}
+    r = u_h - u^+_*.
+\end{equation}
+
+For \(u^+_*\) to be the closest vector to \(u_h\) in the enriched eigenspace, the residual \(r\) must be orthogonal to every direction in the enriched eigenspace. 
+The reason is that, if \(u^+_*\) is the best vector, then moving slightly along any direction \(v\) in the enriched eigenspace should not reduce the error. Thus, we require
+\begin{equation}
+    (r,u^+_{h,i})=0,
+    \qquad i=1,\ldots,k.
+\end{equation}
+% Take a small perturbation
+% \begin{equation}
+%     u^+_* + tv,
+% \end{equation}
+% where \(t\) is small. The new error is
+% \begin{equation}
+%     u_h - (u^+_*+tv) = r-tv.
+% \end{equation}
+% Then
+% \begin{equation}
+%     \|r-tv\|^2
+%     = \|r\|^2 - 2t\operatorname{Re}(r,v) + t^2\|v\|^2.
+% \end{equation}
+
+% If \((r,v)\neq 0\), then one can choose the sign, or in the complex case the phase, of the perturbation so that the linear term decreases the error. Hence \(u^+_*\) would not be the closest vector. Therefore orthogonality is necessary:
+% \begin{equation}
+%     (r,v)=0
+%     \qquad \text{for every } v\in \operatorname{span}\{u^+_{h,1},\ldots,u^+_{h,k}\}.
+% \end{equation}
+Substituting in the expression for \(r\), this becomes
+\begin{equation}
+    \left(u_h - \sum_{j=1}^k x_j u^+_{h,j}, u^+_{h,i}\right)=0,
+    \qquad i=1,\ldots,k.
+\end{equation}
+Expanding the inner product gives
+\begin{equation}
+    (u_h,u^+_{h,i}) - \sum_{j=1}^k x_j (u^+_{h,j},u^+_{h,i})=0,
+    \qquad i=1,\ldots,k.
+\end{equation}
+Therefore,
+\begin{equation}
+    \sum_{j=1}^k x_j (u^+_{h,j},u^+_{h,i})
+    = (u_h,u^+_{h,i}),
+    \qquad i=1,\ldots,k.
+\end{equation}
+This is a linear system,
+\begin{equation}
+    KX=F,
+\end{equation}
+where
+\begin{equation}
+\begin{aligned}
+    K_{ij} &= (u^+_{h,j},u^+_{h,i}), \qquad i,j=1,\ldots,k, \\
+    X_j &= x_j, \qquad j=1,\ldots,k, \\
+    F_i &= (u_h,u^+_{h,i}), \qquad i=1,\ldots,k.
+\end{aligned}
+\end{equation}
+
+Written component-wise,
+\begin{equation}
+\begin{aligned}
+    K_{ij}
+    &= \int_{\Omega} E^+_{h,j}\cdot \overline{E^+_{h,i}}\,dx
+       + \int_{\Omega} H^+_{h,j}\cdot \overline{H^+_{h,i}}\,dx, \\
+    F_i
+    &= \int_{\Omega} E_h\cdot \overline{E^+_{h,i}}\,dx
+       + \int_{\Omega} H_h\cdot \overline{H^+_{h,i}}\,dx.
+\end{aligned}
+\end{equation}
+Solving this system gives the coefficients \(x_1,\ldots,x_k\), and therefore gives the enriched vector,
+\begin{equation}
+    u^+_* = \sum_{j=1}^k x_j u^+_{h,j},
+\end{equation}
+that best aligns with the lower-degree eigenvector \(u_h\) in the \(L^2\)-sense.
+
+
+% \subsection{Implementation}
+% This is implemented as follows
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=1.5\linewidth]{Screenshot 2026-07-03 at 1.32.25 PM.png}
+%     \label{fig:placeholder}
+% \end{figure}
+
+
+% \section{To do list for next week}
+
+% \begin{enumerate}
+%     \item The residual calculation is not invariant w.r.t the eigenspace. Umberto says this is a common issue in these error estimates. It is often overcome by refining for each value in the eigenspace (considering estimate for each value in the eigenspace).
+%     \item Cluster size being too big is ok. The L2 projection will disregard the parts of the cluster that are not in the eigenspace.
+%     \item DWR not as good for N=32 as for N=128 because the coarser mesh will not capture the oscillations in the eigenfunctions as well.
+%     \item TAKS - Also plot the Phi obtained from the enriched eigenvalue (without DWR).
+%     \item TASK - Also choose P2 for uh and P3 for enrichedment for coarse mesh (N=32). If good, see what happens as N=16. Explore. 
+%     \item Patchwise interpolation not the way to go. More for engineers, need bigger stencil which is bad in parallel, higher effectivity index.
+%     \item Push towards pseudospectral contours. I want 0.01 pseudospectral contour for a problem (might not be symmetrix-umberto has examples). We take complex grid, Phi calculations, DWR correction, and if error estimate is within some value of the desired pseudospectral contour, refine the eigensolve. Until I knoe the computed distance to the spectrum is good, keep refining. Keep working until we get desired pseudospectral curve and use DWR to decide where we need to do better solves. 
+%     \item With this, a cool plot would be comparing meshes at z value. CLose to the spectrum we expect some refinement and far away we expect course meshes. Alomst like a heat map for the mesh with pseudospectral curves on top.
+%     \item Do it first for Maxwell where pseudospectra is easier - we actually compute 1/dist(spectrum). Then we will expand to more examples.
+%     \item Umberto has code for pseudospectra he can go through with me.
+%     \item To confirm subspace invariance I can do poission with dirichlet conditions where I know the eigenfunctions. Take one with multiplicity and see how the error estimate changes and to what extent. 
+%     \item Meeting in person Tuesday at 2.
+% \end{enumerate}
+
+
+
+
+
+\end{document}
