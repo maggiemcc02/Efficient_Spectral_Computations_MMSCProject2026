@@ -1,0 +1,543 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs from July $17^{\text{th}}$ to July $24^{\text{th}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting July 17th}
+
+
+% \subsection{Summary of last week's work:}
+
+
+
+
+% \begin{enumerate}
+% \end{enumerate}
+
+
+
+\subsection{Meeting notes}
+
+\begin{itemize}
+    \item Do not focus on perfect code. Get it working for the folded eigenproblem (or self-adjoint eigenproblems).
+    \item For the alignment code, do not use the m-form. For the folded problem and the standard Poisson, use $L^2-L^2.$ For the mixed formulation, use $L^2-H(\operatorname{div}).$
+    \item \checkmark Make sure the initial guess continuation is working as expected. We may not expect to see a reflection of eigenfunctions across meshes if it is. 
+    \item Rate of convergence for eigenvalues on L-shaped mesh should be $ N^ {- 1}.$ We need to debug the code to achieve this.
+    \item \checkmark Use mixed formulation of Poisson that perfectly aligns with the primal formulation (CG, DG). Make sure we get the same results as if we used the primal formulation. This should test adaptivity.
+    \item Get it working on the L-shaped domain first.
+    \item \checkmark Make things explicit, for example, make the markers real, to avoid these complex warnings.
+    \item The dual error being $z_h^+ - z_h$ is intentional. It has to do with algebraic errors and being able to separate out the discretization errors. This happened after Rognes and Logg with Rannacher in/near 2011. Check out the estimator review sent out by Patrick and track down the paper. For the most effective localization (not thinking of algebraic errors), you want $(z_h \in V_h^+) - (p \in V_h)$ to be small so that where it is large on the mesh is a good signal. This motivates taking $z_h^+ - I_h^+ z_h$ because we expect $I_h z_h^+$ to be the closest thing to $z_h^+$ in $V_h.$ Pablo lets the user decide which version of the dual error they want to use. I will compare both to see how much of a difference it makes. At the global level (global error estimate), it does not matter because of Galerkin orthogonality. 
+    \item Once we get adaptivity working, we will play around with it to see what criteria best indicates the need for adaptivity. A first problem should be Poisson, where we know the pseudospectral contours, the eigenvalues, etc. 
+    \item Make a thesis document and start thinking about its structure and the background material. Kathryn probably has a template, or the OCIAM template (Keith Gillow) is popular.
+    \item Next meeting is 4 pm next Friday (July 24).
+\end{itemize}
+
+\subsection{This Week's Plan}
+\begin{enumerate}
+    \item De-bug the code to obtain the proper convergence rate.
+    \item Track down and read the algebraic error paper.
+    \item Start a thesis document
+\end{enumerate}
+
+
+
+\section{Daily Logs}
+
+
+\textbf{Monday}
+\begin{enumerate}
+    \item More iterations of adaptation for L-shaped Poisson example. I get desired convergence for dof $> 10^3$ (after approx. seven adaptations). I need to decide if this result is good, in that we eventually obtain the desired convergence rate, or bad, in that it takes too long to obtain the desired convergence rate. 
+    \item Compared mixed and primal (CG1-DG0) poisson on L-shaped domain and they match (up to almost machine precision).
+    \item Compared $z_h^+ - I_h z_h^+$ to $z_h^+ - z_h.$ They behave similarly.
+    \item Compared adaptivity to uniform refinement (5 levels of mesh hierarchy). Uniform refinement yielded worse results (rate approx. 0.7) as expected. However, I am not sure if this is a great test for comparison (hierarchy DOF vs adaptivity DOF and adaptivity takes a while to do well).
+    \item Thesis outline started. 
+\end{enumerate}
+
+
+\textbf{Tuesday}
+\begin{enumerate}
+\item Ran a few more quick tests for the convergence rate as a part of a Slack discussion with Umberto.
+\item Tried to find a reference with the $N^{-1/2}$ result for the L-shaped domain. Umberto later sent one.
+\item Located Rannacher's talk and paper about seperating the discretization error and the iteration error in a posteriori error estimates. This supports choosing $z_h^+ - z_h$ in the local error estimates. I spent a few hours going through the talk and the paper.
+\item Worked a bit more on my thesis outline, went through the advice sent around by Kathryn, and I started going back over Nick's text on Spectra and Pseudospectra, which I expect to be in the background and introduction of my final report. 
+\item Reference for convergenc rate: \textit{An oscillation-free adaptive FEM for symmetric
+eigenvalue problems by Carsten Carstensen and Joscha Gedicke}. Figure 6 in that paper suggests that they also did not attain the desired convergence results until $DOF > 10^3.$
+\end{enumerate}
+
+\textbf{Wednesday}
+\begin{enumerate}
+    \item Worked on more convergence tests for L-shaped poisson. 
+    \item Sent results to the Slack. Seems like we just needed more adaptations to get into the asymptotic regime. This may not be too unpexpected - we need enough grading in the corner of the L-shaped mesh to get the desired convergence. 
+    \item I have these results recorded in an LShaped\_Poisson\_Results overleaf file
+    \item Met with Umberto to begin discussing the structure of the inner and outer loops.
+\end{enumerate}
+
+\textbf{Thursday}
+\begin{enumerate}
+    \item Worked through and tried to grow upon what Umberto and I discussed in our meeting. This included proving that $\gamma(z, A)$ is 1-Lipschitz, formulating the (heuristic) necessary condition for the $\epsilon$-pseudospectral contour to pass through a cell in our complex plane discretization, and using that condition to create refinement criteria. 
+    \item Started to realize that we need the bottom of the spectrum of the folded operators to be discrete. What assumption on $A$ guarentees this? This probably explains the issues with the Maxwell folded operator for small $z$ values.
+    \item Met with Umberto to finalize some of our thoughts on the inner/outer loops. Here, we proved/constructed a heuristic upper bound on the $|\gamma(z,A) - \Phi_n(z,A)|$ using our DWR error estimates.
+    \item Started writing up some formal notes for these results.
+\end{enumerate}
+
+\textbf{Friday}
+\begin{enumerate}
+    \item Finished writing up some formal notes for these results for the inner/outer loop.
+    \item Ran a first Maxwell example for $z \in [2, 4]$ with $\Delta z= 0.1$ and with five (and ten) required adaptations at each $z.$
+    \item Prepped for the meeting at 4pm.
+\end{enumerate}
+
+% Some results are:
+
+% \begin{longtable}{c r c c c c}
+% \caption{Convergence results for the Poisson eigenproblem on an L-shaped domain that is adapted thirty times using the DWR error estimates for eigenvalues. Here, $N_l = V_l.dim()$ denotes the degrees of freedom, $e_l$ is the error based on the exact eigenvalue $\lambda \approx 9.639723844,$ $\eta_l$ is the DWR global error estimate, and the convergence rates are computed via
+% $ r_\ell^{\mathrm{exact}} = \frac{\log(e_\ell/e_{\ell-1})}{\log(N_\ell/N_{\ell-1})},$ and $  r_\ell^{\mathrm{est}} = \frac{\log(|\eta_\ell|/|\eta_{\ell-1}|)} {\log(N_\ell/N_{\ell-1})}.$}
+% %\title{Results for thirty adaptations on L-shaped domain}
+
+
+% \label{tab:adaptive-convergence}\\
+
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & $r_\ell^{\mathrm{exact}}$
+% & $r_\ell^{\mathrm{est}}$ \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{6}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$ 
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & Rate based on $e_l$
+% & Rate based on $\eta_l$ \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{6}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+
+% 0  & 391    & $1.314\times 10^{-1}$ & $1.189\times 10^{-1}$ & --     & --     \\
+% 1  & 398    & $1.119\times 10^{-1}$ & $1.054\times 10^{-1}$ & $-9.039$ & $-6.809$ \\
+% 2  & 425    & $9.523\times 10^{-2}$ & $9.236\times 10^{-2}$ & $-2.461$ & $-2.010$ \\
+% 3  & 440    & $8.991\times 10^{-2}$ & $8.847\times 10^{-2}$ & $-1.658$ & $-1.240$ \\
+% 4  & 496    & $7.871\times 10^{-2}$ & $7.810\times 10^{-2}$ & $-1.111$ & $-1.041$ \\
+% 5  & 625    & $6.642\times 10^{-2}$ & $6.607\times 10^{-2}$ & $-0.735$ & $-0.724$ \\
+% 6  & 978    & $4.874\times 10^{-2}$ & $4.860\times 10^{-2}$ & $-0.691$ & $-0.686$ \\
+% 7  & 1573   & $3.220\times 10^{-2}$ & $3.209\times 10^{-2}$ & $-0.872$ & $-0.874$ \\
+% 8  & 2259   & $2.273\times 10^{-2}$ & $2.267\times 10^{-2}$ & $-0.963$ & $-0.960$ \\
+% 9  & 2794   & $1.825\times 10^{-2}$ & $1.822\times 10^{-2}$ & $-1.033$ & $-1.028$ \\
+% 10 & 3707   & $1.356\times 10^{-2}$ & $1.354\times 10^{-2}$ & $-1.050$ & $-1.050$ \\
+% 11 & 4617   & $1.077\times 10^{-2}$ & $1.076\times 10^{-2}$ & $-1.048$ & $-1.046$ \\
+% 12 & 6500   & $7.597\times 10^{-3}$ & $7.591\times 10^{-3}$ & $-1.022$ & $-1.020$ \\
+% 13 & 8494   & $5.683\times 10^{-3}$ & $5.678\times 10^{-3}$ & $-1.085$ & $-1.085$ \\
+% 14 & 10245  & $4.664\times 10^{-3}$ & $4.661\times 10^{-3}$ & $-1.055$ & $-1.054$ \\
+% 15 & 11604  & $4.089\times 10^{-3}$ & $4.086\times 10^{-3}$ & $-1.056$ & $-1.056$ \\
+% 16 & 13975  & $3.400\times 10^{-3}$ & $3.398\times 10^{-3}$ & $-0.992$ & $-0.992$ \\
+% 17 & 18243  & $2.634\times 10^{-3}$ & $2.633\times 10^{-3}$ & $-0.958$ & $-0.957$ \\
+% 18 & 24611  & $1.939\times 10^{-3}$ & $1.938\times 10^{-3}$ & $-1.024$ & $-1.023$ \\
+% 19 & 32417  & $1.446\times 10^{-3}$ & $1.446\times 10^{-3}$ & $-1.064$ & $-1.064$ \\
+% 20 & 38695  & $1.197\times 10^{-3}$ & $1.197\times 10^{-3}$ & $-1.068$ & $-1.068$ \\
+% 21 & 49815  & $9.317\times 10^{-4}$ & $9.316\times 10^{-4}$ & $-0.991$ & $-0.991$ \\
+% 22 & 54756  & $8.428\times 10^{-4}$ & $8.427\times 10^{-4}$ & $-1.060$ & $-1.060$ \\
+% 23 & 69109  & $6.776\times 10^{-4}$ & $6.775\times 10^{-4}$ & $-0.938$ & $-0.938$ \\
+% 24 & 94737  & $4.970\times 10^{-4}$ & $4.970\times 10^{-4}$ & $-0.982$ & $-0.982$ \\
+% 25 & 117288 & $3.959\times 10^{-4}$ & $3.959\times 10^{-4}$ & $-1.065$ & $-1.065$ \\
+% 26 & 134701 & $3.390\times 10^{-4}$ & $3.390\times 10^{-4}$ & $-1.120$ & $-1.120$ \\
+% 27 & 159309 & $2.851\times 10^{-4}$ & $2.851\times 10^{-4}$ & $-1.032$ & $-1.032$ \\
+% 28 & 188105 & $2.412\times 10^{-4}$ & $2.412\times 10^{-4}$ & $-1.006$ & $-1.006$ \\
+% 29 & 210864 & $2.150\times 10^{-4}$ & $2.150\times 10^{-4}$ & $-1.009$ & $-1.009$ \\
+
+% \end{longtable}
+
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.75\linewidth]{error_plot.pdf}
+%     \caption{Convergence plot for the Poisson eigenproblem on an L-shaped domain that is adapted thirty times using the DWR error estimates for eigenvalues.}
+%     \label{fig:placeholder}
+% \end{figure}
+
+% \newpage
+
+
+
+% \begin{longtable}{c r c c c c}
+% \caption{Results for maxh=0.05 (above results were for maxh=0.1)}
+% % \caption{Convergence results for the Poisson eigenproblem on an L-shaped domain that is adapted thirty times using the DWR error estimates for eigenvalues. Here, $N_l = V_l.dim()$ denotes the degrees of freedom, $e_l$ is the error based on the exact eigenvalue $\lambda \approx 9.639723844,$ $\eta_l$ is the DWR global error estimate, and the convergence rates are computed via
+% % $ r_\ell^{\mathrm{exact}}
+% % = \frac{\log(e_\ell/e_{\ell-1})}{\log(N_\ell/N_{\ell-1})},$ and $  r_\ell^{\mathrm{est}} = \frac{\log(|\eta_\ell|/|\eta_{\ell-1}|)} {\log(N_\ell/N_{\ell-1})}.$}
+
+
+% \label{tab:adaptive-convergence}\\
+
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & $r_\ell^{\mathrm{exact}}$
+% & $r_\ell^{\mathrm{est}}$ \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{6}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$ 
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & Rate based on $e_l$
+% & Rate based on $\eta_l$ \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{6}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+
+% 0  & 1462   & $4.292\times 10^{-2}$ & $3.808\times 10^{-2}$ & --        & --        \\
+% 1  & 1469   & $3.509\times 10^{-2}$ & $3.264\times 10^{-2}$ & $-42.194$ & $-32.318$ \\
+% 2  & 1497   & $2.883\times 10^{-2}$ & $2.778\times 10^{-2}$ & $-10.413$ & $-8.543$  \\
+% 3  & 1512   & $2.681\times 10^{-2}$ & $2.631\times 10^{-2}$ & $-7.264$  & $-5.454$  \\
+% 4  & 1551   & $2.370\times 10^{-2}$ & $2.349\times 10^{-2}$ & $-4.844$  & $-4.441$  \\
+% 5  & 1615   & $2.213\times 10^{-2}$ & $2.203\times 10^{-2}$ & $-1.692$  & $-1.594$  \\
+% 6  & 1782   & $2.013\times 10^{-2}$ & $2.009\times 10^{-2}$ & $-0.964$  & $-0.936$  \\
+% 7  & 2115   & $1.838\times 10^{-2}$ & $1.836\times 10^{-2}$ & $-0.530$  & $-0.526$  \\
+% 8  & 3327   & $1.385\times 10^{-2}$ & $1.383\times 10^{-2}$ & $-0.625$  & $-0.625$  \\
+% 9  & 5411   & $9.331\times 10^{-3}$ & $9.323\times 10^{-3}$ & $-0.812$  & $-0.811$  \\
+% 10 & 7513   & $6.579\times 10^{-3}$ & $6.575\times 10^{-3}$ & $-1.065$  & $-1.064$  \\
+% 11 & 8973   & $5.473\times 10^{-3}$ & $5.469\times 10^{-3}$ & $-1.037$  & $-1.037$  \\
+% 12 & 9463   & $5.157\times 10^{-3}$ & $5.154\times 10^{-3}$ & $-1.117$  & $-1.116$  \\
+% 13 & 12681  & $3.962\times 10^{-3}$ & $3.960\times 10^{-3}$ & $-0.900$  & $-0.900$  \\
+% 14 & 17033  & $2.948\times 10^{-3}$ & $2.947\times 10^{-3}$ & $-1.001$  & $-1.001$  \\
+% 15 & 21477  & $2.293\times 10^{-3}$ & $2.292\times 10^{-3}$ & $-1.084$  & $-1.084$  \\
+% 16 & 24384  & $1.977\times 10^{-3}$ & $1.976\times 10^{-3}$ & $-1.170$  & $-1.170$  \\
+% 17 & 31974  & $1.490\times 10^{-3}$ & $1.490\times 10^{-3}$ & $-1.043$  & $-1.042$  \\
+% 18 & 36287  & $1.301\times 10^{-3}$ & $1.301\times 10^{-3}$ & $-1.070$  & $-1.070$  \\
+% 19 & 45418  & $1.056\times 10^{-3}$ & $1.056\times 10^{-3}$ & $-0.929$  & $-0.929$  \\
+% 20 & 56900  & $8.499\times 10^{-4}$ & $8.498\times 10^{-4}$ & $-0.965$  & $-0.965$  \\
+% 21 & 72408  & $6.657\times 10^{-4}$ & $6.657\times 10^{-4}$ & $-1.013$  & $-1.013$  \\
+% 22 & 92535  & $5.119\times 10^{-4}$ & $5.119\times 10^{-4}$ & $-1.071$  & $-1.071$  \\
+% 23 & 102247 & $4.563\times 10^{-4}$ & $4.562\times 10^{-4}$ & $-1.153$  & $-1.153$  \\
+% 24 & 122285 & $3.774\times 10^{-4}$ & $3.774\times 10^{-4}$ & $-1.060$  & $-1.060$  \\
+% 25 & 133563 & $3.433\times 10^{-4}$ & $3.432\times 10^{-4}$ & $-1.074$  & $-1.074$  \\
+% 26 & 164253 & $2.830\times 10^{-4}$ & $2.830\times 10^{-4}$ & $-0.933$  & $-0.933$  \\
+% 27 & 199890 & $2.361\times 10^{-4}$ & $2.360\times 10^{-4}$ & $-0.924$  & $-0.924$  \\
+% 28 & 225874 & $2.089\times 10^{-4}$ & $2.088\times 10^{-4}$ & $-1.002$  & $-1.002$  \\
+% 29 & 284582 & $1.658\times 10^{-4}$ & $1.658\times 10^{-4}$ & $-0.999$  & $-0.999$  \\
+
+% \end{longtable}
+
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.75\linewidth]{error_plot_05.pdf}
+%     \caption{Convergence plot for the Poisson eigenproblem on an L-shaped domain that is adapted thirty times using the DWR error estimates for eigenvalues.}
+%     \label{fig:placeholder}
+% \end{figure}
+
+
+% \begin{longtable}{c r c c c c}
+% \caption{Results for maxh=0.05 and marking parameter 0.25 (above results were for marking parameter 0.5)}
+% % \caption{Convergence results for the Poisson eigenproblem on an L-shaped domain that is adapted thirty times using the DWR error estimates for eigenvalues. Here, $N_l = V_l.dim()$ denotes the degrees of freedom, $e_l$ is the error based on the exact eigenvalue $\lambda \approx 9.639723844,$ $\eta_l$ is the DWR global error estimate, and the convergence rates are computed via
+% % $ r_\ell^{\mathrm{exact}}
+% % = \frac{\log(e_\ell/e_{\ell-1})}{\log(N_\ell/N_{\ell-1})},$ and $  r_\ell^{\mathrm{est}} = \frac{\log(|\eta_\ell|/|\eta_{\ell-1}|)} {\log(N_\ell/N_{\ell-1})}.$}
+
+
+% \label{tab:adaptive-convergence}\\
+
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & $r_\ell^{\mathrm{exact}}$
+% & $r_\ell^{\mathrm{est}}$ \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{6}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Mesh level, $\ell$
+% & DOFs, $N_l$ 
+% & $e_l = |\lambda - \lambda_h|$
+% & Estimate $|\eta_l|$
+% & Rate based on $e_l$
+% & Rate based on $\eta_l$ \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{6}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+% 0  & 1462   & $4.292\times 10^{-2}$ & $3.808\times 10^{-2}$ & --        & --        \\
+% 1  & 1473   & $3.415\times 10^{-2}$ & $3.174\times 10^{-2}$ & $-30.500$ & $-24.324$ \\
+% 2  & 1501   & $2.780\times 10^{-2}$ & $2.679\times 10^{-2}$ & $-10.929$ & $-9.003$  \\
+% 3  & 1516   & $2.574\times 10^{-2}$ & $2.528\times 10^{-2}$ & $-7.733$  & $-5.845$  \\
+% 4  & 1621   & $2.199\times 10^{-2}$ & $2.182\times 10^{-2}$ & $-2.351$  & $-2.195$  \\
+% 5  & 1777   & $2.016\times 10^{-2}$ & $2.008\times 10^{-2}$ & $-0.946$  & $-0.902$  \\
+% 6  & 2635   & $1.627\times 10^{-2}$ & $1.624\times 10^{-2}$ & $-0.544$  & $-0.540$  \\
+% 7  & 4761   & $1.057\times 10^{-2}$ & $1.056\times 10^{-2}$ & $-0.729$  & $-0.728$  \\
+% 8  & 9027   & $5.526\times 10^{-3}$ & $5.520\times 10^{-3}$ & $-1.014$  & $-1.014$  \\
+% 9  & 12518  & $4.082\times 10^{-3}$ & $4.079\times 10^{-3}$ & $-0.927$  & $-0.925$  \\
+% 10 & 21605  & $2.385\times 10^{-3}$ & $2.384\times 10^{-3}$ & $-0.985$  & $-0.984$  \\
+% 11 & 34628  & $1.412\times 10^{-3}$ & $1.412\times 10^{-3}$ & $-1.111$  & $-1.111$  \\
+% 12 & 49300  & $1.015\times 10^{-3}$ & $1.015\times 10^{-3}$ & $-0.935$  & $-0.934$  \\
+% 13 & 83701  & $6.047\times 10^{-4}$ & $6.047\times 10^{-4}$ & $-0.978$  & $-0.978$  \\
+% 14 & 137761 & $3.512\times 10^{-4}$ & $3.512\times 10^{-4}$ & $-1.091$  & $-1.090$  \\
+% 15 & 192577 & $2.556\times 10^{-4}$ & $2.556\times 10^{-4}$ & $-0.949$  & $-0.949$  \\
+% 16 & 329358 & $1.522\times 10^{-4}$ & $1.522\times 10^{-4}$ & $-0.966$  & $-0.966$  \\
+% 17 & 534400 & $8.972\times 10^{-5}$ & $8.972\times 10^{-5}$ & $-1.091$  & $-1.091$  \\
+% 18 & 762676 & $6.406\times 10^{-5}$ & $6.406\times 10^{-5}$ & $-0.947$  & $-0.947$  \\
+
+% \end{longtable}
+
+
+% \begin{longtable}{c r r r}
+% \caption{Observed convergence rates with respect to the total number of
+% degrees of freedom in the mixed finite element space.}
+% \label{tab:full-dof-convergence-rates}\\
+
+% \toprule
+% Level $\ell$
+% & Full DoFs $N_\ell$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{4}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Level $\ell$
+% & Full DoFs $N_\ell$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{4}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+
+% 0  & 1791    & --          & --          \\
+% 1  & 1822    & $-9.346826$ & $-7.040395$ \\
+% 2  & 1953    & $-2.326517$ & $-1.899689$ \\
+% 3  & 2024    & $-1.610148$ & $-1.204855$ \\
+% 4  & 2292    & $-1.070138$ & $-1.003023$ \\
+% 5  & 2929    & $-0.692460$ & $-0.682021$ \\
+% 6  & 4648    & $-0.669902$ & $-0.665083$ \\
+% 7  & 7567    & $-0.850696$ & $-0.851874$ \\
+% 8  & 10949   & $-0.942979$ & $-0.940550$ \\
+% 9  & 13590   & $-1.016089$ & $-1.011493$ \\
+% 10 & 18121   & $-1.031703$ & $-1.031889$ \\
+% 11 & 22635   & $-1.034025$ & $-1.031914$ \\
+% 12 & 31962   & $-1.012753$ & $-1.011449$ \\
+% 13 & 41838   & $-1.078155$ & $-1.077949$ \\
+% 14 & 50527   & $-1.047606$ & $-1.046706$ \\
+% 15 & 57280   & $-1.048780$ & $-1.048757$ \\
+% 16 & 69101   & $-0.983283$ & $-0.982942$ \\
+% 17 & 90347   & $-0.952153$ & $-0.951453$ \\
+% 18 & 122005  & $-1.020302$ & $-1.020042$ \\
+% 19 & 160883  & $-1.060015$ & $-1.059866$ \\
+% 20 & 192155  & $-1.064499$ & $-1.064318$ \\
+% 21 & 247579  & $-0.987928$ & $-0.987753$ \\
+% 22 & 272236  & $-1.056096$ & $-1.056049$ \\
+% 23 & 343863  & $-0.934536$ & $-0.934446$ \\
+% 24 & 471639  & $-0.980723$ & $-0.980604$ \\
+% 25 & 584168  & $-1.062884$ & $-1.062866$ \\
+% 26 & 671071  & $-1.118213$ & $-1.118077$ \\
+% 27 & 793847  & $-1.030995$ & $-1.030934$ \\
+% 28 & 937627  & $-1.003926$ & $-1.003908$ \\
+% 29 & 1051292 & $-1.007639$ & $-1.007528$ \\
+
+% \end{longtable}
+
+% \begin{longtable}{c r r r}
+% \caption{Observed convergence rates with respect to the number of
+% degrees of freedom in the $u$-space.}
+% \label{tab:u-dof-convergence-rates}\\
+
+% \toprule
+% Level $\ell$
+% & $u$-space DoFs $N_\ell^u$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{4}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Level $\ell$
+% & $u$-space DoFs $N_\ell^u$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{4}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+
+% 0  & 391    & --          & --          \\
+% 1  & 398    & $-9.039327$ & $-6.808775$ \\
+% 2  & 425    & $-2.461020$ & $-2.009516$ \\
+% 3  & 440    & $-1.657662$ & $-1.240409$ \\
+% 4  & 496    & $-1.110762$ & $-1.041100$ \\
+% 5  & 625    & $-0.734576$ & $-0.723502$ \\
+% 6  & 978    & $-0.690875$ & $-0.685905$ \\
+% 7  & 1573   & $-0.872409$ & $-0.873616$ \\
+% 8  & 2259   & $-0.962555$ & $-0.960076$ \\
+% 9  & 2794   & $-1.032983$ & $-1.028311$ \\
+% 10 & 3707   & $-1.049905$ & $-1.050095$ \\
+% 11 & 4617   & $-1.047702$ & $-1.045563$ \\
+% 12 & 6500   & $-1.021616$ & $-1.020300$ \\
+% 13 & 8494   & $-1.085004$ & $-1.084796$ \\
+% 14 & 10245  & $-1.054721$ & $-1.053816$ \\
+% 15 & 11604  & $-1.056220$ & $-1.056196$ \\
+% 16 & 13975  & $-0.992260$ & $-0.991917$ \\
+% 17 & 18243  & $-0.957788$ & $-0.957083$ \\
+% 18 & 24611  & $-1.023683$ & $-1.023423$ \\
+% 19 & 32417  & $-1.064347$ & $-1.064198$ \\
+% 20 & 38695  & $-1.068093$ & $-1.067911$ \\
+% 21 & 49815  & $-0.991141$ & $-0.990966$ \\
+% 22 & 54756  & $-1.060215$ & $-1.060167$ \\
+% 23 & 69109  & $-0.937651$ & $-0.937560$ \\
+% 24 & 94737  & $-0.982435$ & $-0.982317$ \\
+% 25 & 117288 & $-1.065109$ & $-1.065091$ \\
+% 26 & 134701 & $-1.120324$ & $-1.120188$ \\
+% 27 & 159309 & $-1.032394$ & $-1.032332$ \\
+% 28 & 188105 & $-1.005780$ & $-1.005762$ \\
+% 29 & 210864 & $-1.009491$ & $-1.009380$ \\
+
+% \end{longtable}
+
+% \begin{longtable}{c r r r}
+% \caption{Observed convergence rates the primal problem.}
+% \label{tab:convergence-rates}\\
+
+% \toprule
+% Level $\ell$
+% & DoFs $N_\ell$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endfirsthead
+
+% \multicolumn{4}{c}{\tablename\ \thetable{} continued} \\
+% \toprule
+% Level $\ell$
+% & DoFs $N_\ell$
+% & Exact-error rate
+% & Estimated-error rate \\
+% \midrule
+% \endhead
+
+% \midrule
+% \multicolumn{4}{r}{Continued on next page} \\
+% \endfoot
+
+% \bottomrule
+% \endlastfoot
+
+% 0  & 391    & --          & --          \\
+% 1  & 398    & $-9.039327$ & $-6.808775$ \\
+% 2  & 425    & $-2.461020$ & $-2.009516$ \\
+% 3  & 440    & $-1.657662$ & $-1.240409$ \\
+% 4  & 496    & $-1.110762$ & $-1.041100$ \\
+% 5  & 625    & $-0.734576$ & $-0.723502$ \\
+% 6  & 978    & $-0.690875$ & $-0.685905$ \\
+% 7  & 1573   & $-0.872409$ & $-0.873616$ \\
+% 8  & 2259   & $-0.962555$ & $-0.960076$ \\
+% 9  & 2794   & $-1.032983$ & $-1.028311$ \\
+% 10 & 3707   & $-1.049905$ & $-1.050095$ \\
+% 11 & 4617   & $-1.047702$ & $-1.045563$ \\
+% 12 & 6500   & $-1.021616$ & $-1.020300$ \\
+% 13 & 8494   & $-1.085004$ & $-1.084796$ \\
+% 14 & 10245  & $-1.054721$ & $-1.053816$ \\
+% 15 & 11604  & $-1.056220$ & $-1.056196$ \\
+% 16 & 13975  & $-0.992260$ & $-0.991917$ \\
+% 17 & 18243  & $-0.957788$ & $-0.957083$ \\
+% 18 & 24611  & $-1.023683$ & $-1.023423$ \\
+% 19 & 32417  & $-1.064347$ & $-1.064198$ \\
+% 20 & 38695  & $-1.068093$ & $-1.067911$ \\
+% 21 & 49815  & $-0.991141$ & $-0.990966$ \\
+% 22 & 54756  & $-1.060215$ & $-1.060167$ \\
+% 23 & 69109  & $-0.937651$ & $-0.937560$ \\
+% 24 & 94737  & $-0.982435$ & $-0.982317$ \\
+% 25 & 117288 & $-1.065109$ & $-1.065091$ \\
+% 26 & 134701 & $-1.120324$ & $-1.120188$ \\
+% 27 & 159309 & $-1.032394$ & $-1.032332$ \\
+% 28 & 188105 & $-1.005780$ & $-1.005762$ \\
+% 29 & 210864 & $-1.009491$ & $-1.009380$ \\
+
+% \end{longtable}
+
+\end{document}
