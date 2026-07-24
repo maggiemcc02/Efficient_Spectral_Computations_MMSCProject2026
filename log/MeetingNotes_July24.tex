@@ -1,0 +1,145 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Meeting Notes for July $24^{\text{th}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{What we have been up to}
+
+\subsection{Debugging L-Shaped Poisson Example}
+
+\begin{itemize}
+    \item Last week, we looked at some poor convergence results. From running more tests, it seems like the issue was not allowing enough adaptations for the methodology to get into the asymptotic regime.
+    \item For 30 adaptations total, starting maxh = 0.1, and marking parameter 0.5 (maximum marking), it took about 8 adaptations to get into the asymptotic regime.
+    \item For 30 adaptations total, starting maxh = 0.05, and marking parameter 0.5 (maximum marking), it took about 10 adaptations to get into the asymptotic regime.
+    \item For 30 adaptations total, starting maxh = 0.05, and marking parameter 0.25 (maximum marking), it took about 8 adaptations to get into the asymptotic regime.
+    \item I compared the results when I worked with the CG1-DG0 mixed formulation on the L-shaped domain. The results in the $u$ space match very closely. Should the mixed results match in the $u$ space? What do we expect in the full space?
+\end{itemize}
+
+\subsection{Understanding the choice $z_h^+ - I_h z_h^+$ vs. $z_h^+ - z_h$ for localization}
+
+\begin{itemize}
+    \item I ran the L-shaped code (maxh=0.1, marking 0.5) for both choices and the results were similar. 
+    \item I read Rannacher's lecture and paper on separating out discretization errors and iteration errors in DWR. For example, in the linear case, when Galerkin orthogonality does not hold (because of a non-exact solve for $u_h$ and $z_h$), 
+    $$ J(u - \tilde{u_h}) = \rho(\tilde{u_h})(z-\tilde{z_h}) + \rho(\tilde{u_h})(\tilde{z_h})$$
+\end{itemize}
+
+\subsection{First Maxwell example}
+\begin{itemize}
+    \item I am running a generic outer loop over $z \in [2, 4]$ with spacing $\Delta z = 0.1.$ There is no outer adaptivity and at every $z$ I perform 5 (or 10) adaptations. 
+    \item Are we happy with these results? If so, next I will start formulating an outer loop in the complex plane and a selective inner loop (will not always adapt).
+\end{itemize}
+
+\subsection{Our current outer and inner loop ideas}
+
+\begin{itemize}
+    \item Umberto and I have met twice this week to discuss the structure of the outer and inner loop.
+    \item One observation is that Matt's $\gamma(z, A)$ is based on the bottom of the spectrum of the folded operators. Then, his $\Phi_n(z, A)$ comes from truncating the relevant Rayleigh quotients. In our work, we treat the bottom of the spectrum of the folded operators as if they consist of isolated eigenvalues of finite multiplicity. Otherwise, there would not be a valid eigenfunction to consider, and a DWR error estimate for the eigenvalues would not translate into an error estimate for $|\gamma(z, A) - \Phi_n(z, A)|.$ This seems like a strong assumption. What conditions on $A$ guarantee that this is the case? 
+    \item I think this last observation explains why we have so much trouble in the Maxwell example for small values of $z.$ 
+    \item To formulate our current idea for the outer and inner loop, we completed the following steps:
+    \begin{enumerate}
+        \item Clarifying the assumption that the bottom of the spectrum of the folded operators is discrete so that computing $\gamma(z,A)$ consists of infinite-dimensional eigenproblems and a DWR error estimate for $|\gamma(z, A) - \Phi_n(z, A)|$ makes sense. 
+        \item Using DWR and the previous assumption to create a heuristic bound for $|\gamma(z, A) - \Phi_n(z, A)|.$
+        \item Discretize the complex plane with a square of triangles. Is this ok for Matt's algorithm?
+        \item Proving (and finding a reference proof) that $\gamma(z, A)$ is 1-Lipschitz.
+        \item Using the above work to construct refinement criteria for each cell of the triangulation of the complex plane. 
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Thesis outline}
+
+\begin{itemize}
+    \item I made a first outline for the thesis. This consists of the desired sections and subsections, along with bullet points of key questions that each section should answer.
+    \item Spent some time going back through the spectra and pseudospectra content from earlier this summer (Nick's text, Matt's text, my notes, Umberto's notes) and highlighted some passages that I think could be useful for my introduction and background. 
+    \item What is a timeline for the thesis writing? 
+\end{itemize}
+
+\section{Questions}
+\begin{enumerate}
+    \item Should the mixed results match in the $u$ space? What do we expect in the full space?
+    \item Are we happy with the Maxwell results on the real line? 
+    \item In our work, we treat the bottom of the spectrum of the folded operators as if they consist of isolated eigenvalues of finite multiplicity. This seems like a strong assumption. What conditions on $A$ guarantee that this is the case? 
+    \item Is a triangulation of the complex plane ok and desirable for Matt's algorithm?
+    \item Are we happy proceeding with the outer/inner loop idea we have started? Or should we try something else?
+    \item Based on the refinement criteria in the outer loop, when should we adapt the eigensolve and how should we decide how many adaptations to do? 
+    \item What is a reasonable timeline for thesis writing?
+\end{enumerate}
+
+
+\section{Potential Next Steps}
+\begin{enumerate}
+    \item Fixing any issues with Maxwell on the real line.
+    \item Deciding on the outer and inner loop. Maybe the decision is to experiment more instead of picking our criteria now.
+    \item Computing pseudospectra for Maxwell in the complex plane (a first real outer loop). 
+    \item Computing pseudospectra for Poisson in the complex plane. Umberto and I are meeting on Monday to work out the folded operator for Poisson (double Laplacian issue). 
+    \item Continuing thesis planning and preliminary writing.
+    \item Eventually (hopefully) work on an advection-diffusion example. 
+\end{enumerate}
+
+\section{Meeting Notes}
+\begin{enumerate}
+    \item I will perform an additional test for the L-shaped Poisson example with the marking parameter $\theta = 0.9$ and with more adaptations.
+    \item We think the poor Maxwell results is due to a coarser $z$ grid. Last week, we had better results with a finer $z$ grid. I will do a longer run and send the results.
+    \item I will look into using Codex to parallelize the iteration over the $z$ grid. 
+    \item The assumption we must make on the bottom of the spectrum of the folded operators is very important and interesting. It is a thread we should continue to pull at. Can we construct an alternative to DWR for an infinite-dimensional Rayleigh quotient? Can we construct a DWR that uses $\epsilon$-pseudoeigenfunctions (quasimodes)? 
+    \item The refinement criteria for the outer loop is:
+    \begin{align}
+    | \gamma(w, A) - \Phi_n(z_k, A)|
+    & \lesssim h + \sqrt{|\eta_{a_k}| + |\eta_{b_k}|}.
+\end{align}
+It makes sense, and it is nice, that there is an interplay between the outer and inner refinement. If, say, we adapt in the inner loop until each $\eta ~ h^2/2,$ then we can ensure refinement in the same patch. 
+\item Patrick's deadline for a thesis outline is August the 24th. 
+\item Integrate GitHub and Overleaf so that my notes automatically save there. 
+\item Next meeting is Tuesday August 4th at 11:45 am. 
+\end{enumerate}
+
+
+\end{document}
+
+\
