@@ -1,0 +1,114 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Logs from July $27^{\text{th}}$ to August $4^{\text{th}}$}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting Notes July 24}
+
+\section{Meeting Notes}
+\begin{enumerate}
+    \item I will perform an additional test for the L-shaped Poisson example with the marking parameter $\theta = 0.9$ and with more adaptations.
+    \item We think the poor Maxwell results is due to a coarser $z$ grid. Last week, we had better results with a finer $z$ grid. I will do a longer run and send the results.
+    \item I will look into using Codex to parallelize the iteration over the $z$ grid. 
+    \item The assumption we must make on the bottom of the spectrum of the folded operators is very important and interesting. It is a thread we should continue to pull at. Can we construct an alternative to DWR for an infinite-dimensional Rayleigh quotient? Can we construct a DWR that uses $\epsilon$-pseudoeigenfunctions (quasimodes)? 
+    \item The refinement criteria for the outer loop is:
+    \begin{align}
+    | \gamma(w, A) - \Phi_n(z_k, A)|
+    & \lesssim h + \sqrt{|\eta_{a_k}| + |\eta_{b_k}|}.
+\end{align}
+It makes sense, and it is nice, that there is an interplay between the outer and inner refinement. If, say, we adapt in the inner loop until each $\eta ~ h^2/2,$ then we can ensure refinement in the same patch. 
+\item Patrick's deadline for a thesis outline is August the 24th. 
+\item Integrate GitHub and Overleaf so that my notes automatically save there. 
+\item Next meeting is Tuesday August 4th at 11:45 am. 
+\end{enumerate}
+
+
+\subsection{This Week's Plan}
+
+\begin{enumerate}
+
+    \item Run those two extra tests (marking parameter at 0.9, finer z grid for folded Maxwell on real line)
+    \item Learn about Codex
+    \item Code up outer loop and run it.
+    \item Thesis planning and work - introduction and background.
+    
+
+\end{enumerate}
+
+
+\section{Daily Logs}
+
+\textbf{Monday} 
+\begin{enumerate}
+    \item Downloaded ChatGPT + Codex.
+    \item Ran the two tests (marking parameter and finer z grid). The results were as expected!
+    \item Wrote a first attempt at the outer loop. The first issue to overcome was rewriting the folded operator in the complex case. 
+    \item Met with Umberto. We worked through a proof for the folded operator having a discrete spectrum. I need to go back over this again.
+\end{enumerate}
+
+\textbf{Tuesday}
+\begin{enumerate}
+\item Spent some time learning about Codex. Got it all installed on my computer.
+\item Worked on running things in parallel. I thought I was using Codex but I was using chat.
+\item Ran code. Later realized it was eating up RAM so I killed it.
+\item Tried to do some reading to understand Umberto's proof in the meeting. I reformulated a version of it for myself.
+\end{enumerate}
+
+\textbf{Wednesday}
+\begin{enumerate}
+\item Discussed code changes with chat andtried to make some changes to reduce the RAM usage. Ran it again and still had the issues. Umberto thinks the issue is that we do so many expensive LU solves. 
+\item Started writing my introduction. 
+\end{enumerate}
+
+\textbf{Thursday}
+\begin{enumerate}
+   \item Continued working on the introduction by going back over some of Matt's text and highlighting useful sections.
+    \item Met with Umberto to discuss the proof from earlier in the week, along with RAM issues. We discussed using a version of pseudotools for our problem.
+\end{enumerate}
+
+\end{document}
