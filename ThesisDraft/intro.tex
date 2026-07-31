@@ -2,17 +2,19 @@
 
 % The importance of spectra cannot be overstated, and the study of spectra has a long and rich history in mathematics.
 
-With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, and thus with spectra, it is hard to overstate the importance of spectra in applied mathematics (Nick's essay). Indeed, spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations (PDEs) \footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of (Nicks text) and the references therein.}. For example, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light, such as in Figure ?, correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg (Nick). Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe (Nick).
+\section{Motivations and  Project Aims}
+
+With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, and thus with spectra, it is hard to overstate the importance of spectra in applied mathematics (Nick's essay). Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations (PDEs)\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of (Nicks text) and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in Figure \ref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg (Nick). Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe (Nick).
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.48\linewidth]{images/griff_2.jpg}
     \hfill
     \includegraphics[width=0.48\linewidth]{images/griffith_lines.jpg}
     \caption{Spectroscopic images of the sun's light, courtesy of the Griffith Observatory.}
-    \label{fig:spectroscopic-images}
+    \label{spec pic}
 \end{figure}
 
-Although the importance of spectra is beyond question, their reliable computation is another matter (preface). In finite dimensions, we compute matrices, whose spectrum is the set of their eigenvalues. In particular, if $B \in \mathbb{C}^{nxn}$ then its spectrum is the following set of points:
+Although the importance of spectra is beyond question, their reliable computation is another matter (preface). In finite dimensions, we compute the spectrum of a matrix, which is equivalent to the set of its eigenvalues.  In particular, if $B \in \mathbb{C}^{nxn}$ then its spectrum is the following set of points:
 \begin{equation} \label{matrix spec}
     \operatorname{Sp}(B) = \{z \in \mathbb{C}: \det (B-zI) = 0 \} = \{z \in \mathbb{C}: (B-zI)^{-1} \text{ does not exist} \},
 \end{equation}
@@ -26,16 +28,43 @@ where $I$ denotes the identity operator. The spectrum of a linear operator inclu
 \begin{equation}\label{right shift}
     A(x_1, x_2, \dots) = (0, x_1, x_2, \dots),
 \end{equation}
-that acts on a square-summable\footnote{Claiming that a sequence is `square-summable' is claiming that the sequence is in $l^2.$ The $l^2$ space consists of the space of sequences $(x_n)_{n\in \mathbb{N}}$  that satisfy $\sum_n x_n^2 < \infty.$} sequence of points, $(x_n)_{n\in \mathbb{N}}.$  This operator's spectrum is equal to the unit disc, but it has no eigenvalues\footnote{For more information on this example, see Appendix ?}.
+that acts on square-summable sequences\footnote{Claiming that a sequence is `square-summable' is claiming that the sequence is an element of 
+    $l^2(\mathbb{N}) = \{z = \{x_j\}_{j=1}^{\infty}: \sum_{j=1}^{\infty} |x_j|^2 < \infty\}.$}.This operator's spectrum is equal to the unit disc, but it has no eigenvalues\footnote{For more information on this example, see Appendix ?}.
 
-The standard approach for computing the spectra of an infinite-dimensional operator is often refered to as the \textit{discretize-then-solve} approach. This approach consists of discretizing the operator with a finite-dimensional matrix, computing the spectrum of the discretized operator, and hoping that the spectrum of the discretized operator approaches the spectrum of the infinite-dimensional operator as the size of the discretization increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretized very carefully, \textit{spectral pollution} can occur, where the discretized operator has eigenvalues that converge to something not in the spectrum of the infinite-dimensional operator (Patrick). Furthermore, the approach can suffer from \textit{spectral invisibility}, where discretizing the operator causes us to miss parts of the spectrum, even as the size of the discretization increases. Even if our discretization manages to avoid both spectral pollution and spectral invisibility, there remains a far more catastrophic limitation of the discretize-then-solve approach. In particular, since the spectra of infinite-dimensional operators may include more than just eigenvalues of finite multiplicity, there may be parts of the spectrum that we can never capture with the finite, discrete set of eigenvalues that results from discretization. 
+The standard approach for computing the spectrum of an infinite-dimensional operator is often referred to as the \textit{discretize-then-solve} approach. This approach consists of discretizing the operator with a finite-dimensional matrix, computing the spectrum of the discretized operator, and hoping that the spectrum of the discretized operator approaches the spectrum of the infinite-dimensional operator as the size of the discretization increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretized very carefully, \textit{spectral pollution} can occur, where the discretized operator has eigenvalues that converge to something not in the spectrum of the infinite-dimensional operator (Patrick). Furthermore, the approach can suffer from \textit{spectral invisibility}, where discretizing the operator causes us to miss parts of the spectrum, even as the size of the discretization increases. Even if our discretization manages to avoid both spectral pollution and spectral invisibility, there remains a far more catastrophic limitation of the discretize-then-solve approach. In particular, since the spectra of infinite-dimensional operators may include more than just eigenvalues of finite multiplicity, there may be parts of the spectrum that we can never capture with the finite, discrete set of eigenvalues that results from discretization. 
 
-These major pitfalls of the discretize-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. This challenge has been taken up by Matthew Colbrook at Cambridge. In recent work, Colbrook has proposed a new algorithm for computing the spectra of infinite-dimensional operators. Under certain conditions on the operator, this method yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. 
-\begin{itemize}
-    \item Quick overview of the algorithm
-    \item Issues with it
-    \item Our ideas 
-\end{itemize}
+These major pitfalls of the discretize-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. This challenge has been taken up in the recent work of Matthew Colbrook at Cambridge University. His work is based on the idea that infinite-dimensional problems should not be reduced too quickly and uncritically to finite-dimensional problems. Although discretization is unavoidable in the end, Colbrook shows that when and how it is introduced is crucial to the successful computation of spectra (forward). 
+
+
+% Rather than discretizing the operator at the outset and then computing the eigenvalues of the resulting matrix, 
+Colbrook's algorithm considers a sequence of complex numbers $z$ drawn from a grid of points in the complex plane and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ As we shall see, these bounds are obtained from the smallest spectral values of the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that the folded operators are non-negative and self-adjoint.
+The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretize-than-solve approach (Matt). 
+
+Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost, since it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
+
+
+In this project, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the spectra of infinite-dimensional operators. To do so, we first exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. In particular, we apply the \textit{dual-weighted residual} (DWR) method to estimate the error in the quantities used to bound the distance to the spectrum. These estimates are used to both improve the computed bounds and to drive adaptive refinement of the auxiliary eigenproblems. In an effort to reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This ``outer-adaptivity" balances the DWR error estimate with the desired spatial resolution of the spectral computation. The success of our methodology is demonstrated with numerical examples implemented using the finite element method. Throughout, we consider the Maxwell eigenproblem, which famously exhibits spectral pollution when discretized by the finite element method with standard piecewise linear Lagrange elements.
+
+% In this project, we investigate methods for improving the efficiency of Colbrook’s algorithm for computing the spectra of infinite-dimensional operators. We first exploit the structure of the auxiliary eigenvalue problems arising in the algorithm. In particular, we apply the dual-weighted residual (DWR) method to estimate the discretization error in the quantities used to bound the distance to the spectrum. These estimates are used both to improve the computed bounds and to drive adaptive refinement of the auxiliary eigenproblems. To reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This “outer adaptivity” balances the DWR estimate of the discretization error against the desired spatial resolution of the spectral computation. We demonstrate the performance of the resulting methodology through numerical experiments. Throughout, we use the Maxwell eigenproblem as a principal test case, since naive finite-element discretizations with standard piecewise-linear Lagrange elements are known to exhibit spectral pollution.
+
+% The Maxwell eigenproblem, famous for its exhibition of spectral pollution when the finite element method with standard piecewise linear Lagrange elements is used for the discretize-and-solve approach. 
+
+
+
+% are coarse, the computed bounds on the distance to the spectrum can be poor, furthering the expense of computing meaninful bounds on the distance to the spectrum.
+% can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of obtaining meaningful estimates.
+% To approximate the spectrum with Colbrook's algorithm, we solve eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, if the discretizations of these eigenproblems are coarse, the computed bounds on the distance to the spectrum can be poor. 
+
+% These major shortcomings of the discretize-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. This challenge has been addressed in recent work by Matthew Colbrook at the University of Cambridge. His approach is based on the principle that infinite-dimensional problems should not be reduced too quickly or uncritically to finite-dimensional linear algebra. Although some form of discretization is ultimately unavoidable, when and how it is introduced are crucial to the reliable computation of spectra (forward reference).
+
+% Rather than discretizing the operator at the outset and then computing the eigenvalues of the resulting matrix, Colbrook’s algorithm evaluates a sequence of complex numbers z drawn from a grid in the complex plane and computes bounds on the distance from z to Sp(A). As we shall see, obtaining these bounds often reduces to computing the smallest spectral values of the nonnegative self-adjoint operators
+
+% computes spectra by bounding the spectral distance, $\operatorname{dist}(z, A)$ Under certain conditions on the operator, this method yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. The key 
+% \begin{itemize}
+%     \item Quick overview of the algorithm
+%     \item Issues with it
+%     \item Our ideas 
+% \end{itemize}
 
 
 
@@ -47,15 +76,13 @@ These major pitfalls of the discretize-then-solve approach motivate the developm
 % Spectral theory in the modern sense, is often traced back to Fourier's solution of the the heat equation with series expansions, along with Euler and Lagrange'sstudy of eigenvectors in relation to rigid body motion (Matt, Preface). The field continued to be developed in the 19th century with contributions from scientists such as Cauchy, Cayley, Hermite, Liouville, Poincaré, Poisson, Rayleigh, Schwarz, Sturm, and Sylvestor (preface). In the 20th century, Hilbert's use of infinite matrices to study the eigenvalues of integral operators shaped much of the infinite-dimensional spectral theory considered today. Weyl extended the thoery to singular second-order ordinary differential equations (ODEs), von Neumann pioneered spectral theory for unbounded self-adjoint operators, and Riesz and Stone ...? 
 
 
-\section{Motivations and  Project Goals}
-
 \section{Main Contributions}
-The examiners have suggested that a ``main contributions'' section in the introduction is really useful, so please ensure you have such a section! You can use this to explain what you believe are the main results of your work. If any of what you have done is novel, it can be helpful to highlight that here. If you have worked on an industrial project you could state how and why your results are useful to your industrial partner.
+% The examiners have suggested that a ``main contributions'' section in the introduction is really useful, so please ensure you have such a section! You can use this to explain what you believe are the main results of your work. If any of what you have done is novel, it can be helpful to highlight that here. If you have worked on an industrial project you could state how and why your results are useful to your industrial partner.
 
 \section{Structure of the Dissertation}
-It is common, although not compulsory, to end the introduction with a brief section explaining the structure of the dissertation. Often this goes along the lines of:
-The remainder of the dissertation is structured as follows. In Chapter 2 we discuss blah blah. In Chapter 3 we blah blah. Finally in Chapter 4 we summarise the work we have done and suggest some areas for future research.
+% It is common, although not compulsory, to end the introduction with a brief section explaining the structure of the dissertation. Often this goes along the lines of:
+% The remainder of the dissertation is structured as follows. In Chapter 2 we discuss blah blah. In Chapter 3 we blah blah. Finally in Chapter 4 we summarise the work we have done and suggest some areas for future research.
 
 \section{Code Availability}
-Here you may have a link to your GitHub repository (recommended but not mandatory). You can also make clear whether you have written code from scratch, or based it on other code, or had help from ChatGPT.
+% Here you may have a link to your GitHub repository (recommended but not mandatory). You can also make clear whether you have written code from scratch, or based it on other code, or had help from ChatGPT.
 
