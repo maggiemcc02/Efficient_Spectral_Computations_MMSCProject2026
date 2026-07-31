@@ -3,6 +3,7 @@ In this repo, I will log my week-by-week progress for the MMSC project, collect 
 
 ## Structure of the Repo:
 
+- `ThesisDraft/`: contains my current thesis draft.
 - `log/`: contains logs of meeting notes, weekly goals, and progress reports
 - `notes/`: contains any important notes (ideally typed up in LaTeX).
 - `notes/reading_material`: contains all important texts used. 
