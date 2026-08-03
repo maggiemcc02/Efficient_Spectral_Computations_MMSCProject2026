@@ -1,22 +1,137 @@
 \chapter{Background}
 
-\section{A Quick Introduction to Spectra and Pseudospectra}
+In this chapter, we present all necessary background material. We begin with an overview of relevant definitions and results from spectral theory. Then, we describe the discretize-and-solve approach, realized through the finite element method. Upon doing so, we examine the common pitfalls of this approach. To see one of these pitfalls in action, we apply the finite element discretization to the famous Maxwell eigenproblem, which exhibits spurious eigenvalues when discretized with standard piecewise linear Lagrange elements. 
+
+Having explored the limitations of the discretize-and-solve approach, we introduce Matthew Colbrook's algorithm for computing the spectra of infinite-dimensional operators. When applied to the Maxwell eigenproblem, this approach avoids spurious eigenvalues, even when discretized with piecewise linear Lagrange elements. However, when the discretization is coarse, Colbrook's bounds on the distance to the spectrum may be poor. In an effort to quantify the error in these bounds, and to improve these bounds without extensive uniform refinement, we explore the dual-weighted-residual method for eigenproblems and investigate its application to Colbrook's algorithm. 
+
+
+\section{An Introduction to the Spectra and Pseudospectra of Linear Operators}
+\subsection{The Spectra of Linear Operators}
+
+
+Let $H$ be a Hilbert space with inner product $(\cdot, \cdot)_{H}$ and norm $\|\cdot \|_{H}.$
+We consider a linear operator $A : D(A) \rightarrow H$ defined on a subspace $D(A) \subset H.$ We use $R(A)$ and $D(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$   
+
+We say that $A$ is \textit{bounded} if there exists a constant $c>0$ such that $\|Ax\|_{H} \le c \|x\|_{H}$ for all $x \in D(A).$ When a bounded linear operator's range lies on the real line or in the complex plane, it is called a \textit{bounded linear functional} \cite{krey}. 
+Furthermore, we say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:H \rightarrow D(A)$ such that $AB=I$ and $BA \subset I,$ where $I$ denotes the identity operator on $H.$ In this case, $B$ is called the inverse of $A$ \cite{Matt}. 
+
+
+We say that $A$ is \textit{closed} if and only if it has the following property: whenever $\{x_n\}_{n \in \mathbb{N}}$ is a sequence in $D(A)$ such that $x_n \rightarrow x$ and $A x_n \rightarrow y,$ then $x \in D(A)$ and $Ax=y$ \cite{krey}.
+We note that when $A$ is closed, being boundedly invertible is equivalent to $N(A) = \{0\}$ and $R(A) = H.$\footnote{When $N(A) =\{0\}$ and $R(A) = H,$ $A^{-1}$ is defined. Since $A$ is closed so is $A^{-1}.$ Then, the Closed Graph Theorem tells us that $A^{-1}$ is bounded \cite{krey}.} 
+
+ To define the unique adjoint operator of $A,$ we assume that $A$ is densely defined, i.e., that $D(A)$ is dense in $H.$ Furthermore, we define
+\begin{equation}\label{D(A*)}
+    D(A^*) = \{ w \in H : v \mapsto ( Av, w )_{H} \text{ is a bounded linear functional on D(A)}\}.
+ \end{equation}
+ Consider a $w \in D(A^*).$ Since $D(A)$ is dense in $H$, there exists a unique $u \in H$ such that 
+ \begin{equation}
+     (Av, w)_{H} = (v, w)_{H}, \qquad \forall v \in D(A).
+ \end{equation}
+ The adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called a \textit{normal}.
+
+
+In this setting, the spectrum of $A,$ as stated in \eqref{SpA}, can be equivantly formulated as the following set:
+\begin{equation}\label{SpA2}
+    \operatorname{Sp}(A) = \{z \in \mathbb{C} : A-zI \text{ is not boundedly invertible}\}.
+\end{equation}
+If $A$ is not a closed linear operator, then $\operatorname{Sp}(A) = \mathbb{C}.$ Thus, going forward, we will consider the case in which $A$ is a closed linear operator. In this case, $\operatorname{Sp}(A)$ is a closed subset of the complex plane \cite{Matt}.  
+
+As is the case in finite dimensions, $z \in \mathbb{C}$ is an eigenvalue of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the eigenspace of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \operatorname{Sp}(A)$ but that there may exist $z \in \operatorname{Sp}(A)\setminus \Gamma(A).$ For example, $(A-zI)$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H_2,$ even when $z$ is not an eigenvalue of $A.$
+
+If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its unique adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \operatorname{Sp}(A)\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \operatorname{Sp}(A)$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$ 
+% Furthermore, when $A$ is closed and densely defined, both $A^*A$ and $AA^*$ are self-adjoint.
+
+NEXT - RESOLVENT OPERATOR, 
+
+
+
+% We begin with an overview of the spectral theory that is relevant to the project.
+% Let $X$ and $Y$ be two vector spaces over the same field. Let $D(A) \subset X$ denote the domain of the operator $A:D(A) \rightarrow Y.$ The operator is called `linear' if it satisfies $A(\alpha x + \beta y)= \alpha A(x) + \beta A(y)$ for all $x, y \in D(A)$ and for all scalars $\alpha$ and $\beta.$ Going forward, we will drop the adjective `linear' and use `operator' to refer to  linear operator. 
+
+% More specifically, consider two Hilbert spaces $H_1$ and $H_2$ and the operator  $A: D(A) \rightarrow H$
+% Throughout, we will use the term `operator' to refer to a linear operator, i.e.,
+
+% Let $H_1$ and $H_2$ be Hilbert spaces with inner products $(\cdot, \cdot)_{H_1}$ and $(\cdot, \cdot)_{H_2},$ respectively.
+% We consider a linear operator $A : D(A) \rightarrow H_2$ defined on a subspace $D(A) \subset H_1.$ We use $R(A)$ and $D(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$   
+
+% The linear operator $A$ is \textit{bounded} if there exists a constant $c>0$ such that $\|Ax\|_{H_2} \le c \|x\|_{H_1}$ for all $x \in D(A).$ 
+% We say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:H_2 \rightarrow H_1$ such that $AB=I_{H_2}$ and $BA = I_{D(A)},$ where $I_{H_2}$ and $I_{D(A)}$ denote the identity operators on $H_2$ and $D(A),$ respectively. In this case, $B$ is called the inverse of $A$ \cite{Matt}. 
+
+
+% The linear operator $A$ is \textit{closed} if and only if it has the following property: whenever $\{x_n\}_{n \in \mathbb{N}}$ is a sequence in $D(A)$ such that $x_n \rightarrow x$ and $A x_n \rightarrow y,$ then $x \in D(A)$ and $Ax=y$ \cite{krey}.
+% We note that when $A$ is closed, being boundedly invertible is equivalent to $N(A) = \{0\}$ and $R(A) = H_2.$\footnote{When $N(A) =\{0\}$ and $R(A) = H_2,$ $A^{-1}:H_2 \rightarrow H_1$ is defined. Since $A$ is closed, we can show that $A^{-1}$ is closed. Then, the Closed Graph Theorem tells us that $A^{-1}$ is bounded \cite{krey}.} 
+
+% A bounded linear functional is a bounded linear operator whose range lies on the real line or in the complex plane \cite{krey}.  To define the unique adjoint operator of $A,$ we assume that $A$ is densely defined, i.e., that $D(A)$ is dense in $H_1.$ Furthermore, we define
+% \begin{equation}\label{D(A*)}
+%     D(A^*) = \{ w \in H_2 : v \mapsto ( Av, w )_{H_2} \text{ is a bounded linear functional on D(A)}\}.
+%  \end{equation}
+%  Consider a $w \in D(A^*).$ Since $D(A)$ is dense in $H_1$, there exists a unique $u \in H_1$ such that 
+%  \begin{equation}
+%      (Av, w)_{H_2} = (v, w)_{H_2}, \qquad \forall v \in D(A).
+%  \end{equation}
+%  The adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called a \textit{normal}.
+
+
+% The spectrum of $A,$ as stated in \eqref{SpA}, can be equivantly formulated as the following set:
+% \begin{equation}\label{SpA2}
+%     \operatorname{Sp}(A) = \{z \in \mathbb{C} : A-zI \text{ is not boundedly invertible}\}.
+% \end{equation}
+% If $A$ is not a closed linear operator, then $\operatorname{Sp}(A) = \mathbb{C}.$ Thus, going forward, we will consider the case in which $A$ is a closed linear operator. In this case, $\operatorname{Sp}(A)$ is a closed subset of the complex plane \cite{Matt}.  
+
+% As is the case in finite dimensions, $z \in \mathbb{C}$ is an eigenvalue of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the eigenspace of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \operatorname{Sp}(A)$ but that there may exist $z \in \operatorname{Sp}(A)\setminus \Gamma(A).$ For example, $(A-zI)$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H_2,$ even when $z$ is not an eigenvalue of $A.$
+
+% If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its unique adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \operatorname{Sp}(A)\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \operatorname{Sp}(A)$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$ 
+% % Furthermore, when $A$ is closed and densely defined, both $A^*A$ and $AA^*$ are self-adjoint.
+
+
+
+
+\subsection{The Pseudospectra of Matrices}
+
+\subsection{The Pseudospectra of Linear Operators}
+
 
 
 \section{Dangerous Pitfalls of Using the Finite Element Method for Computing Spectra}
+
+\begin{itemize}
+    \item How much FEM for eigenproblems?  What background is needed? How much FEM background?
+    \item Definitions of the pitfalls?
+\end{itemize}
 \subsection{An Example of Spectral Pollution: The Maxwell Eigenproblem}
+\begin{itemize}
+    \item The problem.
+    \item Show the spectral pollution with CG. 
+\end{itemize}
 
 \section{Matthew Colbrook's Algorithm for Computing Spectra}
+
+\begin{itemize}
+    \item PSEUDOSPEC AND/OR COMPSPEC?
+    \item We only use pseudospec, but compspec is the full `compute the spectra' code. If we use only pseudospec, should the project be 'efficient pseudospectral computations'?
+    \item Or should I present compspec and comment that we focus on pseudospec? A lot of extra stuff for compspec though?
+\end{itemize}
 \subsection{Application to the Maxwell Eigenproblem}
+\begin{itemize}
+    \item Show that we get good results if discretization is not too coarse. 
+\end{itemize}
 
 \section{The Dual-Weighted Residual Method for Eigenproblems}
-\subsection{Application to the Maxwell Eigenproblem}
+\begin{itemize}
+    \item How much background is needed here? Should I do all the general setup for nonlinear problems? Or just state the final result?
+    \item How much needs to be said about the localization in the code? Should I refer to Joe's thesis/Pablo's branch and the Rognes and Logg paper? Or do I need to describe the localization and the adaptivity methodology? 
+\end{itemize}
+
+
 
 \chapter{Methodology}
 
 \section{The Inner Loop: Pairing Colbrook's Algorithm with Adaptivity}
+\subsection{Application to the Maxwell Eigenproblem}
 
 \section{The Outer Loop: Adaptively Refining the Complex Plane in Colbrook's Algorithm}
 
 \chapter{Results}
+\section{1D Poisson}
+\section{Maxwell Eigenproblem}
 
