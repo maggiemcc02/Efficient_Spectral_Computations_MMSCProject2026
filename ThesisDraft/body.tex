@@ -12,14 +12,14 @@ Having explored the limitations of the discretize-and-solve approach, we introdu
 Let $H$ be a Hilbert space with inner product $(\cdot, \cdot)_{H}$ and norm $\|\cdot \|_{H}.$
 We consider a linear operator $A : D(A) \rightarrow H$ defined on a subspace $D(A) \subset H.$ We use $R(A)$ and $D(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$   
 
-We say that $A$ is \textit{bounded} if there exists a constant $c>0$ such that $\|Ax\|_{H} \le c \|x\|_{H}$ for all $x \in D(A).$ When a bounded linear operator's range lies on the real line or in the complex plane, it is called a \textit{bounded linear functional} \cite{krey}. 
-Furthermore, we say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:H \rightarrow D(A)$ such that $AB=I$ and $BA \subset I,$ where $I$ denotes the identity operator on $H.$ In this case, $B$ is called the inverse of $A$ \cite{Matt}. 
+We say that $A$ is a \textit{bounded} on $H$, denoted $A \in \mathcal{B}(H),$ if there exists a constant $c>0$ such that $\|Ax\|_{H} \le c \|x\|_{H}$ for all $x \in D(A).$ When a bounded linear operator's range lies on the real line or in the complex plane, it is called a \textit{bounded linear functional} \cite{krey}. 
+Furthermore, we say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:H \rightarrow D(A)$ such that $AB=I$ and $BA \subset I,$ where $I$ denotes the identity operator on $H.$ In this case, $B$ is called the \textit{inverse} of $A$ \cite{Matt}. 
 
 
 We say that $A$ is \textit{closed} if and only if it has the following property: whenever $\{x_n\}_{n \in \mathbb{N}}$ is a sequence in $D(A)$ such that $x_n \rightarrow x$ and $A x_n \rightarrow y,$ then $x \in D(A)$ and $Ax=y$ \cite{krey}.
 We note that when $A$ is closed, being boundedly invertible is equivalent to $N(A) = \{0\}$ and $R(A) = H.$\footnote{When $N(A) =\{0\}$ and $R(A) = H,$ $A^{-1}$ is defined. Since $A$ is closed so is $A^{-1}.$ Then, the Closed Graph Theorem tells us that $A^{-1}$ is bounded \cite{krey}.} 
 
- To define the unique adjoint operator of $A,$ we assume that $A$ is densely defined, i.e., that $D(A)$ is dense in $H.$ Furthermore, we define
+ To define the unique \textit{adjoint operator} of $A,$ we assume that $A$ is d\textit{ensely defined}, i.e., that $D(A)$ is dense in $H.$ Furthermore, we define
 \begin{equation}\label{D(A*)}
     D(A^*) = \{ w \in H : v \mapsto ( Av, w )_{H} \text{ is a bounded linear functional on D(A)}\}.
  \end{equation}
@@ -27,7 +27,7 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
  \begin{equation}
      (Av, w)_{H} = (v, w)_{H}, \qquad \forall v \in D(A).
  \end{equation}
- The adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called a \textit{normal}.
+ The adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal}.
 
 
 In this setting, the spectrum of $A,$ as stated in \eqref{SpA}, can be equivantly formulated as the following set:
@@ -36,13 +36,29 @@ In this setting, the spectrum of $A,$ as stated in \eqref{SpA}, can be equivantl
 \end{equation}
 If $A$ is not a closed linear operator, then $\operatorname{Sp}(A) = \mathbb{C}.$ Thus, going forward, we will consider the case in which $A$ is a closed linear operator. In this case, $\operatorname{Sp}(A)$ is a closed subset of the complex plane \cite{Matt}.  
 
-As is the case in finite dimensions, $z \in \mathbb{C}$ is an eigenvalue of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the eigenspace of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \operatorname{Sp}(A)$ but that there may exist $z \in \operatorname{Sp}(A)\setminus \Gamma(A).$ For example, $(A-zI)$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H_2,$ even when $z$ is not an eigenvalue of $A.$
+As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the eigenspace of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \operatorname{Sp}(A)$ but that there may exist $z \in \operatorname{Sp}(A)\setminus \Gamma(A).$ For example, $(A-zI)$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H_2,$ even when $z$ is not an eigenvalue of $A.$
 
-If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its unique adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \operatorname{Sp}(A)\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \operatorname{Sp}(A)$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$ 
+If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its unique adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \operatorname{Sp}(A)\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \operatorname{Sp}(A)$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$  With these properties in mind, every operator we will consider going forward is assumed to be linear, closed, and densely defined on a Hilbert space $H.$ 
 % Furthermore, when $A$ is closed and densely defined, both $A^*A$ and $AA^*$ are self-adjoint.
+% With these properties in mind, we henceforth assume that every operator A:D(A)⊂H→H under consideration is linear, closed, and densely defined.
 
-NEXT - RESOLVENT OPERATOR, 
-
+ One of the most important tools for the analysis and computation of spectra is the resolvent operator:
+\begin{equation}\label{resolvant}
+    (A, z) \mapsto (A-zI)^{-1} \qquad z \notin \operatorname{Sp}(A).
+\end{equation}
+The norm of the resolvent provides information about the distance from $z\notin \operatorname{Sp}(A)$ to the spectrum of $A.$ In particular,
+\begin{equation}
+    \| (A-zI)^{-1} \|_H^{-1} \le \operatorname{dist}(z, \operatorname{Sp}(A)), 
+\end{equation}
+where 
+\begin{equation}
+    \operatorname{dist}(z, \operatorname{Sp}(A)) = \inf_{w \in \operatorname{Sp}(A)} |z - w|
+\end{equation}
+If the operator $A$ is normal, we have equality:
+\begin{equation}
+    \| (A-zI)^{-1} \|_H^{-1} = \operatorname{dist}(z, \operatorname{Sp}(A)). 
+\end{equation}
+Hence, when $A$ is a normal operator, the norm of the resolvent can be used to characterize the spectrum of $A.$
 
 
 % We begin with an overview of the spectral theory that is relevant to the project.
@@ -86,13 +102,61 @@ NEXT - RESOLVENT OPERATOR,
 
 
 
-\subsection{The Pseudospectra of Matrices}
+ \subsection{The Pseudospectra of Linear Operators}
 
-\subsection{The Pseudospectra of Linear Operators}
+% Consider the matrix $B \in \mathbb{C}^{n \times n}$ and assume that it has $n$ distinct eigenvalues. Then, $B$ has a set of $n$ linearly independent eigenvectors that are unique up to normalization by scalar factors \cite{Nick}. In this case, we can consider the eigendecomposition $B = V \Lambda V^{-1},$ where $V$ is the matrix of the eigenvectors of $B$ and $\Lambda$ is the diagonal matrix of the corresponding eigenvalues.  
+
+% Consider the matrix two-norm\footnote{Defined as $\|B\|_2 = \sup_{x \ne 0} \frac{\|Bx\|_2}{\|x\|_2},$ where we use the vector two-norm, $\|x\|_2 = (\sum_{i=1}^{n} |x_i|^2)^{1/2}.$}, denoted $\|\cdot \|_2.$ The conditioning of the eigenvectors of $B$ can be characterized by the condition number of $V$ in the matrix two norm:
+% \begin{equation}
+%     \kappa_2(V) = \|V\|_2\|V^{-1}\|_2.
+% \end{equation}
+% When $B$ is a normal matrix, meaning that $B^*B = BB^*,$ where $B^*$ denotes the conjugate transpose of $B$, we can form $V$ with a set of $n$ orthonormal eigenvectors of $B.$ In this case, $V$ is unitary. In this case, $V^{-1} = V^*$ and $\|V\|_2 = \|V^{-1}\|_2 = 1.$ Thus, $\kappa_2(V) = 1.$ Furthermore, the statement $\kappa_2(V) \gg 1$ is a statement that $B$ is in some sense far from normal \cite{Nick}.
+
+% one way to ask how `far' $B$ is from being normal is to ask how far $\kappa_2(V)$ is from one. 
+
+To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask if $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from ``yes" to ``no". Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large \cite{Nick}. This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ In particular, for $\epsilon > 0,$ the $\epsilon$-pseudospectrum of $B$ is the following set:
+\begin{equation} \label{eps B}
+    \operatorname{Sp}_{\epsilon}(B) = \{z \in \mathbb{C}:\|(B-zI)^{-1} \|^{-1} \le \epsilon \} = \operatorname{Cl} \left(\{z \in \mathbb{C} : \|(B-zI)^{-1} \|^{-1} < \epsilon \} \right),
+\end{equation}
+where $\operatorname{Cl}(\cdot)$ denotes the closure of an inputted set \cite{Matt}. Here, we adopt the convention that if $z \in \operatorname{Sp}(B),$ then $\|(B-zI)^{-1}\|^{-1} = 0,$ or $\|(B-zI)^{-1}\| = \infty$ \cite{Matt, Nick}. 
+
+The $\epsilon$-pseudospectrum of $B$ can be equivalently defined as follows:
+\begin{equation} \label{eps stab B}
+    \operatorname{Sp}_{\epsilon}(B) = \bigcup_{E \in \mathbb{C}^{n\times n}, \|E\| \le \epsilon} \operatorname{Sp}(B+E).
+\end{equation}
+This second definition tells us that the $\epsilon$-pseudospectrum of $B$ is the region in the complex plane describing how far an $\epsilon$-sized perturbation of $B$ can move its eigenvalues \cite{Matt}. In this sense, the pseudospectra of $B$ describe the sensitivity of its eigenvalues to perturbations. The pseudospectra of $B$ can therefore be used to identify the regions of the complex plane where eigenvalue computations are unreliable and where eigenvalues alone may provide an unreliable description of the underlying system.
+
+Recall that $B$ is a normal matrix when $B^*B=BB^*,$ where $B^*$ denotes the conjugate transpose of $B.$ When $B$ is a normal matrix, $\|(B-zI)^{-1}\|^{-1} = \operatorname{dist}(z,\operatorname{Sp}(B)).$ In this case, the $\epsilon$-pseudospectra of $B$ consist of closed $\epsilon$ balls about each eigenvalue of $B.$ Thus, an $\epsilon$-sized perturbation of $B$ cannot have eigenvalues that are further than an $\epsilon$-distance from the spectrum of $B.$ In this sense, the spectrum of $B$ is well-conditioned.  
+
+
+In infinite dimensions, we consider a closed and densely defined  linear operator $A : D(A) \subset H \rightarrow H,$ defined on the Hilbert space $H.$ For each $\epsilon>0,$ the $\epsilon$-pseudospectrum of $A$ is the following set:\footnote{Notice that in infinite dimensions, the the equality in \eqref{eps B} need not hold. This is because in infinite dimensions, the resolvent norm of an unbounded operator on a Hilbert space can be constant on open sets \cite{Matt}.}
+\begin{equation}
+    \operatorname{Sp}_{\epsilon}(A) = \operatorname{Cl}\left( \{ z \in \mathbb{C} : \|(A-zI)^{-1}\|_{H}^{-1} < \epsilon \}  \right).
+\end{equation}
+As before, we adopt the convention that if $z \in \operatorname{Sp}(A),$ then $\|(A-zI)^{-1}\|_{H}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{H} = \infty$ \cite{Matt, Nick}.
+Similarly to \eqref{eps stab B}, the $\epsilon$-pseudospectrum of $A$ can be defined as follows \cite{Matt, Nick}:
+\begin{equation} 
+    \operatorname{Sp}_{\epsilon}(A) = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(H), \|E\| < \epsilon} \operatorname{Sp}(A+E) \right).
+\end{equation}
+% As before, this second definition tells us that the pseudospectra of $A$ describe how far perturbations in $A$ impact its spectral values. Th
+
+As is the case in finite-dimensions, the pseudospectra of $A$ can be used to explore the conditioning of the spectrum of $A.$ When $A$ is a normal operator, $ \|(A-zI)^{-1} \|^{-1} = \operatorname{dist}(z, \operatorname{Sp}(A)).$ In this case,
+\begin{equation}
+    \operatorname{Sp}_{\epsilon}(A) = \operatorname{Sp}(A) + \mathfrak{B}_{\epsilon}(0),
+\end{equation}
+where $\mathfrak{B}_{\epsilon}(0)$ denotes the closed ball of radius $\epsilon$ centered at zero \cite{Matt}. Thus,  a perturbation of $A$ with a norm less than $\epsilon$ cannot have spectral values that are further than an $\epsilon$-distance from the spectrum of $A.$ In this sense, the spectrum of $A$ is well-conditioned. 
+
+When $A$ is not a normal operator, its $\epsilon$-pseudospectrum may be much larger than $\operatorname{Sp}(A) + \mathfrak{B}_{\epsilon}(0).$ In this case, perturbations of $A$ with norm less than $\epsilon$  may have spectral values that are much further than an $\epsilon$-distance from the spectrum of $A,$ indicating that the spectrum of $A$ is ill-conditioned.
+
+Before moving on, we note that pseudosepctra have many applications beyond the analysis of the conditioning of spectra. For example, as we shall see, Colbrook's algorithm uses concepts related to pseudospectra to enable the reliable computation of spectra \cite{Matt}.
+%  Thus, the $\epsilon$-pseudospectra of $A$ can be
+
+
+% of closed $\epsilon$ balls about the spectrum of $A$ \cite{Matt}. When $A$ is not a normal operator, its $\epsilon$-pseudospectra may be much larger than  
 
 
 
-\section{Dangerous Pitfalls of Using the Finite Element Method for Computing Spectra}
+\section{Dangerous Pitfalls of the Discretize-Then-Solve Approach}
 
 \begin{itemize}
     \item How much FEM for eigenproblems?  What background is needed? How much FEM background?
