@@ -1,0 +1,213 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Meeting Notes August 4}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Maxwell DWR Corrections}
+
+\begin{itemize}
+    \item Last week, we looked at poor Maxwell results when considering the DWR correction. We thought it was because my z grid was too coarse. I ran it on a finer grid and the results look alot better (see below)!
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{log/phi_plot_N=32.pdf}
+    \caption{Set 5 adaptations at each $z$ (finer $z$ grid).}
+    \label{fig:placeholder}
+\end{figure}
+
+\section{Discrete Bottom of Spectrum}
+\begin{itemize}
+    \item Last week, we noted that for our DWR methodology to work, the bottom of the spectrum of the folded operator must be discrete. Umberto and I explored the conditions for which this is the case. It is alot of extra analysis, probably too much for the thesis. But we confirmed that we should be ok for standard examples like Maxwell, Poisson, and Advection diffusion. A detailed analysis could be a topic of future work.
+\end{itemize}
+
+\section{Outer/Inner Loop for 2D Maxwell}
+\begin{itemize}
+    \item I coded up the outer loop for 2D Maxwell. I did so in parallel with the help of Chat (and later Codex). 
+    \item However, I never got it to run to completion. It ate up RAM, and took a very long time to run. Umberto thinks it is because of all the expensive LU solves.
+    \item As a result, Umberto and I explored the possibility of making an alternative solver, that uses a methodology like in his pseudotools code. This seems like another possibility for future work. However, in the current time crunch, this may be a big endeavour. 
+    \item What can we do here to try and have even a preliminary result for the thesis?
+\end{itemize}
+
+\section{Outer/Inner Loop for 1D Poisson}
+\begin{itemize}
+    \item As a result of these issues with 2D Mawell, Umberto suggested we go to a 1D problem. Specifically,  a special mixed 1D Poisson:
+    Let $U = (u, \sigma)^T$ and defined the operator $DU = (-i\sigma', -iu')^T.$ The relevant function space is $H_0^1(0, \pi) \cap H^1(0, \pi).$ To relate this to Poisson, consider the eigenproblem $DU = \mu u.$ Solve for $\sigma$ in the second equation, substitute it into the first, and obtain $-u'' = \mu^2 u.$ Thus, the eigenvalues are $\mu = \pm n.$ We also have a zero-mode, $U = (0, C).$ Thus the eigenvalues are all the integers. 
+    \item Umberto made some changes to my code to speed it up a bit. This included reusing a base problem, reusing already computed enrichments, treating the eigenvalue differently in the error estimate so that we did not have to fully assemble a brand new result for each eigenvalue, garbage collecting, etc.
+    \item With these changes, along with some manual 1D refinement (netgen adaptivity in the current code does not work for 1D), Umberto got 1D Poisson to run.
+    \item I studied what Umberto did and implemented it within my current framework. I am running it now (12+ hours) and have some results to show. 
+    \item In the future, I should have this code running in parallel. 
+    \item It seems like the eigenvalues do not all get refinement in exactly the same way in the outer loop. I wonder why? 
+    \item What do we want to show for this example? What $\epsilon$? What \texttt{diam\_tol}? What plots?
+\end{itemize}
+
+\section{Back to Outer/Inner Loop for 2D Maxwell}
+\begin{itemize}
+    \item I have coded up a new draft for 2D Maxwell using Umberto's speed-ups. I have not run it yet. Worried about RAM.
+    \item Should also have this run in parallel (not implemented yet). 
+\end{itemize}
+
+\section{Writing}
+\begin{itemize}
+    \item I am getting quite nervous about the write up. I take a long time to write and have not been able to focus much on writing yet. I really want to shift gears asap to writing almost full time. I am worried I will run out of time. 
+    \item What results do we need for the thesis? What do I need to be able to focus on the write-up? My current idea is:
+    \begin{itemize}
+        \item Show Maxwell spectral pollution.
+        \item Show Matt's algorithm applied to Maxwell. Show that a coarse discretization performs poorly.
+        \item Show that the DWR correction helps. 
+        \item Show the outer/inner loop applied to 1D Poisson.
+        \item If possible, show the outer/inner loop applied to Maxwell.
+    \end{itemize}
+    \item Umberto mentioned this list of examples:
+    \begin{itemize}
+        \item 1D Poisson problem,
+        \item 1D advection diffusion,
+        \item 2D Maxwell on a square,
+        \item 2D Maxwell on an L-shape,
+        \item 1D Cossu and Chomaz operator,
+        \item 1D Benilov, O'Brien and Sazonov operator,
+        \item 2D Maxwell with Lie-Derivative. 
+    \end{itemize}
+
+    \item I have lots of write-up questions...
+    \begin{itemize}
+        \item Do we want to take $[0, 1]$ out of all of the Matt distance to spectrum plots? Or just the DWR plot? 
+        \item How much FEM background? What should I say about FEM for eigenproblems, other than all the issues and showing the Maxwell example?
+        \item Colbrook's full algorithm for spectral computations goes a step further than what we do. We are implementing his PseudoSpec algorithm. His CompSpec algorithm does the additional minimization. What should I present? If it is just PseudoSpec, should the thesis discuss efficient pseudospectral computations instead of spectral computations? Or should I present the full algorithm and say that we focus on PseusdoSpec?
+        \item What background/setup is needed for DWR applied to eigenproblems. Should I present the full Lagrangian approach (general nonlinear problems and then apply to eigenproblems) or just state results? What is the right balance here? 
+        \item How much information is needed regarding the adaptivity code? Can I just say that localization is implemented as in Joe's thesis (Rognes and Logg)? Or do I need to explain the localization, marking, refinement, etc? 
+    \end{itemize}
+\end{itemize}
+
+
+\end{document}
+
+
+
+% \begin{enumerate}
+%     \item I will perform an additional test for the L-shaped Poisson example with the marking parameter $\theta = 0.9$ and with more adaptations.
+%     \item We think the poor Maxwell results is due to a coarser $z$ grid. Last week, we had better results with a finer $z$ grid. I will do a longer run and send the results.
+%     \item I will look into using Codex to parallelize the iteration over the $z$ grid. 
+%     \item The assumption we must make on the bottom of the spectrum of the folded operators is very important and interesting. It is a thread we should continue to pull at. Can we construct an alternative to DWR for an infinite-dimensional Rayleigh quotient? Can we construct a DWR that uses $\epsilon$-pseudoeigenfunctions (quasimodes)? 
+%     \item The refinement criteria for the outer loop is:
+%     \begin{align}
+%     | \gamma(w, A) - \Phi_n(z_k, A)|
+%     & \lesssim h + \sqrt{|\eta_{a_k}| + |\eta_{b_k}|}.
+% \end{align}
+% It makes sense, and it is nice, that there is an interplay between the outer and inner refinement. If, say, we adapt in the inner loop until each $\eta ~ h^2/2,$ then we can ensure refinement in the same patch. 
+% \item Patrick's deadline for a thesis outline is August the 24th. 
+% \item Integrate GitHub and Overleaf so that my notes automatically save there. 
+% \item Next meeting is Tuesday August 4th at 11:45 am. 
+% \end{enumerate}
+
+
+% \subsection{This Week's Plan}
+
+% \begin{enumerate}
+
+%     \item Run those two extra tests (marking parameter at 0.9, finer z grid for folded Maxwell on real line)
+%     \item Learn about Codex
+%     \item Code up outer loop and run it.
+%     \item Thesis planning and work - introduction and background.
+    
+
+% \end{enumerate}
+
+
+% \section{Daily Logs}
+
+% \textbf{Monday} 
+% \begin{enumerate}
+%     \item Downloaded ChatGPT + Codex.
+%     \item Ran the two tests (marking parameter and finer z grid). The results were as expected!
+%     \item Wrote a first attempt at the outer loop. The first issue to overcome was rewriting the folded operator in the complex case. 
+%     \item Met with Umberto. We worked through a proof for the folded operator having a discrete spectrum. I need to go back over this again.
+% \end{enumerate}
+
+% \textbf{Tuesday}
+% \begin{enumerate}
+% \item Spent some time learning about Codex. Got it all installed on my computer.
+% \item Worked on running things in parallel. I thought I was using Codex but I was using chat.
+% \item Ran code. Later realized it was eating up RAM so I killed it.
+% \item Tried to do some reading to understand Umberto's proof in the meeting. I reformulated a version of it for myself.
+% \end{enumerate}
+
+% \textbf{Wednesday}
+% \begin{enumerate}
+% \item Discussed code changes with chat andtried to make some changes to reduce the RAM usage. Ran it again and still had the issues. Umberto thinks the issue is that we do so many expensive LU solves. 
+% \item Started writing my introduction. 
+% \end{enumerate}
+
+% \textbf{Thursday}
+% \begin{enumerate}
+%    \item Continued working on the introduction by going back over some of Matt's text and highlighting useful sections.
+%     \item Met with Umberto to discuss the proof from earlier in the week, along with RAM issues. We discussed using a version of pseudotools for our problem.
+% \end{enumerate}
+
+
+% \textbf{Friday}
+% \begin{enumerate}
+%    \item Explored the pseudotools, least squares (for 1D poisson), and CG0 penalty methods (for 1D poisson) discussed in the meeting with Umberto. It is not clear which, if any, of the methods are the best way forward. 
+%    \item Focused on writing my introduction.
+% \end{enumerate}
+
+
+% \textbf{Sunday}
+% \begin{enumerate}
+%    \item Reached out to Umberto about my concerns. Voiced that I want to focus on getting some sort of result for the paper, and that building a new linear solver for 2D Maxwell may be too much of an undertaking.
+%    \item Umberto agreed. He worked on the 1D Poisson problem himself with a Dirac mixed form (best approach for folded operator). He seemed to get it to work!!
+%    \item Focused on starting my background.
+% \end{enumerate}
+
+
+% \textbf{Monday}
+% \begin{enumerate}
+%    \item Spent the day working through Umberto's 1D Poisson codes so that I can understand them and integrate them into my setting.
+% \end{enumerate}
+
+% \end{document}
