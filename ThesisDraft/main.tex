@@ -11,8 +11,13 @@
 % \usepackage[T1]{fontenc}
 \usepackage{float}
 \usepackage{enumitem}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{multirow}
+\usepackage{xurl}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}
 \usepackage{amsfonts}
@@ -25,8 +30,8 @@
 % \captionsetup[table]{font=small}
 \usepackage[capitalize,nameinlink]{cleveref}
 \usepackage{mathtools}
-\newcommand{\defeq}{\vcentcolon=}
-\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{etoolbox}
+
 %\usepackage{amssymb,amsmath,epsfig,html}
 
 \hypersetup{
@@ -35,6 +40,43 @@
     citecolor={blue!50!black},
     urlcolor={blue!80!black}
 }
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\AfterEndEnvironment{definition}{\noindent}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Sp}[1]{\operatorname{Sp}\!\left(#1\right)}
+\newcommand{\Spe}[1]{\operatorname{Sp}_{\epsilon}\!\left(#1\right)}
+
 
 \title{Efficient Algorithms for Infinite-Dimensional Spectral Computations}   %note \\[1ex] is a line break in the title
 \author{Margaret McCarthy}             %your name
@@ -70,6 +112,7 @@
 
 \appendix
 \include{appendix1}
+% \include{appendix2}
 
 \addcontentsline{toc}{chapter}{References}
 \renewcommand{\bibname}{References}

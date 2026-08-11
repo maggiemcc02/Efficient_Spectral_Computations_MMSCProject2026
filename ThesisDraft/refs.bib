@@ -11,6 +11,241 @@ title = {Introductory functional analysis with applications },
 year = {1989 - 1978},
 }
 
+@misc{PatrickNote,
+  author       = {Farrell, P.},
+  title        = {{Finite Element Methods for PDEs: Lecture Notes}},
+  howpublished = {University of Oxford},
+  note         = {Hilary Term 2026},
+}
+
+
+@manual{FiredrakeOfficial,
+  title        = {Firedrake User Manual},
+  author       = {David A. Ham and Paul H. J. Kelly and Lawrence Mitchell and Colin J. Cotter and Robert C. Kirby and Koki Sagiyama and Nacime Bouziani and Sophia Vorderwuelbecke and Thomas J. Gregory and Jack Betteridge and Daniel R. Shapero and Reuben W. Nixon-Hill and Connor J. Ward and Patrick E. Farrell and Pablo D. Brubeck and India Marsden and Thomas H. Gibson and Miklós Homolya and Tianjiao Sun and Andrew T. T. McRae and Fabio Luporini and Alastair Gregory and Michael Lange and Simon W. Funke and Florian Rathgeber and Gheorghe-Teodor Bercea and Graham R. Markall},
+  organization = {Imperial College London and University of Oxford and Baylor University and University of Washington},
+  edition      = {First edition},
+  year         = {2023},
+  month        = {5},
+  doi          = {10.25561/104839},
+}
+
+@Article{slep,
+   author  = "V. Hernandez and J. E. Roman and V. Vidal",
+   title   = "{SLEPc}: A scalable and flexible toolkit for the solution of eigenvalue problems",
+   journal = "ACM Trans. Math. Software",
+   volume  = "31",
+   number  = "3",
+   pages   = "351--362",
+   year    = "2005"
+}
+
+@article{Arnold,
+  author  = {D. N. Arnold and R. S. Falk and R. Winther},
+  title   = {Finite Element Exterior Calculus, Homological Techniques, and Applications},
+  journal = {Acta Numerica},
+  volume  = {15},
+  pages   = {1--155},
+  year    = {2006},
+  doi     = {10.1017/S0962492906210018},
+}
+
+
+
+
+@book{Bangerth,
+  author    = {Bangerth, W. and Rannacher, R.},
+  title     = {Adaptive Finite Element Methods for Differential Equations},
+  series    = {Lectures in Mathematics ETH Z{\"u}rich},
+  publisher = {Birkh{\"a}user},
+  address   = {Basel},
+  year      = {2003},
+  doi       = {10.1007/978-3-0348-7605-6}
+}
+
+@article{Heuveline,
+abstract = {We develop a new approach to a posteriori error estimation for Galerkin finite element approximations of symmetric and nonsymmetric elliptic eigenvalue problems. The idea is to embed the eigenvalue approximation into the general framework of Galerkin methods for nonlinear variational equations. In this context residual-based a posteriori error representations are available with explicitly given remainder terms. The careful evaluation of these error representations for the concrete situation of an eigenvalue problem results in a posteriori error estimates for the approximations of eigenvalues as well as eigenfunctions. These suggest local error indicators that are used in the mesh refinement process.},
+author = {Heuveline, V. and Rannacher, R.},
+address = {New York},
+copyright = {Kluwer Academic Publishers 2001},
+issn = {1019-7168},
+journal = {Advances in computational mathematics},
+keywords = {Eigenvalues ;  Eigenvectors ;  Finite element method},
+language = {eng},
+number = {1-4},
+pages = {107-138},
+publisher = {Springer Nature B.V},
+title = {A posteriori error control for finite element approximations of elliptic eigenvalue problems},
+volume = {15},
+year = {2001},
+}
+
+@online{pablo,
+  author  = {{Firedrake Project}},
+  title   = {Firedrake: goal-adaptive solver branch},
+  url     = {https://github.com/firedrakeproject/firedrake/tree/7b7b7799f0a6dc13a9f056616d2c28aa6b4deb45},
+  urldate = {2026-08-10},
+  note    = {Branch \nolinkurl{pbrubeck/goal-adaptive-solver}.
+             Commit \nolinkurl{7b7b7799f0a6dc13a9f056616d2c28aa6b4deb45}},
+}
+
+@article{logg,
+abstract = {This article presents a general and novel approach to the automation of goal-oriented error control in the solution of nonlinear stationary finite element variational problems. The approach is based on automated linearization to obtain the linearized dual problem, automated derivation and evaluation of a posteriori error estimates, and automated adaptive mesh refinement to control the error in a given goal functional to within a given tolerance. Numerical examples representing a variety of different discretizations of linear and nonlinear partial differential equations are presented, including Poisson's equation, a mixed formulation of linear elasticity, and the incompressible Navier--Stokes equations. [PUBLICATION ABSTRACT]},
+author = {Rognes, M. E. and Logg, A.},
+address = {Philadelphia},
+copyright = {2013, Society for Industrial and Applied Mathematics},
+issn = {1064-8275},
+journal = {SIAM journal on scientific computing},
+keywords = {Algorithms ;  Automation ;  Errors ;  Estimates ;  Finite element method ;  Laboratories ;  Mathematical analysis ;  Mathematical models ;  Non-linear . . .},
+language = {eng},
+number = {3},
+pages = {C173-C193},
+publisher = {Society for Industrial and Applied Mathematics},
+title = {Automated Goal-Oriented Error Control I: Stationary Variational Problems},
+volume = {35},
+year = {2013},
+}
+
+
+@article{Becker,
+abstract = {This article surveys a general approach to error control and adaptive mesh
+design in Galerkin finite element methods that is based on duality principles
+as used in optimal control. Most of the existing work on a posteriori error
+analysis deals with error estimation in global norms like the ‘energy norm’
+or the L2 norm, involving usually unknown ‘stability constants’. However, in
+most applications, the error in a global norm does not provide useful bounds
+for the errors in the quantities of real physical interest. Further, their sensitivity
+to local error sources is not properly represented by global stability constants.
+These deficiencies are overcome by employing duality techniques, as
+is common in a priori error analysis of finite element methods, and replacing
+the global stability constants by computationally obtained local sensitivity
+factors. Combining this with Galerkin orthogonality, a posteriori estimates
+can be derived directly for the error in the target quantity. In these estimates
+local residuals of the computed solution are multiplied by weights which
+measure the dependence of the error on the local residuals. Those, in turn,
+can be controlled by locally refining or coarsening the computational mesh.
+The weights are obtained by approximately solving a linear adjoint problem.
+The resulting a posteriori error estimates provide the basis of a feedback process
+for successively constructing economical meshes and corresponding error
+bounds tailored to the particular goal of the computation. This approach,
+called the ‘dual-weighted-residual method’, is introduced initially within an
+abstract functional analytic setting, and is then developed in detail for several
+model situations featuring the characteristic properties of elliptic, parabolic
+and hyperbolic problems. After having discussed the basic properties
+of duality-based adaptivity, we demonstrate the potential of this approach by
+presenting a selection of results obtained for practical test cases. These include
+problems from viscous fluid flow, chemically reactive flow, elasto-plasticity, radiative
+transfer, and optimal control. Throughout the paper, open theoretical
+and practical problems are stated together with references to the relevant literature.},
+author = {Becker, R. and Rannacher, R.},
+address = {Cambridge, UK},
+copyright = {Cambridge University Press 2001},
+issn = {0962-4929},
+journal = {Acta numerica},
+language = {eng},
+pages = {1-102},
+publisher = {Cambridge University Press},
+title = {An optimal control approach to a posteriori error estimation in finite element methods},
+volume = {10},
+year = {2001},
+}
+
+@article{Bathe,
+  author    = {Gr{\"a}tsch, T. and  Bathe, K.},
+  title     = {A Posteriori Error Estimation Techniques in Practical Finite Element Analysis},
+  journal   = {Computers \& Structures},
+  volume    = {83},
+  number    = {4},
+  pages     = {235--265},
+  year      = {2005},
+  publisher = {Elsevier},
+  issn      = {0045-7949}
+}
+
+
+@article{Oden,
+abstract = {This monograph presents a summary account of the subject of a posteriori error estimation for finite element approximations of problems in mechanics. The study primarily focuses on methods for linear elliptic boundary value problems. However, error estimation for unsymmetrical systems, nonlinear problems, including the Navier-Stokes equations, and indefinite problems, such as represented by the Stokes problem are included. The main thrust is to obtain error estimators for the error measured in the energy norm, but techniques for other norms are also discussed.},
+author = {Ainsworth, M. and Oden, J.},
+address = {Amsterdam},
+copyright = {1997},
+issn = {0045-7825},
+journal = {Computer methods in applied mechanics and engineering},
+keywords = {Physics},
+language = {eng},
+number = {1},
+pages = {1-88},
+publisher = {Elsevier B.V},
+title = {A posteriori error estimation in finite element analysis},
+volume = {142},
+year = {1997},
+}
+
+@mastersthesis{joe,
+  author = {Flood, J.},
+  title  = {Automating Goal-Based Adaptive Refinement for Partial Differential Equations and Eigenvalue Problems},
+  school = {University of Oxford},
+  year   = {2025},
+  type   = {{A thesis submitted for the degree of M.Sc. in Mathematical Modelling and Scientific Computing}},
+  url    = {https://www.maths.ox.ac.uk/system/files/inline-files/2025_Flood_J.pdf}
+}
+
+@article{balance_errs,
+abstract = {This article continues prior work of the authors on the combined a posteriori analysis for the discretization and iteration errors in the finite element approximation of linear elliptic problems to the nonlinear case. The underlying theoretical framework is again that of the Dual Weighted Residual (DWR) method for goal-oriented error control. The accuracy in the algebraic solution process can be balanced with that due to discretization using computable a posteriori error estimates in which the outer nonlinear and inner linear iteration errors are separated from the discretization error. This results in effective stopping criteria for the algebraic iteration, which are elaborated particularly for Newton-type methods. The performance of the proposed strategies is demonstrated for several nonlinear test problems.},
+author = {Rannacher, R. and Vihharev, J.},
+address = {Berlin},
+copyright = {Copyright Walter de Gruyter GmbH Mar 2013},
+issn = {1570-2820},
+journal = {Journal of numerical mathematics},
+keywords = {Newton-Raphson method},
+language = {eng},
+number = {1},
+pages = {23-62},
+publisher = {De Gruyter},
+title = {Adaptive finite element analysis of nonlinear problems: balancing of discretization and iteration errors},
+volume = {21},
+year = {2013},
+}
+
+@book{Scott,
+author = {Adler, J. and De Sterck, H. and MacLachlan, S. and Olson, L.},
+title = {Numerical Partial Differential Equations},
+publisher = {Society for Industrial and Applied Mathematics},
+year = {2025},
+address = {Philadelphia, PA},
+edition   = {},
+}
+
+@article{ufl,
+author = {Aln{\ae}s, M. S. and Logg, A. and {\O}lgaard, K. B. and Rognes, M. E. and Wells, G. N.},
+title = {Unified form language: A domain-specific language for weak formulations of partial differential equations},
+year = {2014},
+issue_date = {February 2014},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {40},
+number = {2},
+issn = {0098-3500},
+url = {https://doi.org/10.1145/2566630},
+doi = {10.1145/2566630},
+abstract = {We present the Unified Form Language (UFL), which is a domain-specific language for representing weak formulations of partial differential equations with a view to numerical approximation. Features of UFL include support for variational forms and functionals, automatic differentiation of forms and expressions, arbitrary function space hierarchies for multifield problems, general differential operators and flexible tensor algebra. With these features, UFL has been used to effortlessly express finite element methods for complex systems of partial differential equations in near-mathematical notation, resulting in compact, intuitive and readable programs. We present in this work the language and its construction. An implementation of UFL is freely available as an open-source software library. The library generates abstract syntax tree representations of variational problems, which are used by other software libraries to generate concrete low-level implementations. Some application examples are presented and libraries that support UFL are highlighted.},
+journal = {ACM Trans. Math. Softw.},
+month = mar,
+articleno = {9},
+numpages = {37},
+keywords = {AD, DSEL, DSL, FEM, PDE, algorithmic differentiation, automatic functional differentiation, discretization, domain specific language, einstein notation, embedded language, finite element method, functional, implicit summation, index notation, mixed element, partial differential equation, symbolic differentiation, tensor algebra, weak form, weak formulation}
+}
+
+
+@manual{Firedrake,
+  title        = {Firedrake User Manual},
+  author       = {D. A. Ham and P. H. J. Kelly and L. Mitchell and C. J. Cotter and R. C. Kirby and K. Sagiyama and N. Bouziani and S. Vorderwuelbecke and T. J. Gregory and J. Betteridge and D. R. Shapero and R. W. Nixon-Hill and C. J. Ward and P. E. Farrell and P. D. Brubeck and I. Marsden and T. H. Gibson and M. Homolya and T. Sun and A. T. T. McRae and F. Luporini and A. Gregory and M. Lange and S. W. Funke and F. Rathgeber and G.-T. Bercea and G. R. Markall},
+  organization = {Imperial College London and University of Oxford and Baylor University and University of Washington},
+  edition      = {1st},
+  year         = {2023},
+  month        = {5},
+  doi          = {10.25561/104839},
+}
+
+
 @article{Boffi,
 abstract = {We discuss the finite element approximation of eigenvalue problems associated with compact operators. While the main emphasis is on symmetric problems, some comments are present for non-self-adjoint operators as well. The topics covered include standard Galerkin approximations, non-conforming approximations, and approximation of eigenvalue problems in mixed form. Some applications of the theory are presented and, in particular, the approximation of the Maxwell eigenvalue problem is discussed in detail. The final part tries to introduce the reader to the fascinating setting of differential forms and homological techniques with the description of the Hodge–Laplace eigenvalue problem and its mixed equivalent formulations. Several examples and numerical computations complete the paper, ranging from very basic exercises to more significant applications of the developed theory.},
 author = {Boffi, D.},
@@ -73,7 +308,7 @@ year = {2005},
 }
 
 @article{NickEssay,
-  author  = {Trefethen, Nick},
+  author  = {Trefethen, L. N},
   title   = {Favorite Eigenvalue Problems},
   journal = {SIAM News},
   volume  = {44},

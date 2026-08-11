@@ -1,0 +1,308 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx} % Required for inserting images
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% Define environments
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{definition}{Definition}
+% \newtheorem{lemma}{Lemma}
+% \newtheorem{corollary}{Corollary}
+
+
+\title{Our Functional-Analytic Setting!}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Matt's Setting and the Issue it Poses for Us}
+
+Throughout his work, Matt has identified $H$ with its dual. Thus, he considers $A : D(A) \subset H \rightarrow H$ and writes
+\begin{align}
+    &\operatorname{Sp}(A) = \{z \in \mathbb{C} : (A-zI) \text{ is not boundedly invertible}\},\\
+    &\sigma_{\inf}(A) = \inf \{ \|Ax\| : x \in D(A), \|x\| = 1 \}, \\
+    &\gamma(z, A) = \|(A-zI)^{-1} \|^{-1} = \min \{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I)\},\\
+    &\gamma(z, A) \le \operatorname{dist}(z, \operatorname{Sp}(A)),\\
+     &\operatorname{Sp}_{\epsilon}(A) = \{z \in \mathbb{C} : \gamma(z, A) = 0\},\\
+    &\operatorname{Sp}_{\epsilon}(A) = \{z \in \mathbb{C} : \gamma(z, A) < \epsilon\},\\
+    & (A-zI)^*(A-zI), \text{ and } (A-zI)(A-zI)^*.
+\end{align}
+
+ In our work, we consider operators that map from a Hilbert space to its antidual, $A: H \rightarrow H^x.$ As a result, we cannot write $A-zI$ without properly specifying what $I$ is. Thus, we need to re-think what $A-zI$ is and what the correct notion of spectra and pseudospectra is for our work. 
+
+
+\section{The Antidual Adjoint}
+
+We first need to define the antidual adjoint. If $f \in H^x$ then $f$ is a bounded conjugate-linear functional, i.e., $f(au) = \overline{a} f(u).$ We want to define a canonical map $J_{\times} : H \rightarrow H^{\times}$ so that $J_{\times} u \in H^{\times \times}.$ To do so, we write 
+\begin{equation}
+    (J_{\times} u)(f) = \overline{f(u)}.
+\end{equation}
+Then, $(J_{\times}u)(af) = \overline{a f(u)} = \overline{a} (J_{\times} u)(f).$
+
+Consider $A : H \rightarrow H^{\times}.$ We define the Banach adjoint $A^B : H^{\times \times} \rightarrow H^{\times}$ by 
+\begin{equation*}
+    \langle A^B f, u \rangle_{H^{\times}, H} = \langle f , Au \rangle_{H^{\times \times}, H^{\times}}.
+    \end{equation*}
+Using the canonical map $J_{\times},$ we can define the antidual adjoint $A^x: H \rightarrow H^{\times}$ via $A^{\times} = A^B J_{\times}.$ In other words, the antidual adjoint satisfies 
+\begin{equation}
+    \langle A^{\times} v, u \rangle_{H^{\times}, H} = \overline{ \langle Au, v \rangle_{H^{\times}, H}}.
+\end{equation}
+Going forward, we will drop the subscripts on the duality action where possible, for ease of notation. 
+
+
+\section{Choosing the `identity' $M$}
+
+Instead of forming $A-zI$ we will form $A-zM$ where
+\begin{equation}
+    M : H \rightarrow H^{\times} \qquad \langle Mu, v \rangle_{H^{\times}, H} \defeq (u, v)_{L^2},
+\end{equation}
+which is both positive definite and self-adjoint with respect to the antidual adjoint, i.e., $\langle Mu, u \rangle > 0$ for $u \ne 0$ and $M^{\times} = M.$ As a result, $M$ defines a metric.
+
+
+When it exists, $M^{-1}$ defines a metric via the following inner product:
+\begin{equation}
+    M^{-1}: H^{\times} \rightarrow H, \qquad (f, g)_{M^{-1}} \defeq \langle f, M^{-1} g \rangle_{H^{\times}, H}.
+\end{equation}
+
+See Homework:
+\begin{itemize}
+    \item $M$ is self-adjoint,
+    \item $M^{-1}$ and $M$ induce metrics,
+    \item New notion of orthogonality using these metrics. 
+\end{itemize}
+
+
+\section{Injection Modulus w.r.t $M$ and $M^{-1}$}
+
+With this $M,$ we can consider $A-zM$ instead of $A-zI$ for spectral and pseudospectra computations. This choice will be clarified below. 
+
+\subsection{A New Injection Modulus}
+The injection modulus measures how injective an operator is. It can be thought of as the infinite-dimensional analog of a singular value. Matt defines it as follows:
+\begin{equation}
+    \sigma_{\inf}(A) = \inf \{ \|Ax\| : x \in D(A), \|x\| = 1 \}.
+\end{equation}
+
+We want to measure the injection modulus of $B_z \defeq A - zM : H \rightarrow H^{\times}.$ To do so, we will use the metrics induced by $M^{-1}$ and $M.$ This choice yields the following:
+\begin{equation}
+    \sigma_{\inf}^2(B_z) = \inf_{u \ne 0} \frac{ \|B_z u \|_{M^{-1}}^2}{\|u\|_{M}^2}.
+\end{equation}
+Expanding the numerator out, we obtain
+\begin{equation}
+    \langle B_z u, M^{-1} B_z u \rangle_{H^{\times}, H}.
+\end{equation}
+Using the antidual adjoint, $\langle B_z u, v \rangle_{H^{\times}, H} = \overline{ \langle B_z^{\times} v, u \rangle_{H^{\times}, H}},$ we can write
+\begin{equation}
+    \langle B_z u, M^{-1} B_z u \rangle_{H^{\times}, H} = \overline {\langle B_z^{\times} (M^{-1} B_z u), u \rangle_{H^{\times}, H}} .
+\end{equation}
+Notice that $\langle B_z u, M^{-1} B_z u \rangle_{H^{\times}, H} = \| B_xu\|_{M^-1}^2$ is real and nonnegative. Thus, we can drop the conjugate and write
+\begin{equation}
+    \sigma_{\inf}^2(B_z) = \inf_{u \ne 0} \frac{{\langle B_z^{\times} (M^{-1} B_z u), u \rangle_{H^{\times}, H}}}{{\langle Mu, u \rangle_{H^{\times}, H}}},
+\end{equation}
+or
+\begin{equation}
+    \sigma_{\inf}^2(A-zM) = \inf_{u \ne 0} \frac{{\langle (A-zM)^{\times} M^{-1} (A-zM) u, u \rangle_{H^{\times}, H}}}{{\langle Mu, u \rangle_{H^{\times}, H}}}.
+\end{equation}
+
+\section{Connection to Matt's Pseudospectra (Issues)}
+
+For our work, we define $M$ by $\langle Mu, v \rangle_{H^{\times}, H} = (u, v)_{L^2}.$ To get Matt's operator $\mathcal{A} : H \rightarrow H$ that relates to our operator $A : H \rightarrow H^{\times},$ we simply need to apply $M^{-1}$ to $A:$
+\begin{equation}
+    \mathcal{A} = M^{-1} A : H \rightarrow H.
+\end{equation}
+\textbf{QUESTIONS}:
+\begin{itemize}
+    \item Does it matter that Matt's operator is from $D(\mathcal{A}) \subset H$ to $H$???
+    \item Does it matter that we use $L^2$ and Matt uses $H$? I think it works if we define $M$ to give the $H$ inner product.
+    \item $M$ is a mass operator not a Riesz map. Does $M^{-1}$ exist? $M$ is not onto for $H^{\times}$? Can we say things like $A = M \mathcal{A}$? I am hesitant to treat $M^{-1}$ like a Riesz map.
+
+\end{itemize}
+In this way, $M^{-1}(A-zM) = \mathcal{A} - zI$ where $I : H \rightarrow H.$ Furthermore, notice that with our choice of $M$ we have 
+\begin{equation}
+    \| M w \|_{M^{-1}}^2 = \langle Mw, w \rangle = \|w \|_M^2 = \|w \|_{L^2}^2.
+\end{equation}
+Thus,
+\begin{equation}
+    \|(A-zM) u \|_{M^{-1}}^2 = \|M(\mathcal{A} - zI) u \|_{M^{-1}}^2 = \| \mathcal{A} - zI\|_{L^2}^2.
+\end{equation}
+Hence,
+\begin{equation}
+    \sigma_{\inf}(A-zM) = \sigma_{\inf}(\mathcal{A}-zI).
+\end{equation}
+
+This also holds for the adjoint injection modulus. The Hilbert adjoint of $\mathcal{A}$ satisfies 
+\begin{equation}
+    (\mathcal{A}u, v)_{L^2} = (u, \mathcal{A}'v)_{L^2}.
+\end{equation}
+Notice that
+\begin{equation}
+    (\mathcal{A}u, v)_{L^2} = \langle M(\mathcal{A} u), v \rangle = \langle M(M^{-1} Au), v \rangle = \langle Au, v \rangle.
+\end{equation}
+Using the antidual adjoint, we have 
+\begin{equation}
+    (\mathcal{A}u, v)_{L^2} = \overline{ \langle A^{\times} v, u \rangle}
+\end{equation}
+Write $w = M^{-1} A^{\times} v \in H.$ Then $Mw = A^{\times} v$ and 
+$\overline{ \langle Mu, v \rangle} = \overline{(w, u)_{L^2}} = (u, w)_{L^2}.$ Thus,
+\begin{equation}
+    \langle Au, v \rangle = \overline {\langle Mw, u \rangle} = (u, w)_{L^2} = (u, M^{-1} A^{\times} v)_{L^2}. 
+\end{equation}
+Thus, $\mathcal{A}' = M^{-1} A^{\times}.$
+
+Furthermore, 
+$\mathcal{A}' - \overline{z} I $ = $M^{-1}(A^{\times} - \overline{z}M).$ Hence,
+\begin{align}
+    \sigma_{\inf}(\mathcal{A}' - \overline{z}I) &= \inf_{\|u\|_{L^2} = 1} \| M^{-1} (A - zM)^{\times} u \|_{L^2} \\
+    & = \inf_{\|u\|_{L^2} = 1} \| (A - zM)^{\times} u \|_{M^{-1}}\\
+    &= \sigma_{\inf}(A-zM)
+ \end{align}
+
+\textbf{ AM I ACCIDENtALLY TREATING $M$ AS A RIESZ MAP !!??}
+
+\subsection{Poisson}
+
+\begin{itemize}
+    \item Take $Lu = -u''$ and $D(L) = H^2(0, \pi) \cap H_0^1(0, \pi)$ which acts like (?) $L : D(L) \subset L^2(0, \pi) \rightarrow L^2(0, \pi).$
+    \item Write $A : H_0^1(0, \pi) \rightarrow (H_0^1(0, \pi))^{\times} \defeq H^{-1}(0,\pi),$ defined by $\langle Au, v \rangle = (u', v')_{L^2}.$
+    \item Define the mass map $M : H_0^1(0, \pi) \rightarrow H^{-1}(0, \pi)$ by $\langle Mu, v\rangle = (u, v)_{L^2}.$
+
+    \item The `weak' shift operator is $A-zM$. For sufficiently regular $u,$ 
+\begin{equation}
+    \langle Au, v \rangle = (Lu, v)_{L^2},
+\end{equation}
+via integration by parts. Also, 
+\begin{equation}
+    \langle z Mu, v \rangle = (zu, v)_{L^2}.
+\end{equation}
+Thus, 
+\begin{equation}
+    \langle (A-zM)u, v\rangle = ((L-zI)u, v)_{L^2}.
+\end{equation}
+In other words,
+\begin{equation}
+    (A-zM)u = M((L-zI)u).
+\end{equation}
+
+\item \textbf{THIS IS WHERE THE ISSUE IS!!} We need $(L-zI)u \in H_0^1(0, \pi).$ Should we instead define another map 
+$$J : L^2 \rightarrow H^{-1}(0, \pi)$$ by 
+$$\langle Jf, v \rangle = (f, v)_{L^2}$$
+so that $M = J |_{H_0^1(0, \pi)}$? Then $J^{-1}(A-zM)u = (L-zI)u$????
+
+% \item Now, 
+% \begin{align}
+%     \|(A-zM)u\|_{M^{-1}}^2  &= \langle (A-zM) u, M^{-1} (A-zM) u \rangle \\
+%     &= \langle M((L-zI)u), (L-zI)u \rangle \\
+%     &= \| (L-zI) u \|_{L^2}^2.
+% \end{align}
+
+% \item Thus,
+% \begin{equation}
+%     \sigma_{\inf}(L-zI) = \inf_{u \ne 0} \frac{\|(A-zM)u \|_{M^{-1}}}{\|u\|_{M}}.
+% \end{equation}
+
+\item Now, 
+\begin{align}
+    \|J^{-1}(A-zM)u\|_{L^2}^2 
+    &= \| (L-zI) u \|_{L^2}^2  ???
+\end{align}
+
+\item Thus,
+\begin{equation}
+    \sigma_{\inf}(L-zI) = \inf_{u \ne 0} \frac{\|(J^{-1} A-zM)u \|_{L^2}}{\|u\|_{L^2}} ???
+\end{equation}
+
+\end{itemize}
+
+
+\section{Discretization}
+
+We discretize $B_z = A-zM$ with $B_h.$ We say that $B_h$ acts between $(\mathbb{C}, \| \cdot \|_{M_h})$ and $(\mathbb{C}, \| \cdot \|_{M_h^{-1}})$
+where $\|x\|_{M_h}^2 = x^*M_h x$ and $\|y\|_{M_h^{-1}}^2 = y^*M_h^{-1} y.$
+
+In this way, we build the generalized SVD of $B_h,$
+\begin{equation}
+    B_h = U \Sigma (V^* M_h),
+\end{equation}
+where $U^* M_h^{-1} U = I,$ $V^* M_h V = I,$ and $\Sigma$ holds the singular values with respect to $M_h$ and$ M_h^{-1}$, i.e.,
+\begin{equation}
+    \sigma_j(B_h)  = \sqrt{\lambda_j(B_h^* M_h^{-1} B_h, \, M_h)}.
+\end{equation}
+From this, we can show that 
+\begin{equation}
+    \| B_h^{-1} \|_{M^{-1}, M} = 1/\sigma_{\min}(B_h),
+\end{equation}
+ where $\|B_h\|_{M^{-1}, M} = \sup_{f \ne 0} \| B_h^{-1} f \|_{M_h^{-1}} / \|f \|_{M_h}.$
+
+
+ \noindent
+See Homework:
+\begin{itemize}
+    \item SVD proof,
+    \item Smallest singular value proof,
+    \item Orthogonal/Isometry proof.
+\end{itemize}
+
+\end{document}
