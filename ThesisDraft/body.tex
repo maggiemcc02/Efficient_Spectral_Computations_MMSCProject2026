@@ -371,25 +371,35 @@ To estimate this error, the DWR method embeds the given problem into the framewo
 % its influence on the quantity of interest.
 
 
-We now specialize the DWR framework to eigenproblems, taking the eigenvalue itself as the chosen quantity of interest. To do so, we consider a subset $V$ of the Hilbert space $H$ (DO WE NEED EMBEDDING?DENSITY?). Denoting the antidual of $V$ by $V^{\times},$ we consider the linear operators $V, M: V \rightarrow V^{\times}.$ 
- We seek a  $\lambda \in \mathbb{C}$ and nonzero $u \in H$ such that 
+We now specialize the DWR framework to eigenproblems, taking the eigenvalue itself as the chosen quantity of interest.
+To do so, we consider linear operators $A$ and $M$ on a subspace $V$ of a Hilbert space $H.$  (DO WE NEED EMBEDDING? DENSITY?)
+ We seek a  $\lambda \in \mathbb{C}$ and nonzero $u \in V$ such that 
 \begin{equation} \label{eig prob}
     Au = \lambda M u,
 \end{equation}
-where $M$ is assumed to be self-adjoint with respect to the anti-dual adjoint (EQN!!) and positive semidefinite  \cite{Bangerth}. 
+where $M$ is assumed to be self-adjoint and positive semidefinite  \cite{Bangerth}. 
+
+% To do so, we consider a subset $V$ of the Hilbert space $H$ (DO WE NEED EMBEDDING?DENSITY?). Denoting the antidual of $V$ by $V^{\times},$ we consider the linear operators $V, M: V \rightarrow V^{\times}.$ 
+%  We seek a  $\lambda \in \mathbb{C}$ and nonzero $u \in H$ such that 
+% \begin{equation} \label{eig prob}
+%     Au = \lambda M u,
+% \end{equation}
+% where $M$ is assumed to be self-adjoint with respect to the anti-dual adjoint (EQN!!) and positive semidefinite  \cite{Bangerth}. 
 
 As per usual, we prefer the variational formulation
 \begin{equation} \label{var eig}
     a(u, v) = \lambda m(u, v) \qquad \forall v \in V,
 \end{equation}
-where 
-\begin{align} 
-   a(\cdot, \cdot) &= \langle A \cdot, \cdot\rangle_{V^{\times}, V},\\
-   m(\cdot, \cdot) &= \langle M\cdot, \cdot\rangle_{V^{\times}, V}.
-\end{align}
-Here, $\langle \cdot, \cdot\rangle_{V^{\times}, V}$ denotes the action of an element in $V^{\times}$ in the first slot, on an element in $V$ in the second slot \cite{umberto}. Furthermore, all eigenfunctions that satisfy \eqref{var eig} are assumed to be normalized by $m(u, u) = 1.$
+% where 
+% \begin{align} 
+%    a(\cdot, \cdot) &= \langle A \cdot, \cdot\rangle_{V^{\times}, V},\\
+%    m(\cdot, \cdot) &= \langle M\cdot, \cdot\rangle_{V^{\times}, V}.
+% \end{align}
+% Here, $\langle \cdot, \cdot\rangle_{V^{\times}, V}$ denotes the action of an element in $V^{\times}$ in the first slot, on an element in $V$ in the second slot \cite{umberto}. 
+where $a(\cdot, \cdot)$ and $m(\cdot, \cdot)$ are the sesquilinear forms induced by $A$ and $M,$ respectively.
+Furthermore, all eigenfunctions that satisfy \eqref{var eig} are assumed to be normalized by $m(u, u) = 1.$
 
-To discretize this eigenproblem, we introdice the finite-dimensional subspace $V_h \subset V$ and seek $\lambda_h \in \mathbb{C}$ and nonzero $u_h \in V_h$ that satisfy
+To discretize this eigenproblem, we introduce the finite-dimensional subspace $V_h \subset V$ and seek $\lambda_h \in \mathbb{C}$ and nonzero $u_h \in V_h$ that satisfy
 \begin{equation} \label{gal eig}
     a(u_h, v_h) = \lambda_h m(u_h, v_h) \qquad \forall v_h \in V_h,
 \end{equation}
@@ -399,9 +409,9 @@ With this, our goal is to control the error in $\lambda_h$. In other words, the 
 
 As previously discussed, the DWR method introduces a dual problem whose solution is used to describe the sensitivity of the quantity of interest to errors in the primal solution. For a general eigenvalue problem, the dual problem takes the form of the adjoint eigenproblem:
 \begin{equation} \label{dual eig}
-    A^{\times} u^{\times} = \lambda^{\times} u^{\times}, 
+    A^* u^* = \lambda^*Mu^*, 
 \end{equation}
-where $A^{\times}$ denotes the antidual adjoint of $A$ (EQN!!?). In the present setting, however, the auxiliary eigenproblems of Colbrook's algorithm are symmetric. Hence, the primal and dual eigenproblems coincide. This leads to the following symmetric version of the DWR error estimate, which is stated and proved in \cite{Bangerth, Heuveline}\footnote{In \cite{Bangerth} and \cite{Heuveline}, the general result for non-symmetric eigenproblems is formulated in the Hilbert-space setting, where $A$ and $M$ map from $V$ to $V,$ as opposed to the current antidual setting, in which $A$ and $M$ map from $V$ to its antidual $V^{\times}$. Fortunately, the result and its proof are expressed in terms of the associated variational forms of the eigenproblems, which take the same form in the Hilbert-space and antidual settings. Hence, the result carries over to the current setting unchanged.}:
+where $A^*$ denotes the Hilbert adjoint of $A$. In the present setting, however, the auxiliary eigenproblems of Colbrook's algorithm are symmetric. Hence, the primal and dual eigenproblems coincide. This leads to the following symmetric version of the DWR error estimate, which is stated and proved in \cite{Bangerth, Heuveline}\footnote{In \cite{Bangerth} and \cite{Heuveline}, the general result for non-symmetric eigenproblems is formulated in the Hilbert-space setting, where $A$ and $M$ map from $V$ to $V,$ as opposed to the current antidual setting, in which $A$ and $M$ map from $V$ to its antidual $V^{\times}$. Fortunately, the result and its proof are expressed in terms of the associated variational forms of the eigenproblems, which take the same form in the Hilbert-space and antidual settings. Hence, the result carries over to the current setting unchanged.}:
 \begin{corollary}[DWR Method for a Symmetric Eigenproblem \cite{Bangerth, Heuveline}]
     Consider an eigenpair $\{u_h, \lambda_h\} \in V_h \times \mathbb{C}$ that solves \eqref{gal eig}. 
     Define the primal eigenvalue residual as
