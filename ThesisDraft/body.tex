@@ -364,7 +364,7 @@ Let $u$ denote the solution of the underlying infinite-dimensional problem, ofte
 \end{equation}
 
  
-To estimate this error, the DWR method embeds the given problem into the framework of optimal control \cite{Becker}. To do so, the method introduces an associated \textit{dual problem} that depends on the chosen quantity of interest. Using the solution of the dual problem, the method provides an error estimate in the form of a primal residual weighted by a sensitivity parameter obtained from the dual solution. In this way, the dual solution is used to describe sensitivity of the quantity of interest to errors in the computed primal solution, thereby allowing for mesh adaptation driven by the error in the computed quantity of interest rather than by the error in the computed primal solution \cite{Becker}.
+To estimate this error, the DWR method embeds the given problem into the framework of optimal control \cite{Becker}. To do so, the method introduces an associated \textit{dual problem} that depends on the chosen quantity of interest. Using the solution of the dual problem, the method provides an error estimate in the form of a primal residual weighted by a `sensitivity parameter' obtained from the dual solution. In this way, the dual solution is used to describe sensitivity of the quantity of interest to errors in the computed primal solution, thereby allowing for mesh adaptation driven by the error in the computed quantity of interest rather than by the error in the computed primal solution \cite{Becker}.
 
 % the effect that changes in the primal residual, say from mesh adaptation, have on the error in the quantity of interest. 
 
@@ -413,7 +413,7 @@ As previously discussed, the DWR method introduces a dual problem whose solution
 \begin{equation} \label{dual eig}
     A^* u^* = \lambda^*Mu^*, 
 \end{equation}
-where $A^*$ denotes the Hilbert adjoint of $A$. In the present setting, however, the auxiliary eigenproblems of Colbrook's algorithm are symmetric. Hence, the primal and dual eigenproblems coincide. This leads to the following symmetric version of the DWR error estimate, which is stated and proved in \cite{Bangerth, Heuveline}\footnote{In \cite{Bangerth} and \cite{Heuveline}, the general result for non-symmetric eigenproblems is formulated in the Hilbert-space setting, where $A$ and $M$ map from $V$ to $V,$ as opposed to the current antidual setting, in which $A$ and $M$ map from $V$ to its antidual $V^{\times}$. Fortunately, the result and its proof are expressed in terms of the associated variational forms of the eigenproblems, which take the same form in the Hilbert-space and antidual settings. Hence, the result carries over to the current setting unchanged.}:
+where $A^*$ denotes the Hilbert adjoint of $A$. In the present setting, however, the auxiliary eigenproblems of Colbrook's algorithm are symmetric. Hence, the primal and dual eigenproblems coincide. This leads to the following symmetric version of the DWR error estimate, which is stated and proved in \cite{Bangerth, Heuveline}:
 \begin{corollary}[DWR Method for a Symmetric Eigenproblem \cite{Bangerth, Heuveline}]
     Consider an eigenpair $\{u_h, \lambda_h\} \in V_h \times \mathbb{C}$ that solves \eqref{gal eig}. 
     Define the primal eigenvalue residual as
@@ -430,6 +430,8 @@ where $A^*$ denotes the Hilbert adjoint of $A$. In the present setting, however,
     \end{equation}
 
 \end{corollary}
+
+% \footnote{In \cite{Bangerth} and \cite{Heuveline}, the general result for non-symmetric eigenproblems is formulated in the Hilbert-space setting, where $A$ and $M$ map from $V$ to $V,$ as opposed to the current antidual setting, in which $A$ and $M$ map from $V$ to its antidual $V^{\times}$. Fortunately, the result and its proof are expressed in terms of the associated variational forms of the eigenproblems, which take the same form in the Hilbert-space and antidual settings. Hence, the result carries over to the current setting unchanged.}:
 
 With this result, we can estimate the error in approximating an eigenvalue of \eqref{eig prob} with an eigenvalue of \eqref{gal eig}. Furthermore, we can localize the global error estimate \eqref{DWR} to obtain local error contributions for each cell of the mesh that underlies the current discretization. With this in mind, the localization of \eqref{DWR} can be used to drive an adaptive mesh refinement technique. 
 
@@ -469,7 +471,7 @@ Rognes and Logg's automated localization procedure was implemented in Firedrake 
 
 % Before moving on, we note that by Galerkin orthogonality, $\rho(u_h, \lambda_h)(u-\varphi_h) = \rho(u_h, \lambda_h)(u)$ for any $\varphi_h \in V_h.$ Thus, we can suppress the subtraction in \eqref{DWR}. However, 
 
-Notice that by applying Galerkin orthogonality, the primal residual in \eqref{resid} can be written as $\rho(u_h, \lambda_h)(u-\varphi_h) = \rho(u_h, \lambda_h)(u)$ for any $\varphi_h \in V_h.$ Thus, to compute the global error estimate \eqref{DWR}, the subtraction could be suppressed \cite{Bangerth}. However, after localization, we do not expect Galerkin orthogonality to hold on each cell of the mesh. Thus, we expect the choice of $\varphi_h$ to impact the local error estimates \eqref{local eta}, and thus may influence the adaptive refinement procedure that results.
+Notice that by applying Galerkin orthogonality, the primal residual in \eqref{resid} can be written as $\rho(u_h, \lambda_h)(u-\varphi_h) = \rho(u_h, \lambda_h)(u)$ for any $\varphi_h \in V_h.$ Thus, to compute the global error estimate \eqref{DWR}, the subtraction could be suppressed \cite{Bangerth}. However, after localization, we do not expect Galerkin orthogonality to hold on each cell of the mesh. Thus, we expect the choice of $\varphi_h$ to impact the local error estimates \eqref{local eta} and the adaptive refinement procedure that results.
 
 Two common choices for $\varphi_h$ are $\varphi_h = u_h$ and $\varphi_h = I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretization error in the eigenfunction while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it has been shown that the first choice allows for the separation of the error incurred by discretization and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our local error estimates \eqref{local eta}\footnote{We note that both choices were tested numerically and produced similar results.}.
 
