@@ -1,0 +1,210 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Meeting Notes August 11}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Code Updates}
+
+\begin{itemize}
+    \item Maxwell has not yet run to completion. There are a few things to sort out here:
+    \begin{itemize}
+        \item Balancing inner maxits. I had 20 which was alot (too many). This used up alot of RAM (96 GiB before it was killed). 
+        \item Computer reboot.
+        \item After 5 days I was only in third sweep. Part of that I think, is too many inner maxits. 
+        \item I had diam\_tol = 0.01, epsilon = 0.02, and maxits = 20. This should take 5 sweeps but the sweeps take a long time with 20 maxits. What should I take? What is an acceptable RAM usage for a shared computer?
+        \item Not running in parallel yet. Was hoping to get a full run in and check memory issues. I can try and do this (now or later)? 
+    \end{itemize}
+    \item Also going to re-run 1D Poisson and save data at each sweep so that I can work on the plots after it has run. 
+    \item Umberto has all these other examples in mind. I think it is best to focus on these two for now and add in extras if I can get results for these two?
+\end{itemize}
+
+
+
+\section{Writing Updates}
+
+\subsection{Done: (Draft)}
+\begin{itemize}
+    \item Draft spectra and pseudospectra background
+    \item Draft introduction done (minus main contributions, structure of thesis, and code).
+    \item Pitfalls + Spectral pollution in Maxwell done.
+    \item DWR Done.
+\end{itemize}
+
+\subsection{NOT Done: (Draft)}
+\begin{itemize}
+    \item Proper functional analytic section. (ISSUE)
+    \item Matt's algorithm in proper setting. (ISSUE)
+    \item Inner loop methodology; dealing with multiplicity, the refinement technique, application to Maxwell.
+    \item Outer loop methodology; formulation of the outer loop and related proofs, the full algorithm.
+    \item Results; Poisson, Maxwell, maybe more. 
+    \item Conclusions, Abstract, Acknowledgements. 
+\end{itemize}
+
+\subsection{Questions}
+\begin{itemize}
+    \item How to get unstuck? How should I account for these functional analysis issues? I am hesitant to write up Matt's algorithm and the related spectral theory!
+    \item What parameters for Maxwell? What do we want to show in the report? 
+\end{itemize}
+
+
+\section{The Functional Analysis Issues}
+
+
+\subsection{Matt's Formulations:}
+
+Matt considers a closed and densely defined operator $T : D(T) \subset X \rightarrow X,$ where $X$ is a Hilbert space. In doing so, he defines the spectrum and pseudospectrum using $T-zI.$ He folds using $(T-zI)^*(T-zI)$ where $(T-zI)^*$ is the Hilbert adjoint. Furthermore, he defines the injection modulus as follows:
+\begin{equation}
+    \sigma_{\inf}(T-zI) = \inf_{u \in D(T), u \ne 0} \frac{ \| (T-zI)u \|_X} {\|u\|_X}.
+\end{equation}
+
+\subsection{The Issue}
+
+When we work on the Maxwell problem and/or the Poisson problem, we consider an operator $A : V \rightarrow V^*.$ Thus, it does not make sense to write $A-zI.$ What is $I$?
+
+Furthermore, even if we replace $I$ with the correct identity map (say a Riesz map), it does not make sense to fold $(A-zM)^*(A-zM)$ because there is a space mismatch:
+\begin{equation}
+    A-ZM : V \rightarrow V^*
+\end{equation}
+\begin{equation}
+    (A-ZM)^* : V \rightarrow V^*,
+\end{equation}
+where $(A-zM)^*$ is the Banach adjoint. 
+
+As a result, we need to rethink the functional analytic setting for Matt's algorithm so that it works for the problems we want to work with.
+
+\subsection{Why Our Previous Solutions Failed}
+
+We considered $A : V \rightarrow V^*$ and a special $M: V \rightarrow V^*$ defined via $\langle Mu, v\rangle = (u, v)_{L^2}.$ This is not surjective! So we could not honestly invert $M^{-1}:V^* \rightarrow V.$ Also, we could not connect $A$ back to $T$ without a Riesz map. 
+
+\subsection{Current Solution}
+
+Let $V = H_0^1 \times H^1$ for Poisson (dirac folding) or $V = H_{\text{curl}} \times H_{\text{curl}} $ for Maxwell (2D). Set $X = L^2 \times L^2.$ We know $V \hookrightarrow X.$
+
+The key is that we use first-order formulations of the two operators. For example, for Poisson, we use $TU = (-i \sigma', -i u')^T$ where $U = (u, \sigma)^T.$ Thus, our operator $A$ maps from V to $X^*.$ To see this, again consider Poisson: since $u \in H_0^1$ and $\sigma \in H^1,$ $TU \in L^2.$ Thus, we can define $\langle AU, V \rangle = (TU, V)_{L^2}$ where $A : V \rightarrow X^*.$
+
+With this, we can consider $M$ as the inverse Riesz map:
+\begin{equation}
+    M: X \rightarrow X^*,\qquad \langle MU, V\rangle_{X^*, X} = (U, V)_X.
+\end{equation}
+The Riesz representation theorem gives the related Riesz map $M^{-1}: X^* \rightarrow X.$ 
+
+With this, we can write $A-zM: V \rightarrow X^*$ because $A : V \rightarrow X^*,$ $M: X \rightarrow X^*,$ and any $u \in V$ is also in $X.$
+
+Furthermore, we can compose $(A-zM)^* M^{-1} (A-zM)$ because $(A-zM): V \rightarrow X^*,$ $M^{-1}: X^* \rightarrow X,$ and $(A-zM)^* : X \rightarrow V^*$ (banach adjoint). Thus, our new folded operator is 
+\begin{equation}
+    (A-zM)^* M^{-1} (A-zM) : V \rightarrow V^*.
+\end{equation}
+
+The KEY to this result is that we have a first-order operator to work with. Otherwise, we have $A: V \rightarrow V^*$ and not $A: V \rightarrow X^*$ and choosing the proper $M$ for folding was a disaster because we could not use the standard Riesz map from $X^*$ to $X.$ 
+
+
+\subsection{Connection to Matt's Formulation}
+
+Now, return to Matt's $T: V \rightarrow X$ which is assumed to be a first-order operator. We define 
+\begin{equation}
+    A : V \rightarrow X^*, \qquad \langle Au, v \rangle_{X^*, X} = (Tu, v)_{X}.
+\end{equation}
+Then, we can say $A = MT$ where $M:X \rightarrow X^*$ is the inverse Riesz map. Similarly, we can say $(A-zM) = M(T-zI).$
+
+In this way, we can define $\operatorname{Sp}(A; M) =\{z \in \mathbb{C} : A-zM \text{ is not boundedly invertible} \}$ which is equivalent to $\operatorname{Sp}(T)$ because $(T-zI)$ is boundedly invertible iff $A-zM$ is ($M$ is an isomorphism). 
+
+Furthermore, we can show the equivalence of the injection modulus. By the Riesz representation theorem, we have 
+$ \| Mf \|_{X^*} = \|f \|_{X}.$ Thus, 
+\begin{align}
+    \sigma_{\inf}(T-zI) &= \inf_{u \in V, u \ne 0} \frac{\|(T-zI) u \|_{X}}{\|u\|_X} \\\
+    &= \inf_{u \in V, u \ne 0} \frac{\|M (T-zI) u \|_{X^*}}{\|Mu\|_{X^*}} \\
+    &= \inf_{u \in V, u \ne 0} \frac{\|(A-zM) u \|_{X^*}}{\|u\|_X}.
+\end{align}
+Thus, $\sigma_{\inf}(T-zI) = \sigma_{\inf}((A-zM); M).$
+
+Furthermore,
+\begin{align}
+    \sigma_{\inf}^2(A-zM;M) &= \inf_{u \in V, u \ne 0} \frac{\|(A-zM) u \|_{X^*}^2}{\|u\|_X^2}\\
+    &= \inf_{u \in V, u \ne 0} \frac{ \langle (A-zM)u, M^{-1} (A-zM)u \rangle } {\langle Mu, u \rangle} \\
+    &= \inf_{u \in V, u \ne 0} \frac{ \langle (A-zM)^* M^{-1} (A-zM) u, u \rangle} {\langle Mu, u \rangle},
+\end{align}
+which is the folding we currently implement (or want to be implementing). 
+
+
+\subsection{Example: Poisson}
+
+We define $V = H_0^1 \times H^1$ and $X = L^2 \times L^2.$ We consider $T:V \rightarrow X$ defined by 
+\begin{equation}
+    T(u, \sigma) = (-i \sigma', -i u')^T. 
+\end{equation}
+
+We define $A:V \rightarrow X^*$ by 
+\begin{equation}
+    \langle A(u, \sigma), (v, \tau)\rangle = (T(u, \sigma), (v, \tau))_{X} = (-i \sigma', v)_{L^2} + (-iu', \tau)_{L^2}.
+\end{equation}
+Defining $M:X \rightarrow X^*$  by $\langle Mu, v \rangle = (u, v)$ we have $A = MT$ because, by definiton of the inverse Riesz map,
+\begin{equation}
+    \langle MTu, v\rangle_{X^*, X} = (Tu, v)_X = \langle Au, v \rangle\rangle_{X^*, X}. 
+\end{equation}
+
+Thus, we can use the $\sigma_{\inf}(A;M)$ to recover the desired pseudospectral information about $T.$ 
+
+
+\subsection{Still to Sort}
+\begin{itemize}
+    \item I need to check that the same result holds for $\sigma_{\inf}(T^* - \overline{z}I).$
+    \item Umberto and I need to prove the desired Gårding inequality so that we have a discrete spectrum. 
+\end{itemize}
+\subsection{Questions}
+\begin{itemize}
+    \item Dual or Antidual?
+    \item Is this the correct direction to go in? 
+    \item How should this be presented in the thesis? 
+\end{itemize}
+
+
+
+
+\end{document}
+

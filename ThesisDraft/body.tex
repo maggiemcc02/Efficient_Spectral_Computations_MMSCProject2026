@@ -158,14 +158,7 @@ Before moving on, we note that pseudosepctra have many applications beyond the a
 
 % of closed $\epsilon$ balls about the spectrum of $A$ \cite{Matt}. When $A$ is not a normal operator, its $\epsilon$-pseudospectra may be much larger than  
 
-\subsection{Extension to our Functional-Analytic Setting}
 
-\begin{itemize}
-    \item Bounded operators from a space to its antidual
-    \item Antidual adjoint
-    \item New notion of spectra and needed results.
-    \item New notion of pseudospectra and needed results. 
-\end{itemize}
 
 
 \section{Dangerous Pitfalls of the Discretize-Then-Solve Approach}
@@ -268,9 +261,12 @@ To compute solutions of \eqref{Max}, we discretize $\Omega = (0, \pi)^2$ with th
 
 
 % meshes
-\input{ThesisDraft/figures/maxwell_pollute}
+% \input{ThesisDraft/figures/maxwell_pollute}
+% % Table results
+% \input{ThesisDraft/tables/pollute_table}
+\input{figures/maxwell_pollute}
 % Table results
-\input{ThesisDraft/tables/pollute_table}
+\input{tables/pollute_table}
 
 
 
@@ -325,6 +321,11 @@ With this example in mind, it is clear that the pitfalls of the discretize-the-s
     \item We will focus on Pseudospec because ...
     \item Operator folding in our more general functional analytic setting. 
 \end{itemize}
+
+\subsection{Extension to our Functional-Analytic Setting}
+
+
+
 \subsection{Application to the Maxwell Eigenproblem}
 \begin{itemize}
     \item Show that we get good results if discretization is not too coarse. 
@@ -448,7 +449,7 @@ which yields the approximate local error contributions
 \end{equation}
 These local error contributions can be used to indicate the regions of the mesh that contribute the most to the error in the desired quanitty of interest. As a result, they can be used to drive an adaptive mesh refinement technique based on the error in the desired quantity of interest. 
 
-Rognes and Logg's automated localization procedure was implemented in Firedrake as a part of Joseph Flood's Master's Thesis \cite{joe}. This implementation has since been further developed by Patrick Farrell and Pablo Brubeck \cite{pablo}. For this project, we build upon the existing implementation and adapt it to the auxilliary eigenproblems arising in Colbrook's algorithm. We therefore omit the details of the local problems used to obtain \eqref{local eta} and refer the reader to \cite{joe, logg, pablo} for further details on the localization procedure and its implementation.
+Rognes and Logg's automated localization procedure was implemented in Firedrake as a part of Joseph Flood's Master's Thesis \cite{joe}. This implementation has since been further developed by Patrick Farrell and Pablo Brubeck \cite{pablo}. For this project, we build upon the existing implementation and adapt it to the auxiliary eigenproblems arising in Colbrook's algorithm. We therefore omit the details of the local problems used to obtain \eqref{local eta} and refer the reader to \cite{joe, logg, pablo} for further details on the localization procedure and its implementation.
 
 
 \subsection{Approximating the Exact Errors}
@@ -458,9 +459,9 @@ Rognes and Logg's automated localization procedure was implemented in Firedrake 
 
 Notice that by applying Galerkin orthogonality, the primal residual in \eqref{resid} can be written as $\rho(u_h, \lambda_h)(u-\varphi_h) = \rho(u_h, \lambda_h)(u)$ for any $\varphi_h \in V_h.$ Thus, to compute the global error estimate \eqref{DWR}, the subtraction could be suppressed \cite{Bangerth}. However, after localization, we do not expect Galerkin orthogonality to hold on each cell of the mesh. Thus, we expect the choice of $\varphi_h$ to impact the local error estimates \eqref{local eta}, and thus may influence the adaptive refinement procedure that results.
 
-Two common choices for $\varphi_h$ are $\varphi_h = u_h$ and $\varphi_h = I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretization error in the eigenfunction while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it has been shown that the first choice allows for the seperation of the error incurred by discretization and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our local error estimates \eqref{local eta}\footnote{We note that both choices were tested numerically and produced similar results.}.
+Two common choices for $\varphi_h$ are $\varphi_h = u_h$ and $\varphi_h = I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretization error in the eigenfunction while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it has been shown that the first choice allows for the separation of the error incurred by discretization and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our local error estimates \eqref{local eta}\footnote{We note that both choices were tested numerically and produced similar results.}.
 
-To compute either $u-u_h$ or $u - I_h u_h$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be not need to approximate it. Thus, for the practical computation of \eqref{DWR} and $\eqref{local eta},$ we have to approximate the terms involving $u.$ In particular, we have to apprroximate $e \defeq u-u_h$ in the remainder term of \eqref{DWR}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
+To compute either $u-u_h$ or $u - I_h u_h$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be no need to approximate it. Thus, for the practical computation of \eqref{DWR} and $\eqref{local eta},$ we have to approximate the terms involving $u.$ In particular, we have to apprroximate $e \defeq u-u_h$ in the remainder term of \eqref{DWR}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
 
 There are many strategies for approximating $e$ and $e_h$, each of which is discussed in \cite{Bangerth, Heuveline}. The most common approaches approximate $u$ in an `enriched' finite element space, $V_h^+,$  that is obtained by increasing the degree of the piecewise polynomial basis used to construct $V_h.$ To obtain an `enriched' approximation $u_h^+$ to $u$ in $V_h^+,$ there are two common approaches. We discuss both in turn:
 \begin{enumerate}

@@ -6,7 +6,7 @@
 
 With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, and thus with spectra, it is hard to overstate the importance of spectra in applied mathematics \cite{NickEssay}. Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations (PDEs)\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of \cite{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in Figure \ref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg \cite{Nick}. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite{Nick}.
 % spectroscopy figure
-\input{ThesisDraft/figures/fraunhofer}
+\input{figures/fraunhofer}
 
 Although the importance of spectra is beyond question, their reliable computation is another matter \cite{Forward}. In finite dimensions, we compute the spectrum of a matrix, which is equivalent to the set of its eigenvalues.  In particular, if $B \in \mathbb{C}^{nxn}$ then its spectrum is the following set of points:
 \begin{equation} \label{matrix spec}
@@ -82,6 +82,9 @@ To investigate the effectiveness of our methodology, we apply it to numerical ex
 \section{Main Contributions}
 % The examiners have suggested that a ``main contributions'' section in the introduction is really useful, so please ensure you have such a section! You can use this to explain what you believe are the main results of your work. If any of what you have done is novel, it can be helpful to highlight that here. If you have worked on an industrial project you could state how and why your results are useful to your industrial partner.
 
+Not written yet - this is a running list of what I may want to include.
+
+
 In this report, our main contributions, all of which are novel, can be summarized as follows:
 
 \begin{itemize}
@@ -89,8 +92,8 @@ In this report, our main contributions, all of which are novel, can be summarize
     \item We develop the functionality needed for DWR to approximate the error for eigenvalues with multiplicity greater than one.
     \item We extend the existing code for DWR for eigenproblems to handle mixed function spaces. 
     \item We derive, discuss, and check the assumptions needed for DWR to be applied to Colbrook's algorithm. 
-    \item We apply DWR to the auxilliary eigenproblems in Colbrook's algorithm. In doing so, we are able to compute bounds on the distance to the spectrum both accurately and efficiently. This success is shown via an application to the Maxwell eigenproblem.
-    \item We develop a strategy for adapting the complex plane in Colbrook's algorithm. This methodology aims to balance the refinement of the auxilliary eigenproblems with the refinement of the complex plane for pseudospectral computations.
+    \item We apply DWR to the auxiliary eigenproblems in Colbrook's algorithm. In doing so, we are able to compute bounds on the distance to the spectrum both accurately and efficiently. This success is shown via an application to the Maxwell eigenproblem.
+    \item We develop a strategy for adapting the complex plane in Colbrook's algorithm. This methodology aims to balance the refinement of the auxiliary eigenproblems with the refinement of the complex plane for pseudospectral computations.
     \item We apply our methodology to the Poisson eigenproblem in one dimension and Maxwell eigenproblem in two dimensions. 
 \end{itemize}
 
@@ -107,7 +110,7 @@ In this report, our main contributions, all of which are novel, can be summarize
 \begin{itemize}
     \item How to write Matt's algorithm with the right functional analysis.
     \item What operators are we considering? Bounded? Or closed and densely defined?
-    \item What assumptions on the spaces and operators are needed in the DWR section? Do we need some special embedding of $V$ into $H?$ 
+    \item What assumptions on the spaces and operators are needed in the DWR section? Do we need some special embedding of $V$ into $H?$ What spaces and adjoint?
     \item Double-check that DWR results carry over to the antidual setting. It doesn't matter too much because we use the symmetric result.
 \end{itemize}
 
