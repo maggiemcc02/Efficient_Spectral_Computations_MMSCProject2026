@@ -43,7 +43,7 @@ If $A$ is not a closed linear operator, then $\Sp{A} = \mathbb{C}.$ Thus, going 
 
 As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the \textit{eigenspace} of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \Sp{A}$ but that there may exist $z \in \Sp{A}\setminus \Gamma(A).$ For example, $A-zI$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H,$ even when $z$ is not an eigenvalue of $A.$
 
-If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$  
+If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = A^* - \overline zI.$  
 
 % With these properties in mind, every operator we will consider going forward is assumed to be linear, closed, and densely defined on a Hilbert space $H.$ 
 % Furthermore, when $A$ is closed and densely defined, both $A^*A$ and $AA^*$ are self-adjoint.
@@ -163,7 +163,7 @@ Before moving on, we note that pseudosepctra have many applications beyond the a
 
 
 
-\section{Dangerous Pitfalls of the Discretize-Then-Solve Approach}
+\section{Dangerous Pitfalls of the Discretize-Then-Solve Approach}\label{pit}
 
 The most common approach for computing the spectrum of infinite-dimensional operators is the discretize-then-solve approach. This approach discretizes the infinite-dimensional operator with a finite-dimensional matrix and computes its eigenvalues. The success of this method relies on the hope that as the size of the discretization increases, the set of computed eigenvalues converges to the spectrum of the infinite-dimensional operator. While such an approach can be succesful for many problems, it is known to fail catastopically. 
 
@@ -313,18 +313,113 @@ With this example in mind, it is clear that the pitfalls of the discretize-the-s
 % Furthermore, we use $\mathbf{t}$ to denote the unit tangent of $\partial U,$ $H(\textbf{rot}; U)$ the denote the space of functions in $L^2(u)$ with $\textbf{rot}$ in $L^2(U)^2,$ and $\mathbf{H}_0(\text{rot} ; U)$ to denote the space of functions in $L^2(U)^2$ with $\text{rot}$ in $L^2(U).$ 
 
 
-\section{Matthew Colbrook's Algorithm for Computing Spectra}
+\section{Colbrook's Algorithm for Computing Pseudospectra}
 
-\begin{itemize}
-    \item Matts setting vs. our general functional analytic setting
-    \item Injection moduli and resolvent norm
-    \item Three limit problems
-    \item Pseudospec combines the first two limits. Compspec combines the last. 
-    \item We will focus on Pseudospec because ...
-    \item Operator folding in our more general functional analytic setting. 
-\end{itemize}
 
-\subsection{Extension to our Functional-Analytic Setting}
+
+The pitfalls of the discretize-then-solve approach motivate the development of alternative approaches for computing the spectra of infinite-dimensional operators. In recent work, Matthew Colbrook has proposed an alternative approach that avoids these pitfalls by working with the infinite-dimensional operator as far as possible, thereby delaying discretization. In this way, Colbrook shows that when and how discretization is introduced is crucial to the reliable computation of spectra. 
+
+In this section, we introduce Colbrook's algorithm for computing Pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for two main reasons. First, Colbrook's algorithm for pseudospectra can be applied to a much broader class of operators than his algorithm for spectra and forms the computational component of his algorithm for computing spectra. Second, as discussed previously, the pseudospectra of an operator are often more informative than the spectrum alone. 
+
+In the first subsection, we introduce the fundamental tool for Colbrook's algorithm, namely, the injection modulus of an operator. In the second subsection, we use this tool to build Colbrook's algorithm for computing pseudospectra. Then, in the third subsection, we specialize the algorithm to the finite element setting. Finally, in the final section, we demonstrate the success of Colbrook's algorithm by applying it to the Maxwell eigenproblem. 
+
+
+\subsection{Characterizing the Spectrum with Injection Moduli}
+Let $A$ be a closed and densely defined linear operator on $H.$ The first ingredient for Colbrook's algorithm is the \textit{injection modulus} of $A,$ which is defined as
+\begin{equation}
+    \sigma_{\inf}(A) = \{ \|Ax\|_H : x \in D(A), \|x\|_H = 1\}.
+\end{equation}
+The injection modulus is a quantitative measure of `how injective' an operator is \cite{Matt}. In this way, it can be viewed as a generalization of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors, $\{x_n\}_{n \in \mathbb{N}}$, such that $\|A x_n \|_H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_H=0.$ 
+
+One of the most fundamental tools in Colbrook's algorithm is the following function of $z 
+\in \mathbb{C},$
+\begin{equation}
+    \gamma(z, A) = \min \{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \}.
+\end{equation}
+With this, Colbrook characterizes the resolvent norm $\|(A-zI)^{-1}\|$ in the following way:
+\begin{lemma}[Injection Moduli and Resolvent Norms \cite{Matt}]
+   Let $A$ be a closed and densely defined operator on a Hilbert space $H.$ We have that
+   \begin{equation} \label{gamma}
+       \gamma(z, A) = \|(A-zI)^{-1}\|^{-1},
+   \end{equation}
+   where we adopt the convention that $\|(A-zI)^{-1}\|^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
+\end{lemma} \label{gamma and norm}
+
+In finite dimensions, we have that $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I)$ for every $z \in \mathbb{C}.$ However, in infinite dimensions, it is possible to have $z \in \Sp{A}$ and $\sigma_{\inf}(A-zI) \ne \sigma_{\inf}(A^*-\overline{z}I).$ To see this, consider the right-shift operator as defined in \eqref{right shift}, i.e., the operator $A:l^2(\mathbb{N}) \rightarrow l^2(\mathbb{N)}$ defined by $A(x_1, x_2, \dots) = (0, x_1, x_2, \dots).$ This operator satisfies $\|Ax\|_{l^2(\mathbb{N})} = \|x\|_{l^2(\mathbb{N})}.$ Thus, $\sigma_{\inf}(A) = 1.$ Now consider its Hilbert adjoint $A^*,$ which is the left-shift operator $A^*(x_1, x_2, \dots) = (x_2, x_3, \dots).$ Notice that $A^*(1, 0, \dots) = (0, 0, \dots).$ Hence, $\sigma_{\inf}(A) \ne \sigma_{\inf}(A^*) = 0.$
+
+With Lemma \ref{gamma and norm} in mind, we can define the spectrum of $A$ as follows:
+\begin{equation}\label{gamma Sp}
+    \Sp{A} = \{ z \in \mathbb{C} : \gamma(z, A) = 0\}.
+\end{equation}
+Similarly, we can define the $\epsilon$-pseudospectrum as the following set:
+\begin{equation} \label{gamma eps Sp}
+    \Spe{A} = \operatorname{Cl} \left(\{ z \in \mathbb{C} : \gamma(z, A) < \epsilon\}\right).
+\end{equation}
+Thus, to approximate $\Sp{A}$ and $\Spe{A},$ we can approximate $\gamma(z, A).$ This idea underpins Colbrook's algorithms for computing the spectra and pseudospectra of infinite-dimensional operators. As discussed, we focus on Colbrook's algorithm for computing pseudospectra because it applies to a broad class of operators, it forms the main computational component of his algorithm for computing spectra, and because pseudospectral computations tend to be much more interesting than spectral computations. 
+
+
+\subsection{Computing Pseudospectra via Operator Folding}
+
+Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies on the characterization of $\Spe{A}$ using $\gamma(z,A)$ in \eqref{gamma eps Sp}. The key idea is to approximate $\gamma(z, A)$ at chosen values of $z \in \mathbb{C}$ and to retain the values of $z$ for which $\gamma(z, A) < \epsilon.$ To do so, Colbrook makes the following assumption:
+\begin{assumption}[Required Convergence of $\Phi_n(z, A)$ \cite{Matt}]\label{assump}
+    To compute $\Spe{A},$ assume that we can compute functions $\Phi_n(z, A)$ such that 
+    \begin{equation}
+        \lim_{n \rightarrow \infty} \sup_{z \in \mathcal{C}} | \Phi_n(z, A) - \gamma(z, A) | = 0 \qquad \forall \text{ compact } \mathcal{C}\in \mathbb{C}, 
+    \end{equation}
+    where the speed of convergence is allows to rely on $A$ and $\mathcal{C}.$ Furthermore, we assume that $\gamma(z, A) \le \Phi_n(z, A)$ for sufficiently large $n$ (depending on $A$ but not on $z$).
+\end{assumption}
+
+To satisfy this assumption, we introduce \textit{operator folding}. Suppose that $A$ is a closed and densely defined operator on a separable Hilbert space $H,$ i.e., a Hilbert space that contains a countable orthonormal basis \cite{Matt}. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$ \cite{Matt}. The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
+\begin{equation}
+    \sigma_{\inf}((A-zI)\mathcal{P}_n^*) =  \sqrt{\sigma_{\inf}(\mathcal{P}_n(A-zI)^*(A-zI)\mathcal{P}_n^*)}.
+\end{equation}
+Using this, we approximate $\gamma(z, A)$ with 
+\begin{equation} \label{phi Pn}
+    \Phi_n(z, A) = \min\{\sigma_{\inf}((A-zI) \mathcal{P}_n^*), \sigma_{\inf}((A-zI)^*\mathcal{P}_n^*) \},
+\end{equation}
+which satisfies Assumption \ref{assump} under suitable conditions of $D(A)$ and $D(A^*)$ \cite{Matt}. (WHAT ARE THESE SUITABLE ASSUMPTIONS? IS IT JUST THAT THE ORTHONORMAL BASIS OF H FORMS CORE OF A AND A*?)
+
+To approximate the $\Phi_n(z, A)$ in \eqref{phi Pn}, we formulate certain variational problems. In particular, we consider the following two quadratic forms:
+\begin{align}
+    Q_{z, A}^{(1)}(f, g)&= ((A-zI)f, (A-zI)g)_{H}, &\quad f, g &\in D(A),\\
+    Q_{z, A}^{(2)}(f, g) &= ((A-zI)^*f, (A-zI)^*g)_{H}, &\qquad f, g &\in D(A^*),
+\end{align}
+which induce the Rayleigh quotients
+\begin{align}
+\mathcal{R}_{z, A}^{(1)}(f) &= \frac{Q_{z, A}^{(1)}(f, f)}{(f, f)_H} = \frac{\|(A-zI)f\|_H^2}{\|f\|_H^2},\\
+\mathcal{R}_{z, A}^{(2)}(f) &= \frac{Q_{z, A}^{(2)}(f, f)}{(f, f)_H} = \frac{\|(A-zI)^*f\|_H^2}{\|f\|_H^2}.
+\end{align}
+These Rayleigh quotients can be used to characterize the injection moduli of $A-zI$ and $A^* - \overline{z}I$ in the following way:
+\begin{align}
+\sigma_{\inf}(A-zI) &= \sqrt{ \inf_{f \in D(A)\setminus\{0\}} R_{z, A}^{(1)}(f) },\\
+\sigma_{\inf}(A^*-\overline{z}I) &= \sqrt{ \inf_{f \in D(A^*)\setminus\{0\}} R_{z, A}^{(2)}(f) }.
+\end{align}
+With this, $\gamma(z, A)$ can be written as 
+\begin{equation}
+    \gamma(z, A) = \sqrt{ \min \left\{ \inf_{f \in D(A)\setminus\{0\}} R_{z, A}^{(1)}(f) , \inf_{f \in D(A^*)\setminus\{0\}} R_{z, A}^{(2)}(f)  \right\}  }.
+\end{equation}
+Consequently, computing $\gamma(z, A)$ is equivalent to computing the smallest spectral values of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ 
+
+
+It is at this stage that discretization enters Colbrook's algorithm. To approximate $\gamma(z, A)$ with $\Phi_n(z, A),$ we discretize the variational problems associated with the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ Discretization yields two generalized eigenproblems whose smallest eigenvalues approximate the smallest spectral values of the folded operators. 
+As a result, $\Phi_n(z, A)$ is taken to be the square root of the smaller of the two computed eigenvalues. In the next subsection, We outline the specifics of this approach in the finite element setting.
+
+
+At this point, it may not yet be clear that there is any benefit to discretizing the folded operators instead of the original operator. The benefit of Colbrook's formulation comes from the fact that the folded operators are self-adjoint and non-negative. Computing the bottom of the spectrum of a non-negative and self-adjoint operator tends to be much easier than computing other parts of the spectrum and is less prone to the pitfalls discussed in Section \ref{pit} \cite{Matt}.
+
+With the approximation $\Phi_n(z, A)$ of $\gamma(z, A)$ at hand, we can formulate Colbrook's algorithm for computing the $\epsilon$-pseudospectrum of $A.$ First, we discretize the complex plane with a collection of test points $z \in \mathbb{C}$, denoted $\operatorname{Grid} \subset \mathbb{C}.$ Then, we iterate over each $z \in \operatorname{Grid}$ and compute $\Phi_n(z, A)$ by solving the two auxiliary eigenproblems, one for each folded operator. Then, the $\epsilon$-pseudospectrum of $A$ is approximated by the following set of points:
+\begin{equation}
+    \Gamma_n^{\epsilon}( A)  = \{ z \in \operatorname{Grid} : \Phi_n(z, A) < \epsilon\}.
+\end{equation}
+Under Assumption \ref{assump}, we have that
+\begin{equation}
+    \Gamma_n^{\epsilon}(A) \subset \{z \in \mathbb{C} : \gamma(z, A) < \epsilon\} \subset \Spe{A}.
+\end{equation}
+This method, which Colbrook calls \texttt{PseudoSpec}, is outlined in Algorithm . In \cite{Matt}, Colbrook shows that the output of \texttt{PseudoSpec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as $n \rightarrow \infty.$
+
+
+
+\subsection{Operator Folding with the Finite Element Method (Needs Right Functional Analysis Still)}
 
 
 
@@ -422,11 +517,11 @@ where $A^*$ denotes the Hilbert adjoint of $A$. In the present setting, however,
     \end{equation}
     We have the error representation
     \begin{equation} \label{DWR}
-        (\lambda - \lambda_h)(1 - \mathcal{R}_h) = \rho(u_h, \lambda_h)(u - \varphi_h),
+        (\lambda - \lambda_h)(1 - \xi_h) = \rho(u_h, \lambda_h)(u - \varphi_h),
     \end{equation}
     for an arbitrary $\varphi_h \in V_h,$ with the remainder term
     \begin{equation}
-        \mathcal{R}_h = \frac{1}{2} m(u-u_h, u-u_h).
+        \xi_h = \frac{1}{2} m(u-u_h, u-u_h).
     \end{equation}
 
 \end{corollary}
