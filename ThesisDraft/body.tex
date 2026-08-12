@@ -1,12 +1,14 @@
 \chapter{Background}
 
-In this chapter, we present all necessary background material. We begin with an overview of relevant definitions and results from spectral theory. Then, we describe the common pitfalls discretize-and-solve approach. To see one of these pitfalls in action, we apply the finite element discretization to the famous Maxwell eigenproblem, which exhibits spurious eigenvalues when discretized with standard piecewise linear Lagrange elements. 
+In this chapter, we present all necessary background material. We begin with an overview of relevant definitions and results from spectral theory. Then, we describe the common pitfalls discretize-and-solve approach. To see one of these pitfalls in action, we consider the famous Maxwell eigenproblem, which exhibits spurious eigenvalues when discretized with standard piecewise-linear Lagrange finite elements. 
 
-Having explored the limitations of the discretize-and-solve approach, we introduce Matthew Colbrook's algorithm for computing the spectra of infinite-dimensional operators. When applied to the Maxwell eigenproblem, this approach avoids spurious eigenvalues, even when discretized with piecewise linear Lagrange elements. However, when the discretization is coarse, Colbrook's bounds on the distance to the spectrum may be poor. In an effort to quantify the error in these bounds, and to improve these bounds without extensive uniform refinement, we explore the Dual-Weighted-Residual method for eigenproblems and investigate its application to Colbrook's algorithm. 
+Having explored the limitations of the discretize-and-solve approach, we introduce Matthew Colbrook's algorithm for computing the spectra of infinite-dimensional operators. When applied to the Maxwell eigenproblem, this approach avoids spurious eigenvalues, even when discretized with piecewise-linear Lagrange finite elements. However, when the discretization is coarse, Colbrook's bounds on the distance to the spectrum may be poor. In an effort to quantify the error in these bounds, and to improve these bounds without extensive uniform refinement, we explore the Dual-Weighted-Residual (DWR) method for eigenproblems and investigate its application to Colbrook's algorithm. 
 
 \section{An Introduction to Spectral Theory}
 
-In this section, we provide an overview of the spectral theory required for this project. In the first subsection, we recall several standard results from functional analysis and introduce the basic concepts needed to define the spectrum of a linear operator. In the second subsection, we extend this discussion to the $\epsilon$-pseudospectrum of an operator acting on a Hilbert space. In the final subsection, we specialize the preceeding theory to bounded linear operators that map a Hilbert space to its antidual. This is the functional-analytic setting that is relevant to the problems considered in this project.
+In this section, we provide an overview of the spectral theory required for this project. In the first subsection, we recall several standard results from functional analysis and introduce the basic concepts needed to define the spectrum of a linear operator. In the second subsection, we extend this discussion to the $\epsilon$-pseudospectrum of an operator. 
+
+% In the final subsection, we specialize the preceeding theory to bounded linear operators that map a Hilbert space to its antidual. This is the functional-analytic setting that is relevant to the problems considered in this project.
 
 \subsection{The Spectra of Linear Operators}
 
@@ -29,7 +31,7 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
  \begin{equation}
      (Av, w)_{H} = (v, w)_{H}, \qquad \forall v \in D(A).
  \end{equation}
- The adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal}.
+ The Hilbert adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal}.
 
 
 
@@ -39,7 +41,7 @@ In this setting, the spectrum of $A,$ as stated in \eqref{SpA}, can be equivantl
 \end{equation}
 If $A$ is not a closed linear operator, then $\Sp{A} = \mathbb{C}.$ Thus, going forward, we will consider the case in which $A$ is a closed linear operator. In this case, $\Sp{A}$ is a closed subset of the complex plane \cite{Matt}.  
 
-As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the \textit{eigenspace} of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \Sp{A}$ but that there may exist $z \in \Sp{A}\setminus \Gamma(A).$ For example, $(A-zI)$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H,$ even when $z$ is not an eigenvalue of $A.$
+As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the \textit{eigenspace} of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \Sp{A}$ but that there may exist $z \in \Sp{A}\setminus \Gamma(A).$ For example, $A-zI$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $H,$ even when $z$ is not an eigenvalue of $A.$
 
 If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugation of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI).$  
 
@@ -118,11 +120,11 @@ Hence, when $A$ is a normal operator, the norm of the resolvent can be used to c
 
 % one way to ask how `far' $B$ is from being normal is to ask how far $\kappa_2(V)$ is from one. 
 
-To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask if $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from ``yes" to ``no". Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large \cite{Nick}. This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ In particular, for $\epsilon > 0,$ the $\epsilon$-pseudospectrum of $B$ is the following set:
+To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask if $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from ``yes" to ``no". Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large \cite{Nick}. This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ In particular, for $\epsilon > 0,$ the $\epsilon$-\textit{pseudospectrum} of $B$ is the following set:
 \begin{equation} \label{eps B}
     \operatorname{Sp}_{\epsilon}(B) = \{z \in \mathbb{C}:\|(B-zI)^{-1} \|^{-1} \le \epsilon \} = \operatorname{Cl} \left(\{z \in \mathbb{C} : \|(B-zI)^{-1} \|^{-1} < \epsilon \} \right),
 \end{equation}
-where $\operatorname{Cl}(\cdot)$ denotes the closure of an inputted set \cite{Matt}. Here, we adopt the convention that if $z \in \operatorname{Sp}(B),$ then $\|(B-zI)^{-1}\|^{-1} = 0,$ or $\|(B-zI)^{-1}\| = \infty$ \cite{Matt, Nick}. 
+where $\operatorname{Cl}(\cdot)$ denotes the closure of the inputted set \cite{Matt}. Here, we adopt the convention that if $z \in \operatorname{Sp}(B),$ then $\|(B-zI)^{-1}\|^{-1} = 0,$ or $\|(B-zI)^{-1}\| = \infty$ \cite{Matt, Nick}. 
 
 The $\epsilon$-pseudospectrum of $B$ can be equivalently defined as follows:
 \begin{equation} \label{eps stab B}
