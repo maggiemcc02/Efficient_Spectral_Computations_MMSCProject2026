@@ -358,7 +358,7 @@ Similarly, we can define the $\epsilon$-pseudospectrum as the following set:
 Thus, to approximate $\Sp{A}$ and $\Spe{A},$ we can approximate $\gamma(z, A).$ This idea underpins Colbrook's algorithms for computing the spectra and pseudospectra of infinite-dimensional operators. As discussed, we focus on Colbrook's algorithm for computing pseudospectra because it applies to a broad class of operators, it forms the main computational component of his algorithm for computing spectra, and because pseudospectral computations tend to be much more interesting than spectral computations. 
 
 
-\subsection{Computing Pseudospectra via Operator Folding}
+\subsection{Computing Pseudospectra by Operator Folding}
 
 Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies on the characterization of $\Spe{A}$ using $\gamma(z,A)$ in \eqref{gamma eps Sp}. The key idea is to approximate $\gamma(z, A)$ at chosen values of $z \in \mathbb{C}$ and to retain the values of $z$ for which $\gamma(z, A) < \epsilon.$ To do so, Colbrook makes the following assumption:
 \begin{assumption}[Required Convergence of $\Phi_n(z, A)$ \cite{Matt}]\label{assump}
@@ -373,13 +373,13 @@ To satisfy this assumption, we introduce \textit{operator folding}. Suppose that
 \begin{equation}
     \sigma_{\inf}((A-zI)\mathcal{P}_n^*) =  \sqrt{\sigma_{\inf}(\mathcal{P}_n(A-zI)^*(A-zI)\mathcal{P}_n^*)}.
 \end{equation}
-Using this, we approximate $\gamma(z, A)$ with 
+That is, we approximate $\gamma(z, A)$ with 
 \begin{equation} \label{phi Pn}
     \Phi_n(z, A) = \min\{\sigma_{\inf}((A-zI) \mathcal{P}_n^*), \sigma_{\inf}((A-zI)^*\mathcal{P}_n^*) \},
 \end{equation}
 which satisfies Assumption \ref{assump} under suitable conditions of $D(A)$ and $D(A^*)$ \cite{Matt}. (WHAT ARE THESE SUITABLE ASSUMPTIONS? IS IT JUST THAT THE ORTHONORMAL BASIS OF H FORMS CORE OF A AND A*?)
 
-To approximate the $\Phi_n(z, A)$ in \eqref{phi Pn}, we formulate certain variational problems. In particular, we consider the following two quadratic forms:
+To approximate $\Phi_n(z, A)$ in \eqref{phi Pn}, we discretize variational problems for $\gamma(z, A)$. In particular, we consider the following quadratic forms:
 \begin{align}
     Q_{z, A}^{(1)}(f, g)&= ((A-zI)f, (A-zI)g)_{H}, &\quad f, g &\in D(A),\\
     Q_{z, A}^{(2)}(f, g) &= ((A-zI)^*f, (A-zI)^*g)_{H}, &\qquad f, g &\in D(A^*),
@@ -395,29 +395,77 @@ These Rayleigh quotients can be used to characterize the injection moduli of $A-
 \sigma_{\inf}(A^*-\overline{z}I) &= \sqrt{ \inf_{f \in D(A^*)\setminus\{0\}} R_{z, A}^{(2)}(f) }.
 \end{align}
 With this, $\gamma(z, A)$ can be written as 
-\begin{equation}
+\begin{equation} \label{var gamma}
     \gamma(z, A) = \sqrt{ \min \left\{ \inf_{f \in D(A)\setminus\{0\}} R_{z, A}^{(1)}(f) , \inf_{f \in D(A^*)\setminus\{0\}} R_{z, A}^{(2)}(f)  \right\}  }.
 \end{equation}
-Consequently, computing $\gamma(z, A)$ is equivalent to computing the smallest spectral values of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ 
+Consequently, computing $\gamma(z, A)$ is equivalent to computing the bottom of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ 
 
 
-It is at this stage that discretization enters Colbrook's algorithm. To approximate $\gamma(z, A)$ with $\Phi_n(z, A),$ we discretize the variational problems associated with the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ Discretization yields two generalized eigenproblems whose smallest eigenvalues approximate the smallest spectral values of the folded operators. 
-As a result, $\Phi_n(z, A)$ is taken to be the square root of the smaller of the two computed eigenvalues. In the next subsection, We outline the specifics of this approach in the finite element setting.
+It is at this stage that discretization enters Colbrook's methodology. To compute $\Phi_n(z,A),$ we discretize the minimization problems in \eqref{var gamma} and approximate the bottom of the spectrum of $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ Letting $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ denote the computed solutions, we set
+\begin{equation} \label{approx phi}
+    \Phi_n(z, A) = \sqrt{ \min \{ \mu_n^{(1)}(z), \mu_n^{(2)}(z) }.
+\end{equation}
+
+% In the next subsection, we discuss using a finite element discretization to compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z).$
 
 
-At this point, it may not yet be clear that there is any benefit to discretizing the folded operators instead of the original operator. The benefit of Colbrook's formulation comes from the fact that the folded operators are self-adjoint and non-negative. Computing the bottom of the spectrum of a non-negative and self-adjoint operator tends to be much easier than computing other parts of the spectrum and is less prone to the pitfalls discussed in Section \ref{pit} \cite{Matt}.
+%  Discretization yields two generalized eigenproblems whose smallest eigenvalues approximate the smallest spectral values of the folded operators.  
+% As a result, $\Phi_n(z, A)$ is taken to be the square root of the smaller of the two computed eigenvalues. 
 
-With the approximation $\Phi_n(z, A)$ of $\gamma(z, A)$ at hand, we can formulate Colbrook's algorithm for computing the $\epsilon$-pseudospectrum of $A.$ First, we discretize the complex plane with a collection of test points $z \in \mathbb{C}$, denoted $\operatorname{Grid} \subset \mathbb{C}.$ Then, we iterate over each $z \in \operatorname{Grid}$ and compute $\Phi_n(z, A)$ by solving the two auxiliary eigenproblems, one for each folded operator. Then, the $\epsilon$-pseudospectrum of $A$ is approximated by the following set of points:
+% At this point, it may not be clear that there is any benefit to discretizing the folded operators instead of the original operator. The benefit of Colbrook's formulation comes from the fact that the folded operators are self-adjoint and non-negative. Computing the bottom of the spectrum of a non-negative and self-adjoint operator tends to be much easier than computing other parts of the spectrum and is less prone to the pitfalls discussed in Section \ref{pit} \cite{Matt}.
+
+With the approximation \eqref{approx phi} at hand, we can formulate Colbrook's algorithm for computing the $\epsilon$-pseudospectrum of $A.$ First, we select a collection of test points in the complex plane, denoted $\operatorname{Grid} \subset \mathbb{C}.$ Then, we iterate over each $z \in \operatorname{Grid},$ compute
+$\Phi_n(z, A),$ and approximate $\Spe{A}$ by the following set of points:
 \begin{equation}
     \Gamma_n^{\epsilon}( A)  = \{ z \in \operatorname{Grid} : \Phi_n(z, A) < \epsilon\}.
 \end{equation}
+This method is outlined in Algorithm \ref{pseudospec}. 
 Under Assumption \ref{assump}, we have that
 \begin{equation}
     \Gamma_n^{\epsilon}(A) \subset \{z \in \mathbb{C} : \gamma(z, A) < \epsilon\} \subset \Spe{A}.
 \end{equation}
-This method, which Colbrook calls \texttt{PseudoSpec}, is outlined in Algorithm . In \cite{Matt}, Colbrook shows that the output of \texttt{PseudoSpec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as $n \rightarrow \infty.$
+Furthermore, in \cite{Matt} Colbrook shows that the output of Algorithm \ref{pseudospec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as $n \rightarrow \infty.$
+
+\begin{algorithm}[ht]
+\caption{Computing $\Spe{A}$.}
+\label{pseudospec}
+
+\textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$.
+
+\begin{algorithmic}[1]
+    \State For each $z\in\operatorname{Grid}$, compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z).$
+    \State Set $\Phi_n(z, A) = \sqrt{ \min \{ \mu_n^{(1)}(z), \mu_n^{(2)}(z)\}}.$
+    \State Set
+    $\Gamma_n^\epsilon(A)
+    =\{z\in\operatorname{Grid}:\Phi_n(z,A)<\epsilon\}$.
+\end{algorithmic}
+
+\textbf{Output:} $\Gamma_n^\epsilon(A)$, an approximation of
+$\operatorname{Sp}_\epsilon(A)$.
+
+\end{algorithm}
+
+The computation of $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ needed for Algorithm \ref{pseudospec} depends on the chosen discretization. In the next subsection, we employ the finite element method to compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ as the smallest eigenvalues of two auxiliary eigenproblems.
 
 
+% \begin{algorithm}[ht]
+% \caption{Computing $\Spe{A}$.}
+% \label{pseudospec}
+
+% \textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$.
+
+% \begin{algorithmic}[1]
+%     \State For each $z\in\operatorname{Grid}$, approximate the bottom of $\Sp{(A-zI)^*(A-zI)}$ and $\Sp{(A-zI)(A-zI)^*},$ denoted $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z),$ respectively.
+%     \State Set $\Phi_n(z, A) = \sqrt{ \min \{ \mu_n^{(1)}(z), \mu_n^{(2)}(z)\}}.$
+%     \State Set
+%     $\Gamma_n^\epsilon(A)
+%     =\{z\in\operatorname{Grid}:\Phi_n(z,A)<\epsilon\}$.
+% \end{algorithmic}
+
+% \textbf{Output:} $\Gamma_n^\epsilon(A)$, an approximation of
+% $\operatorname{Sp}_\epsilon(A)$.
+
+% \end{algorithm}
 
 \subsection{Operator Folding with the Finite Element Method (Needs Right Functional Analysis Still)}
 
