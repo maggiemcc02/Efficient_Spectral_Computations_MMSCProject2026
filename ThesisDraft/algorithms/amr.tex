@@ -1,0 +1,37 @@
+
+% \begin{algorithm}[ht]
+% \caption{The Inner Loop for Colbrook's Algorithm}
+% \label{DWR alg}
+% \begin{algorithmic}[1]
+% \Input The $j$-th auxiliary eigenproblem ($j \in \{1, 2\}$) for a fixed $z \in \operatorname{Grid}$ in Algorithm \ref{pseudospec}, the initial finite element space $V_h^{(j)},$ marking parameter $\theta$
+% \Ensure Corrected smallest eigenvalue $\widehat{\mu}_h^{(j)}(z)$
+
+% \Repeat
+%     \State Construct the finite element space $V_h^{(j)}$ on $\mathcal{T}_h^{(j)}$.
+%     \State Solve the $j$th auxiliary eigenproblem on $V_h^{(j)}$ to obtain
+%     $\mu_h^{(j)}(z)$ and a corresponding eigenfunction $u_h^{(j)}$.
+%     \State Construct an enriched space $V_h^{(j),+}$ and solve the enriched auxiliary eigenproblem.
+%     \State Match $u_h^{(j)}$ with an enriched eigenfunction $u_h^{(j),+}$ using the procedure of Section~\ref{...}.
+%     \State Compute the DWR error estimate $\eta^{(j)}(z)$ and define
+%     \[
+%         \widehat{\mu}_h^{(j)}(z)
+%         =
+%         \mu_h^{(j)}(z)+\eta^{(j)}(z).
+%     \]
+%     \State Compute the localized indicators $\eta_T^{(j)}$ for
+%     $T\in\mathcal{T}_h^{(j)}$.
+%     \If{$|\eta^{(j)}(z)| \leq \mathrm{tol}$}
+%         \State \Return $\widehat{\mu}_h^{(j)}(z)$
+%     \EndIf
+%     \State Mark all $T\in\mathcal{T}_h^{(j)}$ satisfying
+%     \[
+%         |\eta_T^{(j)}|
+%         \geq
+%         \theta
+%         \max_{K\in\mathcal{T}_h^{(j)}}|\eta_K^{(j)}|.
+%     \]
+%     \State Refine the marked elements of $\mathcal{T}_h^{(j)}$.
+% \Until{the stopping criterion is satisfied}
+% \end{algorithmic}
+% \end{algorithm}
+
