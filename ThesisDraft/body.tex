@@ -683,7 +683,7 @@ To see this, consider the case in which the closed and densely defined operator 
 % For example, consider the Maxwell eigenproblem \eqref{Max} and $z\in \mathbb{R}.$ Furthermore, consider the eigenvalue $\omega^2 = 1$ with multiplicity two. For all values of $z\in \mathbb{R}$ that are closer to $\omega^2 = 1$ than to any other value of $\omega^2,$ the smallest eigenvalue of the corresponding folded operator is $(1-z)^2$ with multiplicity two.
 
 
-Let $\lambda$ be the smallest eigenvalue of the infinite-dimensional auxiliary eigenproblem. If $\lambda$ has a multiplicity $m > 1,$ then a finite element discretization yields $m$ eigenvalues $\lambda,$ $\lambda_{h, i}$ for $i = 1, 2, \dots, m,$ that approximate $\lambda,$ each with a corresponding discrete eigenfunction, $u_{h, i}$ \cite{Boffi, slep}. Since the eigenspace associated with $\lambda$ is $m$-dimensional, each $u_{h, i}$ may approximate any linear combination of eigenfunctions that belong to the target eigenspace. 
+Let $\lambda$ be the smallest eigenvalue of an infinite-dimensional eigenproblem. If $\lambda$ has a multiplicity $m > 1,$ then a finite element discretization yields $m$ eigenvalues, $\lambda_{h, i}$ for $i = 1, 2, \dots, m,$ that approximate $\lambda,$ each with a corresponding discrete eigenfunction, $u_{h, i}$ \cite{Boffi, slep}. Since the eigenspace associated with $\lambda$ is $m$-dimensional, each $u_{h, i}$ may approximate any linear combination of eigenfunctions that belong to the target eigenspace. 
 
 
 To use DWR to estimate the error in the smallest computed eigenvalue, we require an enriched approximation $u_h^+$ that corresponds to the chosen discrete eigenfunction $u_h.$ When $\lambda$ is an eigenvalue with multiplicity one, this matching is simple: we compute $u_h$ and $u_h^+,$ normalize them, and align their phases. When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, it is more challenging to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
@@ -706,7 +706,7 @@ To solve this problem, we formulate it as a matrix problem. For $u_h^+$ to solve
 which we solve for the coefficients $\alpha_1, \alpha_2, \dots, \alpha_m,$ that define our `best match' $u_h^+.$
 
 
-By solving this matrix problem, we obtain an enriched eignfunction $u_h^+$ that best represents the chosen primal eigenfunction $u_h$ within the computed enriched eigenbasis. This allows us to apply the DWR error estimate \eqref{DWR} to eigenvalues of multiplicity greater than one.
+In solving this matrix problem, we obtain an enriched eignfunction $u_h^+$ that `best' represents the chosen primal eigenfunction $u_h$ within the computed enriched eigenbasis. This allows us to apply the DWR error estimate \eqref{DWR} to eigenvalues of multiplicity greater than one.
 As a result, we can use \eqref{DWR} to estimate the error in the smallest eigenvalues that arise in Colbrook's algorithm. The details of this implementation are discussed in the next subsection.
 
 
@@ -761,9 +761,9 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a set $z\in \op
     \end{equation}
     Using this error estimate, compute the corrected eigenvalue, $\mu_c^{(j)}(z),$  as follows:
     \begin{equation}
-        \mu_c^{(j)}(z) \defeq \eta^{(j)} + \mu_n^{(j)}(z).
+        \mu_c^{(j)}(z) \defeq \eta^{(j)}(z) + \mu_n^{(j)}(z).
     \end{equation}
-    Use the method of Rognes and Logg to compute the local error indicators $\eta_T^{(j)}$, as given by \eqref{local eta}, for each cell $T$ in the mesh that defines $V_h^{(j)}$ \cite{logg}. 
+    Use the method of Rognes and Logg to compute the local error indicators $\eta_T^{(j)}$, as given by \eqref{local eta}, for each cell $T$ in the mesh that defines $V_h^{(j)}$ \cite{logg, joe, pablo}. 
 
     
     \item \textbf{Mark:}\footnote{This marking scheme was obtained from \cite{Pslides} where it is said to be simpler than the famous Dörfler marking routine, but performs similarly in practice \cite{Dorf, Pslides}.} 
@@ -774,7 +774,7 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a set $z\in \op
     Unless otherwise stated, we take $\theta = 1/2.$
 
     
-    \item \textbf{Refine:} Refine the marked cells, thereby defining a new finite element function space for the $j$-th auixiliary eigenproblem. To refine our marked cells, we employ Netgen's refinement technique, as implemented by Flood, Farrell, and Brubeck \cite{NGSolve, Schoberl1997, pablo}.
+    \item \textbf{Refine:} Refine the marked cells, thereby defining a new finite element function space for the $j$-th auxiliary eigenproblem. To refine our marked cells, we employ Netgen's refinement technique, as implemented by Flood, Farrell, and Brubeck \cite{NGSolve, Schoberl1997, pablo}.
 
 \end{enumerate}
 To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a user-defined stopping criterion has been satisfied. In the next subsection, we demonstrate the success of this methodology by applying it to the Maxwell eigenproblem. 
@@ -789,7 +789,11 @@ To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a 
 
 \section{The Outer Loop: Adaptively Refining the Complex Plane in Colbrook's Algorithm}
 
-\subsection{The Inner and Outer Refinement Criteria}
+\subsection{The Inner Refinement Criteria}
+
+\subsection{The Outer Refinement Criteria}
+
+
 \subsection{Our Implementation}
 
 \chapter{Numerical Examples}
