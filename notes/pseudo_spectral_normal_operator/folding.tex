@@ -57,7 +57,7 @@
   \small\oldthebibliography{#1}\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 \title{\vspace{-1.5em}The functional analytic aspects of operator folding\\
-       and finite element methods\vspace{-0.5em}}
+       and variational formulations\vspace{-0.5em}}
 \author{Umberto Zerbinati\thanks{Mathematical Institute, University of Oxford.
   Corresponding author,
   \href{mailto:zerbinati@maths.ox.ac.uk}{zerbinati@maths.ox.ac.uk}.}
@@ -71,11 +71,14 @@
 \noindent
 In \cite{Colbrook2026} Colbrook introduces very appealing algorithms for
 computing spectra and pseudospectra. This note makes two points regarding its application in
-the context of the finite element method.
+the context of variational formulations (and their discretisations, like the finite element method).
+
+\pef{I propose we rephrase to that there's a problem with variational formulations, not with the finite element method. It arises on the continuous level also.}
+\pef{I confess I find this note quite difficult to read. Umberto, how much of it was written with Claude? I find its prose with Opus 5 to be much, much worse than previous versions.}
 
 \smallskip
 \noindent\textbf{(a)}\ \emph{It is not straightforward to apply the algorithm as stated in
-\cite[\S3.4.1]{Colbrook2026} in the context of a finite element method.}  The algorithm
+\cite[\S3.4.1]{Colbrook2026} in the context of a variational formulation.}  The algorithm
 is phrased in the language of spectral theory, in terms of e.g.~$A$, $A^*$, $\dom(A)$, $\dom(A^*)$ and orthogonal
 projections $\mathcal{P}_n$. These are not the natural language in which finite element discretisations are expressed. \Cref{sec:stuck} lists some
 difficulties we have encountered in passing from one setting to the other.
@@ -156,6 +159,7 @@ one and the same finite-dimensional space must lie in \emph{both} domains (of $A
 those carry different boundary conditions in general.  \uzt{If instead those
 conditions are meant to make \eqref{eq:folded} well posed, then they are conditions
 of a different kind.}
+\pef{What does it mean for \eqref{eq:folded} to be well-posed? It's just an operator, not an equation or a problem.}
 \Cref{eq:folded} is the operator $T^*T$ of \cite[\S V.3.7]{Kato1995}, and by
 \cite[Thm~V.3.24, p.~275]{Kato1995} it needs the strictly smaller $\dom(T^*T) =
 \{u \in \dom(T) : Tu \in \dom(T^*)\}$ with $T = A - zI$, which a discretisation
@@ -220,7 +224,7 @@ The structural difficulty is that folding evaluates
 $\norm{(A-zI)u}_{\Hb}$, so the trial space must sit inside the \emph{graph}
 space $\dom(A)$ and exhaust a core of it.  For $\Delta$ on a bounded $\Omega$
 \uzt{three} things then go wrong at once.  Continuous piecewise linears are not in
-$H^2(\Omega)$, so $\norm{(A - zI)u_h}_{L^2}$ is not inaccurate but undefined, and
+$H^2(\Omega)$, so $\norm{(A - zI)u_h}_{L^2}$ is undefined, and
 $C^1$ elements would be needed.  On a non-convex polygon even those fail, since
 $\dom(\Delta) = \{u \in H^1_0 : \Delta u \in L^2\}$ contains corner
 singularities and has $H^2 \cap H^1_0$ as a proper \emph{closed} subspace in the
@@ -228,7 +232,7 @@ graph norm, so no $H^2$-conforming family is a core. Furthermore $\dom(A^*)$ car
 conditions, so the second quotient in \eqref{eq:quotients} needs a second space.
 None of this arises in \cite[\S\S3.4.2--3.4.3]{Colbrook2026}, set on $L^2(\R^d)$
 where $C^\infty_c(\R^d)$ is \emph{assumed} to be a core and the basis is Hermite
-functions, which are smooth, with no boundary (this is the all reason why the advection diffusion problem is not normal ...). 
+functions, which are smooth, with no boundary (this is the whole reason why the advection-diffusion operator is not normal \dots). 
 Nor in \cite[\S3.4.4]{Colbrook2026}, whose operator is the \emph{first-order} Maxwell
 system, whose graph space $H_0(\curl) \times H(\curl)$ standard elements reach.
 Between them the two settings never cover a second-order operator on a bounded
@@ -238,7 +242,10 @@ that the $L^2$ Riesz map ``will not be consistent with the function spaces of
 the continuous problem''.
 
 
-\paragraph{(vi) The estimator we want needs more than either.}  We intend to
+\paragraph{(vi) The estimator we want needs more than either.} 
+\pef{Keep the note strictly focused on Colbrook's work, what we want to do
+after is not important here. I suggest getting rid of this paragraph altogether.}
+We intend to
 drive refinement by a dual weighted residual estimator
 \cite{BeckerRannacher2001,HeuvelineRannacher2001}.  DWR needs a form bounded on
 $V \times V$, a conforming $V_h$ for Galerkin orthogonality, a well posed dual
@@ -256,14 +263,16 @@ of adaptivity are not independent.
 \section{The setting we propose}
 \label{sec:path}
 
-Let $V \subset\subset \Hb$ with $\Hb = L^2$, taking $V$ of the type $H_0(\curl)
+We can so far only make sense for first-order operators, so we restrict ourselves to this setting.
+
+Let $V \subset\subset \Hb$ with $\Hb = L^2$. For concreteness consider the Maxwell eigenproblem, and thus take $V$ of the type $H_0(\curl)
 \cap H(\divg 0)$ so the embedding is compact.\footnote{Two caveats.  We are
 sloppy about the components: $E$ and $H$ carry different boundary conditions, so
 the pair lives in $H_0(\curl) \times H(\curl)$ rather than $V \times V$.  And the
 solenoidal constraint buys the compact embedding at the cost of conformity,
 since standard elements are not divergence-free, as flagged in
-\cite[footnote~2, p.~130]{Colbrook2026}.}  From here $A$ is the \emph{weak}
-operator, related to the endomorphism of \cref{sec:setting} by $\Astr = M^{-1}A$,
+\cite[footnote~2, p.~130]{Colbrook2026}.} \pef{This doesn't make any sense as a general setting to propose.}  From here $A$ is the \emph{weak}
+operator \pef{What does that mean? We're trying to explain things here.}, related to the endomorphism of \cref{sec:setting} by $\Astr = M^{-1}A$,
 and only now does the shift $A - zM$ make sense.  Take
 \begin{equation}
   \label{eq:maxwellop}
@@ -285,7 +294,7 @@ the folded operator as
 which composes, $V \times V \xrightarrow{A - zM} \Hb^* \times \Hb^* \subseteq
 V^* \times V^* \xrightarrow{M^{-1}} \Hb \times \Hb \cong (\Hb^* \times \Hb^*)^*
 \xrightarrow{(A-zM)^*} V^* \times V^*$, the middle step being the canonical
-double dual identification, numerically an identity.  This is the continuous
+double dual identification, numerically an identity. \pef{Spell this out.} This is the continuous
 counterpart of the modified normal equation $A^{T}TAx = A^{T}Tb$ of
 \cite[Eq.~(3.7)]{LazzarinoNakatsukasaZerbinati2026}, where $T$ discretises a
 Riesz map inserted for the reason given in \cref{sec:stuck}(iii), that the plain
@@ -315,6 +324,7 @@ nothing, with no spectrum of its own.  Above we repaired that by
 $\Hb$.  A finite element method usually does the opposite and \emph{inverts},
 and what comes out is compact rather than unbounded.  Two steps, the first
 free.
+\pef{This is 100\% AI. Please rewrite things in your own words, I think the AI prose is poor. What on earth are the two steps? It doesn't make any sense. The words are English words and the sentences are grammatical but they don't mean anything.}
 
 A G\aa rding inequality is \emph{automatic}, with no hypothesis beyond $V$
 carrying the graph norm $\norm{u}_V^2 = \norm{u}_{\Hb}^2 + \norm{\Astr
