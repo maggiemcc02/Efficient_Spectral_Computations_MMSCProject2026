@@ -15,7 +15,7 @@
 \usepackage[nameinlink]{cleveref}
 \usepackage{todonotes}
 \newcommand{\pef}[1]{\todo[inline, color=green!40]{PEF: #1}}
-
+\newcommand{\MM}[1]{\todo[inline, color=pink!70]{MM: #1}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
@@ -83,9 +83,10 @@ functional analytic setting we set out in \cref{sec:path}, namely a conforming
 Rayleigh--Ritz discretisation of the pencil $\eqref{eq:starstar}\,u = \lambda Mu$
 on $V \times V$.  \Cref{sec:already} gives our evidence.
 \pef{I can't parse this point. How can a functional analytic setting be computed for Maxwell in Colbrook's book?}
-
+\MM{Is the point here that Umberto thinks that what Matt is doing in his Maxwell example can be explained in Section 3, which inserts the Riesz maps needed for folding in the variational setting?}
 If (b) is right the two are reconciled \pef{What two? What reconciliation? Confused here}, and what is missing from
 \cite{Colbrook2026} is the bridge between them, which is \cref{sec:path}.
+\MM{Is this saying that if our view of Matt's Maxwell example is correct, Section 3 shows that our implementation aligns with how Matt presents his algorithm?}
 
 % ═════════════════════════════════════════════════════════════════════════════
 \section{The setting of Colbrook}
@@ -98,6 +99,7 @@ Since we want its spectrum, $A$ must be an \emph{endomorphism}, $A \colon
 H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$.
 \pef{This isn't obviously an endomorphism, because $L^2$ will contain e.g.~$C^0$ functions whose boundary
 trace is not zero?}
+\MM{I agree that this is not an endomorphism but that it is an example of $A:D(A) \subset \Hb \rightarrow \Hb.$}
 Under suitable conditions on
 $\dom(A)$ and $\dom(A^*)$ one considers \cite[\S3.4.1]{Colbrook2026}
 \begin{equation}
@@ -131,7 +133,7 @@ of pseudospectra to the eigenvalues of the self-adjoint operator
 The sentence introducing \cite[Eq.~(3.25)]{Colbrook2026} reads ``\emph{under
 suitable conditions on $\dom(A)$ and $\dom(A^*)$}, the functions $\Phi_n(z,A)$
 converge locally uniformly to $\gamma(z,A)$ \emph{from above} and hence satisfy
-Assumption~3.2.1''. \pef{Have you checked the final version of the book? And mention what $\Phi_n$ is.} That hypothesis carries everything, since convergence from
+Assumption~3.2.1''. \pef{Have you checked the final version of the book? And mention what $\Phi_n$ is.} \MM{PEF, do you have a final copy?}That hypothesis carries everything, since convergence from
 above is what Assumption~3.2.1 asks for and what turns
 \cite[Thm~3.2.3]{Colbrook2026} into $\Gamma^\epsilon_n(A) \subseteq
 \Sp_\epsilon(A)$, the error control. \pef{This previous sentence strongly reads like AI.} We cannot find in the book what these
@@ -157,6 +159,7 @@ would have to respect instead.
 
 \paragraph{(ii) Babu\v{s}ka--Osborn does not apply.} 
 \pef{So what? He never said Babu\v{s}ka--Osborn should apply?}
+\MM{Is this section highlighting the assumption we have to make to apply DWR? Namely, that the bottom of the spectrum of the folded operators must consist of an isolated eigenvalue of finite multiplicity? It is not clear to me why we want a convergence rate and error indicator from Babu\v{s}ka--Osborn theory?}
 We would like to apply
 Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} to
 \eqref{eq:folded}, and cannot, since it is unbounded with non-compact inverse.
@@ -173,6 +176,7 @@ operators, since we are trying to compute pseudospectra?
 $(A-zI)^* \colon \Hb^* \to \Hb^*$, so we would be composing $\Hb
 \xrightarrow{A-zI} \Hb$ with $\Hb^* \xrightarrow{(A-zI)^*} \Hb^*$, and the two
 halves do not meet. \pef{Won't his obvious reply be `I am considering the Hilbert adjoint'?}
+\MM{I agree. My (potentially incorrect) interpretation is as follows: Matt considers the Hilbert adjoint. However, when we consider an operator $A: V \rightarrow V^*,$ the natural notion of the adjoint is the Banach adjoint. Then, we map from the Banach adjoint to the Hilbert adjoint (and thus back to Matt's setting) with the appropriate Riesz map. I believe this is what Umberto does in Section 3?}
 The standard repair, when $\Hb = L^2$, is to identify $\Hb$
 with its dual silently.  That does keep the composition an endomorphism. Silently identifying
 a space with its dual is evil, for the reasons we now outline.
@@ -218,6 +222,7 @@ discrete side in \cite[Rmk~3.7]{LazzarinoNakatsukasaZerbinati2026}, which warns
 that the $L^2$ Riesz map ``will not be consistent with the function spaces of
 the continuous problem''.
 
+
 \paragraph{(vi) The estimator we want needs more than either.}  We intend to
 drive refinement by a dual weighted residual estimator
 \cite{BeckerRannacher2001,HeuvelineRannacher2001}.  DWR needs a form bounded on
@@ -232,7 +237,7 @@ certificate survives, but the estimator has no anchor.  The tool needs precisely
 the isolation that \cite[p.~129]{Colbrook2026} declines to assume.  Whether the
 bottom is isolated also depends on where $z$ sits, so the inner and outer layers
 of adaptivity are not independent.
-
+\MM{This is unfortunately the strong assumption that we make to apply DWR. I view this as a limitation in our choice of DWR rather than an issue  with Matt's work.  Hopefully we can work on this in the future. It would be really interesting to develop an error estimate for a general spectral bottom.}
 % ═════════════════════════════════════════════════════════════════════════════
 \section{The setting we propose}
 \label{sec:path}
@@ -282,6 +287,8 @@ Unlike \eqref{eq:star}, this has a variational form attached,
              + (\bar z + z)\,\ii \bigl(\bcurl E,\ G\bigr)
              + \bar z z\,(E,F) + \bar z z\,(H,G).
 \end{multline}
+
+\MM{The assumption that we are working with the first-order operator is obviously not great. However, this seemed like the most straightforward way to directly relate our variational folding of the Maxwell (and the Poisson) problems to what Matt writes in his book. Umberto and I tried to work this out in a more general setting and kept getting stuck.}
 
 \subsection{The G\aa rding inequality, and the standard finite element device}
 \label{sec:garding}
