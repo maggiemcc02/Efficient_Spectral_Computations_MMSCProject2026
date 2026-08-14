@@ -74,8 +74,9 @@ computing spectra and pseudospectra. This note makes two points regarding its ap
 the context of variational formulations (and their discretisations, like the finite element method).
 
 \pef{I propose we rephrase to that there's a problem with variational formulations, not with the finite element method. It arises on the continuous level also.}
+\uz{I would be happy with this rephrasing.}
 \pef{I confess I find this note quite difficult to read. Umberto, how much of it was written with Claude? I find its prose with Opus 5 to be much, much worse than previous versions.}
-
+\uz{This is minor edits from what Claude wrote after parsing my hand written notes, I just checked that the contact of my hand written notes was there and didn't worry about how it embellished it. For the maths I would consider the notes I wrote and shared over slack and the one me and Maggie have been writing these weeks as the source of truth.}
 \smallskip
 \noindent\textbf{(a)}\ \emph{It is not straightforward to apply the algorithm as stated in
 \cite[\S3.4.1]{Colbrook2026} in the context of a variational formulation.}  The algorithm
@@ -160,6 +161,7 @@ those carry different boundary conditions in general.  \uzt{If instead those
 conditions are meant to make \eqref{eq:folded} well posed, then they are conditions
 of a different kind.}
 \pef{What does it mean for \eqref{eq:folded} to be well-posed? It's just an operator, not an equation or a problem.}
+\uz{If an operator goes from V to W and you compose with an operator going from X to Y, it is ill-posed.}
 \Cref{eq:folded} is the operator $T^*T$ of \cite[\S V.3.7]{Kato1995}, and by
 \cite[Thm~V.3.24, p.~275]{Kato1995} it needs the strictly smaller $\dom(T^*T) =
 \{u \in \dom(T) : Tu \in \dom(T^*)\}$ with $T = A - zI$, which a discretisation
@@ -245,6 +247,7 @@ the continuous problem''.
 \paragraph{(vi) The estimator we want needs more than either.} 
 \pef{Keep the note strictly focused on Colbrook's work, what we want to do
 after is not important here. I suggest getting rid of this paragraph altogether.}
+\uz{I believe you are right !}
 We intend to
 drive refinement by a dual weighted residual estimator
 \cite{BeckerRannacher2001,HeuvelineRannacher2001}.  DWR needs a form bounded on
@@ -271,8 +274,10 @@ sloppy about the components: $E$ and $H$ carry different boundary conditions, so
 the pair lives in $H_0(\curl) \times H(\curl)$ rather than $V \times V$.  And the
 solenoidal constraint buys the compact embedding at the cost of conformity,
 since standard elements are not divergence-free, as flagged in
-\cite[footnote~2, p.~130]{Colbrook2026}.} \pef{This doesn't make any sense as a general setting to propose.}  From here $A$ is the \emph{weak}
-operator \pef{What does that mean? We're trying to explain things here.}, related to the endomorphism of \cref{sec:setting} by $\Astr = M^{-1}A$,
+\cite[footnote~2, p.~130]{Colbrook2026}.} \pef{This doesn't make any sense as a general setting to propose.}
+\uz{It is not a general setting it is a concrete example. Why do you think this doesn't make any sense ?}
+From here $A$ is the \emph{weak}
+operator \pef{What does that mean? We're trying to explain things here.}\uz{Here I mean an opeartor defined to a weak formulations, i.e. a variational formulation, so it spit what we call a load-vector not a vector or a function this is an element of the dual.} related to the endomorphism of \cref{sec:setting} by $\Astr = M^{-1}A$,
 and only now does the shift $A - zM$ make sense.  Take
 \begin{equation}
   \label{eq:maxwellop}
@@ -318,17 +323,9 @@ Unlike \eqref{eq:star}, this has a variational form attached,
 \label{sec:garding}
 
 \Cref{sec:stuck} got stuck because \cite{Colbrook2026} needs an endomorphism
-while a finite element method produces $A \colon V \to V^*$, an endomorphism of
-nothing, with no spectrum of its own.  Above we repaired that by
-\emph{composing} with a Riesz map, recovering the unbounded $\Astr = M^{-1}A$ on
-$\Hb$.  A finite element method usually does the opposite and \emph{inverts},
-and what comes out is compact rather than unbounded.  Two steps, the first
-free.
-\pef{This is 100\% AI. Please rewrite things in your own words, I think the AI prose is poor. What on earth are the two steps? It doesn't make any sense. The words are English words and the sentences are grammatical but they don't mean anything.}
+while a finite element method produces $A \colon V \to V^*$, \uzt{this is not an endomorphism for this reason it is typical in finite element land to use the solution operator trick.}
 
-A G\aa rding inequality is \emph{automatic}, with no hypothesis beyond $V$
-carrying the graph norm $\norm{u}_V^2 = \norm{u}_{\Hb}^2 + \norm{\Astr
-u}_{\Hb}^2$.  Applying $(s-t)^2 \ge \tfrac12 s^2 - t^2$ with $s = \norm{\Astr
+A G\aa rding inequality can be proven and will be useful with the hypothesis $V$ compactly included in $\Hb$ to give that the solution operator we are considering if Fredholm of index 0. Applying $(s-t)^2 \ge \tfrac12 s^2 - t^2$ with $s = \norm{\Astr
 u}_{\Hb}$ and $t = \abs{z}\,\norm{u}_{\Hb}$ gives, for $u \in V$,
 \begin{equation}
   \label{eq:garding}
@@ -360,18 +357,6 @@ There is no essential spectrum, the bottom $\lambda_1$ is an isolated eigenvalue
 equal to $\siginf(\Astr - zI)^2$ when $V$ is the whole graph space, and
 Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} applies to $T$ in
 the usual way.
-
-The device does not solve the difficulty of \cref{sec:setting}, it inverts it.
-An endomorphism is produced by \emph{solving} rather than by \emph{applying},
-trading the unbounded $\Astr$ for the compact $T$ with reciprocal spectrum.  The
-G\aa rding inequality is what makes $T$ exist, the compact embedding is what
-makes it compact.
-
-We know what this costs.  A compact embedding $V \subset\subset \Hb$ of the graph
-space is the same thing as compactness of the resolvent of $\Astr$, exactly what
-\cite[p.~129]{Colbrook2026} declines to assume.  For Maxwell it forces the
-solenoidal $V$ of the footnote, which standard finite elements do not provide.
-That trade seems to us the crux of the whole question.
 
 \subsection{This appears to be what is already done for Maxwell}
 \label{sec:already}
