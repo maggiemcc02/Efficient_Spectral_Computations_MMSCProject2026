@@ -1,0 +1,44 @@
+\begin{thebibliography}{1}
+
+\bibitem{BabuskaOsborn1991}
+Ivo Babu{\v{s}}ka and J.~Osborn.
+\newblock Eigenvalue problems.
+\newblock In {\em Handbook of Numerical Analysis, Vol. {II}: Finite element
+  methods (Part 1)}, pages 641--787. North-Holland, Amsterdam, 1991.
+
+\bibitem{BeckerRannacher2001}
+Roland Becker and Rolf Rannacher.
+\newblock An optimal control approach to a posteriori error estimation in
+  finite element methods.
+\newblock {\em Acta Numerica}, 10:1--102, 2001.
+
+\bibitem{Boffi2010}
+Daniele Boffi.
+\newblock Finite element approximation of eigenvalue problems.
+\newblock {\em Acta Numerica}, 19:1--120, 2010.
+
+\bibitem{Colbrook2026}
+Matthew~J. Colbrook.
+\newblock {\em Infinite-Dimensional Spectral Computations: Foundations,
+  Algorithms, and Modern Applications}.
+\newblock Cambridge University Press, Cambridge, 2026.
+
+\bibitem{HeuvelineRannacher2001}
+V.~Heuveline and R.~Rannacher.
+\newblock A posteriori error control for finite approximations of elliptic
+  eigenvalue problems.
+\newblock {\em Adv. Comput. Math.}, 15(1--4):107--138, 2001.
+
+\bibitem{Kato1995}
+Tosio Kato.
+\newblock {\em Perturbation theory for linear operators}.
+\newblock Classics in Mathematics. Springer-Verlag, Berlin, 1995.
+\newblock Reprint of the 1980 edition.
+
+\bibitem{LazzarinoNakatsukasaZerbinati2026}
+Lorenzo Lazzarino, Yuji Nakatsukasa, and Umberto Zerbinati.
+\newblock Preconditioned normal equations for solving discretised partial
+  differential equations, 2026.
+\newblock arXiv:2502.17626.
+
+\end{thebibliography}

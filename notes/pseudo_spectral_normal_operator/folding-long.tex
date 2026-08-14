@@ -1,0 +1,1091 @@
+\documentclass[11pt,a4paper]{article}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% A note for Matthew Colbrook on the functional-analytic setting of operator
+% folding, written ahead of a video call.  Macro names deliberately match
+% ~/Maths/Notes/spectral_theory/shared.tex so that material can migrate into
+% the survey later.
+% ─────────────────────────────────────────────────────────────────────────────
+
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
+            urlcolor=blue!55!black]{hyperref}
+\usepackage{cleveref}
+% thmtools is loaded after cleveref on purpose.  Environments declared with
+% \declaretheorem register their own cleveref type even when they share a
+% counter, which plain \newtheorem[theorem] does not.
+\usepackage{thmtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\declaretheorem[sibling=theorem,style=plain,name=Proposition]{proposition}
+\declaretheorem[sibling=theorem,style=plain,name=Lemma]{lemma}
+\declaretheorem[sibling=theorem,style=plain,name=Corollary]{corollary}
+\declaretheorem[sibling=theorem,style=definition,name=Definition]{definition}
+\declaretheorem[sibling=theorem,style=definition,name=Example]{example}
+\declaretheorem[style=definition,name=Question]{question}
+\declaretheorem[sibling=theorem,style=remark,name=Remark]{remark}
+
+\newcommand{\creflastconjunction}{, and~}
+
+% All of the theorem-like environments above share the `theorem' counter, so
+% cleveref would otherwise call every one of them a theorem.
+\crefname{definition}{Definition}{Definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{lemma}{Lemma}{Lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{Proposition}{Propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+\crefname{example}{Example}{Examples}
+\Crefname{example}{Example}{Examples}
+\crefname{theorem}{Theorem}{Theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{question}{Question}{Questions}
+\Crefname{question}{Question}{Questions}
+
+% ── Macros (names shared with the spectral_theory survey) ────────────────────
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\dual}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\Hb}{\mathcal{H}}
+\newcommand{\Vb}{V}
+\newcommand{\Lop}{\mathcal{L}}
+\newcommand{\Aop}{\mathcal{A}}
+\newcommand{\Bop}{\mathcal{B}}
+\newcommand{\Dop}{\mathcal{D}}
+\newcommand{\Mop}{\mathcal{M}}
+\newcommand{\spec}{\sigma}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\dd}{\,\mathrm{d}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\Rot}{\mathbf{rot}}
+\DeclareMathOperator{\curl}{curl}
+\DeclareMathOperator{\divg}{div}
+\newcommand{\siginf}{\spec_{\inf}}
+\newcommand{\adj}{\star}                 % antidual (Banach) adjoint
+\newcommand{\Riesz}{\mathcal{R}}         % the H-Riesz map
+\newcommand{\Mass}{\mathcal{M}}          % the mass operator V -> V'
+\newcommand{\Ltwo}{L^2}
+\newcommand{\Hdiv}{H(\divg)}
+\newcommand{\Hrot}{H(\rot)}
+\newcommand{\HRot}{H(\Rot)}
+
+\title{Operator folding and the primal-dual bookkeeping\\ of variational
+       problems\\[2ex]
+       \large A note for Matthew Colbrook}
+\author{Umberto Zerbinati\thanks{Mathematical Institute, University of Oxford
+  (\href{mailto:zerbinati@maths.ox.ac.uk}{zerbinati@maths.ox.ac.uk}).  Written
+  after discussions with Margaret McCarthy and Patrick E. Farrell.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Chapter~3 of \cite{Colbrook2026} builds \texttt{PseudoSpec} and \texttt{CompSpec}
+on top of a closed and densely defined operator $A \colon \dom(A) \subset \Hb
+\to \Hb$, an endomorphism of a single Hilbert space.  A finite element method
+does not hand you such an object.  It hands you a bounded operator $\Aop \colon
+\Vb \to \Vb'$ from a space into its own dual, which is an endomorphism of
+nothing, and the passage from one picture to the other is where we kept getting
+stuck.  This note works
+out that passage.  The short answer is that there is no primal-dual
+inconsistency in operator folding, there is a Riesz map which is invisible in
+$\ell^2(\N)$ and unavoidable in $\Vb'$, and it is already present in
+\cite[Algorithm~3.4]{Colbrook2026} under the name $G_n$.  Two further worries,
+about Kato's domain for $(A-zI)^*(A-zI)$ and about the absence of a compact
+resolvent, both dissolve once one notices that the algorithm touches only the
+\emph{form} domain and only the \emph{bottom} of the spectrum.  We close with
+four questions.
+\end{abstract}
+
+\tableofcontents
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{What this note is about}
+\label{sec:purpose}
+
+Maggie's thesis applies two layers of adaptivity to the algorithms of
+\cite[Chapter~3]{Colbrook2026}.  An inner layer refines the discretisation used
+to evaluate the injection moduli, and an outer layer refines the sampling of
+the complex plane.  Both layers live on top of a finite element discretisation,
+and it was while writing down what exactly is being discretised that we ran into
+trouble.
+
+Recall the two objects.  For a closed and densely defined $A$ on a separable
+Hilbert space $\Hb$, the injection modulus is
+\begin{equation}
+  \label{eq:siginf}
+  \siginf(A) = \inf\{\norm{Au} : u \in \dom(A),\ \norm{u} = 1\},
+\end{equation}
+and the resolvent lower bound that drives everything is
+\begin{equation}
+  \label{eq:gamma}
+  \gamma(z,A) = \min\bigl\{\siginf(A - zI),\ \siginf(A^* - \bar z I)\bigr\}
+  = \norm{(A-zI)^{-1}}^{-1},
+\end{equation}
+the last equality being \cite[Lemma~1.2.5]{Colbrook2026}.  Operator folding
+\cite[\S3.4.1, p.~114]{Colbrook2026} evaluates \cref{eq:gamma} through the two
+non-negative closed quadratic forms
+\begin{equation}
+  \label{eq:colbrookforms}
+  Q^{(1)}_{z,A}(u,v) = \dual{(A-zI)u}{(A-zI)v},\qquad
+  Q^{(2)}_{z,A}(u,v) = \dual{(A-zI)^*u}{(A-zI)^*v},
+\end{equation}
+with $\dom(Q^{(1)}_{z,A}) = \dom(A)$ and $\dom(Q^{(2)}_{z,A}) = \dom(A^*)$, so
+that
+\begin{equation}
+  \label{eq:326}
+  \gamma(z,A) = \sqrt{\min\Bigl\{
+     \inf_{u \in \dom(A)\setminus\{0\}} \tfrac{Q^{(1)}_{z,A}(u,u)}{\norm{u}^2},\
+     \inf_{u \in \dom(A^*)\setminus\{0\}} \tfrac{Q^{(2)}_{z,A}(u,u)}{\norm{u}^2}
+  \Bigr\}}.
+\end{equation}
+This is \cite[Equation~(3.26)]{Colbrook2026}.  The sentence immediately after it
+says that the computation of $\gamma$ has been transformed into finding the
+bottom of the spectrum of the non-negative self-adjoint operators
+$(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*$, and it is that sentence which started our
+confusion.
+
+Everything in \cref{eq:siginf,eq:gamma,eq:326} presupposes that $A$ maps $\Hb$
+into itself.  A finite element method starts from a bilinear form and produces
+$\Aop \colon \Vb \to \Vb'$, so the composition $\Aop^{*}\Aop$ appears not to
+type-check, and the standard cure of silently identifying $\Hb$ with $\Hb'$ is
+exactly the sort of thing that hides a factor of a mass matrix.  Our four
+questions were the following.
+
+\begin{enumerate}
+  \item How does one legitimately pass from $\Aop \colon \Vb \to \Vb'$ to
+        Colbrook's $A \colon \dom(A) \subset \Hb \to \Hb$?
+  \item Is there a primal-dual inconsistency in the folded operator, and if
+        the cure is a Riesz map, which Riesz map?
+  \item Kato \cite[Theorem~V.3.24, p.~275]{Kato1995} constructs $(A-zI)^*(A-zI)$
+        on a domain that is strictly smaller than $\dom(A)$ and is not given
+        explicitly.  Do we need to discretise that domain?
+  \item The folded operator is unbounded and has no compact inverse, so
+        Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} does not
+        apply to it.  What replaces it?
+\end{enumerate}
+
+The answers, in order, are as follows, and they occupy
+\cref{sec:bridge,sec:folding,sec:gram,sec:kato,sec:rayleigh}.
+
+\begin{itemize}
+  \item[(1)] $A = \Riesz \Aop$ restricted to $\dom(A) = \{u \in \Vb : \Aop u
+        \in \Hb'\}$, where $\Riesz \colon \Hb' \to \Hb$ is the Riesz map of the
+        \emph{pivot} space.  Two things happen at once.  The Riesz map
+        transports the output back into $\Hb$, and the domain shrinks from $\Vb$
+        to $\Aop^{-1}(\Hb')$.  The second is the one that gets forgotten, and it
+        is where the boundary conditions and the elliptic regularity live.
+  \item[(2)] There is no inconsistency.  The Banach adjoint of $\Aop \colon \Hb
+        \to \Hb'$ is a map $\Hb'' = \Hb \to \Hb'$ and not a map $\Hb' \to \Hb'$,
+        so the two arrows simply do not compose and a Riesz map has to be
+        inserted between them.  The correct folded object is $(\Aop -
+        z\Mass)^{\adj}\Riesz(\Aop - z\Mass) \colon \Vb \to \Vb'$, and the Riesz
+        map is the one of $\Hb$, not the one of $\Vb$.  This is the continuous
+        counterpart of the modified normal equation of
+        \cite[Equation~(3.7)]{LazzarinoNakatsukasaZerbinati2026}.
+  \item[(3)] No.  Rayleigh quotients see only the \emph{form} domain, which by
+        \cite[Example~VI.2.13, p.~326]{Kato1995} is exactly $\dom(A)$.  Kato's
+        smaller domain is a core of that form and never has to be exhibited.
+  \item[(4)] Nothing needs to replace it.  The folded form is non-negative and
+        only its infimum is wanted, so a Rayleigh--Ritz restriction is
+        automatically an upper bound.  That is precisely the one-sidedness
+        $\gamma(z,A) \le \Phi_n(z,A)$ demanded by
+        \cite[Assumption~3.2.1]{Colbrook2026}.  The approximation hypothesis is
+        that the trial spaces exhaust a \emph{core}, which is density in the
+        graph norm and not compactness.
+\end{itemize}
+
+\Cref{sec:twodomains,sec:tworoutes} record two consequences that are invisible
+in $\ell^2(\N)$ and very visible in a finite element code.  \Cref{sec:examples}
+carries the argument through Maxwell, Dirac and advection-diffusion.
+\Cref{sec:affine} records a cheap way to sweep the complex plane.
+\Cref{sec:pivot} asks how far the pivot space can be moved, which is where this
+touches the preconditioning work in
+\cite{LazzarinoNakatsukasaZerbinati2026}.  \Cref{sec:questions} collects the
+questions we would like to discuss.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Notation, fixed once}
+\label{sec:notation}
+
+Sesquilinear forms and inner products are linear in the first argument and
+conjugate-linear in the second.  We use \emph{antiduals} throughout.  For a
+complex Hilbert space $X$, $X'$ denotes the space of bounded conjugate-linear
+functionals on $X$, and $\dual{g}{v} := g(v)$ for $g \in X'$ and $v \in X$, so
+that $\dual{\cdot}{\cdot}$ is linear in its first slot and conjugate-linear in
+its second.  With this convention the Riesz map is linear rather than
+conjugate-linear, and no bars appear where they are not wanted.  This is a
+bookkeeping choice and nothing depends on it, but it removes a genuine share of
+the confusion.
+
+Let $\Hb$ be the \emph{pivot} Hilbert space, typically $L^2$, and let $\Vb
+\hookrightarrow \Hb$ be a Hilbert space that is continuously and densely
+embedded.  We write
+\begin{equation}
+  \label{eq:riesz}
+  \Riesz \colon \Hb' \to \Hb, \qquad \dual{g}{w} = (\Riesz g, w)_{\Hb}
+  \quad \text{for all } w \in \Hb,
+\end{equation}
+for the Riesz map of $\Hb$, which is a linear isometric isomorphism, and
+\begin{equation}
+  \label{eq:mass}
+  \Mass \colon \Vb \to \Vb', \qquad \dual{\Mass u}{v} = (u,v)_{\Hb}
+  \quad \text{for all } v \in \Vb,
+\end{equation}
+for the \emph{mass operator}, which is the composition of the inclusion $\Vb
+\hookrightarrow \Hb$, the inverse Riesz map $\Hb \to \Hb'$, and the restriction
+of functionals $\Hb' \hookrightarrow \Vb'$.  The last of these is injective
+because $\Vb$ is dense in $\Hb$.  The Gelfand triple is
+\begin{equation}
+  \label{eq:gelfand}
+  \begin{tikzcd}[column sep=large]
+    \Vb \arrow[r, hook] & \Hb \arrow[r, "\Riesz^{-1}", "\sim"'] & \Hb'
+    \arrow[r, hook] & \Vb',
+  \end{tikzcd}
+\end{equation}
+and we never write $\Hb = \Hb'$.  Two identities are used constantly,
+\begin{equation}
+  \label{eq:RM}
+  \Riesz \Mass = \iota \colon \Vb \hookrightarrow \Hb, \qquad
+  \norm{\Riesz g}_{\Hb} = \norm{g}_{\Hb'} \quad \text{for } g \in \Hb'.
+\end{equation}
+
+Given a bounded operator $\mathcal{C} \colon \Vb \to \Hb'$ we write
+$\mathcal{C}^{\adj} \colon \Hb \to \Vb'$ for its antidual adjoint,
+\begin{equation}
+  \label{eq:antidualadjoint}
+  \dual{\mathcal{C}^{\adj} w}{v} := \overline{\dual{\mathcal{C}v}{w}},
+  \qquad w \in \Hb,\ v \in \Vb.
+\end{equation}
+The right-hand side is conjugate-linear in $v$ and linear in $w$, so
+$\mathcal{C}^{\adj}$ is a well-defined bounded linear map with
+$\norm{\mathcal{C}^{\adj}} = \norm{\mathcal{C}}$.  Note the shape of the
+arrows.  The adjoint of a map \emph{into} a dual space is a map \emph{out of}
+the predual, not a map between duals.  This is the whole of \cref{sec:folding}
+in one sentence.
+
+Finally, $\Aop \in \mathcal{L}(\Vb,\Vb')$ denotes a bounded weak operator, with
+associated sesquilinear form $a(u,v) := \dual{\Aop u}{v}$, and $\Aop^{\adj} \in
+\mathcal{L}(\Vb,\Vb')$ denotes the operator of the adjoint form,
+$\dual{\Aop^{\adj} v}{u} := \overline{a(u,v)}$.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{From a variational operator to Colbrook's endomorphism}
+\label{sec:bridge}
+
+\begin{definition}[the strong realisation]
+  \label{def:strong}
+  Given $\Aop \in \mathcal{L}(\Vb,\Vb')$, set
+  \begin{equation}
+    \label{eq:domA}
+    \dom(A) := \{u \in \Vb : \Aop u \in \Hb'\},
+    \qquad A := \Riesz \Aop \big|_{\dom(A)} .
+  \end{equation}
+\end{definition}
+
+Unwinding \cref{eq:riesz,eq:mass}, \cref{def:strong} says exactly
+\begin{equation}
+  \label{eq:strongchar}
+  u \in \dom(A) \text{ and } Au = f
+  \quad \Longleftrightarrow \quad
+  u \in \Vb,\ f \in \Hb, \text{ and } a(u,v) = (f,v)_{\Hb}
+  \ \ \forall v \in \Vb ,
+\end{equation}
+which is the usual recipe for reading a strong operator off a weak form.  Two
+separate things are happening and it is worth separating them.  The Riesz map
+transports the output of $\Aop$ from $\Hb'$ back into $\Hb$.  Independently, the
+domain \emph{shrinks} from $\Vb$ to $\Aop^{-1}(\Hb')$, which is in general a
+proper subspace.  For $\Aop = -\Delta$ with $\Vb = H^1_0(\Omega)$ and $\Hb =
+L^2(\Omega)$ one gets $\dom(A) = H^2(\Omega) \cap H^1_0(\Omega)$ on a convex or
+$C^{1,1}$ domain, strictly inside $\Vb$.  The shrinking is where the elliptic
+regularity and the boundary conditions live, and it is the step that gets
+forgotten.  In the language of \cref{sec:purpose}, the endomorphism $A$ that
+\cite{Colbrook2026} needs is not obtained from $\Aop$ by an identification, it
+is obtained by a composition and a restriction.
+
+Whether $A$ is closed and densely defined has to be argued, and the argument
+differs from example to example.
+
+\begin{remark}[provenance of \cref{def:strong}]
+  \label{rem:provenance}
+  If the form $a$ is densely defined, closed and \emph{sectorial}, then Kato's
+  first representation theorem \cite[Theorem~VI.2.1, p.~322]{Kato1995} produces
+  an m-sectorial, hence closed and densely defined, operator, and part~(iii) of
+  that theorem characterises its domain exactly as the right-hand side of
+  \cref{eq:domA}.  So \cref{def:strong} \emph{is} Kato's construction, written
+  with the Riesz map made explicit.  Sectoriality is a real hypothesis and it
+  fails for indefinite first-order systems.  For Maxwell in \cref{sec:maxwell}
+  the form is symmetric but bounded neither above nor below, and there one does
+  not go through \cref{def:strong} at all.  Instead the self-adjoint operator is
+  written down directly with $\dom(A) = \Vb$, as in
+  \cite[p.~130]{Colbrook2026}.
+\end{remark}
+
+The adjoint behaves as one would hope, with the same caveat.
+
+\begin{lemma}[the three adjoints agree, up to Riesz maps]
+  \label{lem:adjoint}
+  Let $\Aop \in \mathcal{L}(\Vb,\Vb')$ and let $A$ be as in
+  \cref{def:strong}.  Put $\dom(A^{\adj}) := \{v \in \Vb : \Aop^{\adj} v \in
+  \Hb'\}$ and $A^{\adj}_{\Riesz} := \Riesz\Aop^{\adj}|_{\dom(A^{\adj})}$.  Then
+  \begin{equation}
+    \label{eq:adjinclusion}
+    A^{\adj}_{\Riesz} \subseteq A^*,
+  \end{equation}
+  where $A^*$ is the Hilbert adjoint of $A$ in $\Hb$.  Equality holds whenever
+  $\dom(A^*) \subseteq \Vb$, in particular for closed sectorial forms.
+\end{lemma}
+
+\begin{proof}
+  Let $v \in \dom(A^{\adj})$ and put $g := \Riesz\Aop^{\adj}v \in \Hb$.  For
+  $u \in \dom(A) \subseteq \Vb$,
+  \[
+    (Au,v)_{\Hb} = \dual{\Aop u}{v} = a(u,v)
+      = \overline{\dual{\Aop^{\adj}v}{u}}
+      = \overline{(g,u)_{\Hb}} = (u,g)_{\Hb},
+  \]
+  using \cref{eq:riesz} and the definition of $\Aop^{\adj}$.  Hence $v \in
+  \dom(A^*)$ with $A^*v = g$, which is \cref{eq:adjinclusion}.  The converse
+  inclusion needs $\dom(A^*) \subseteq \Vb$, after which the same computation
+  run backwards shows $\Aop^{\adj}v \in \Hb'$.
+\end{proof}
+
+So the Banach adjoint of the weak operator, composed with the Riesz map of the
+pivot space, is the Hilbert adjoint of the strong operator.  The adjoint with
+respect to the duality pairing and the adjoint with respect to the inner product
+are not in competition.  They differ by Riesz maps which are explicit, and
+\cref{eq:adjinclusion} is the precise statement of that.  This answers a
+question we had left open in an appendix of our own working notes.
+
+The last consequence of \cref{def:strong} is the one that fixes the shift.
+
+\begin{corollary}[the correct weak shift is by the mass operator]
+  \label{cor:shift}
+  For $u \in \dom(A)$ and $z \in \C$,
+  \begin{equation}
+    \label{eq:shift}
+    (A - zI)u = \Riesz(\Aop - z\Mass)u .
+  \end{equation}
+\end{corollary}
+
+\begin{proof}
+  $zu = z\Riesz\Mass u$ by \cref{eq:RM}, and $\Riesz$ is linear.
+\end{proof}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Folding without a primal-dual error}
+\label{sec:folding}
+
+Write $\mathcal{C}_z := \Aop - z\Mass$.  By \cref{eq:domA} we have
+$\mathcal{C}_z(\dom(A)) \subseteq \Hb'$, and if $\dom(A) = \Vb$ then
+$\mathcal{C}_z \colon \Vb \to \Hb'$ is bounded.
+
+The diagram which does not close is
+\begin{equation}
+  \label{eq:baddiagram}
+  \begin{tikzcd}[column sep=huge]
+    \Hb \arrow[r, "\Aop"] & \Hb'
+    & \Hb' \arrow[r, "\Aop^{\adj}", dashed] & \Hb' ,
+  \end{tikzcd}
+\end{equation}
+and it fails for a reason that can be stated in one line.  The antidual adjoint
+of $\Aop \colon \Hb \to \Hb'$ is a map $\Hb'' = \Hb \to \Hb'$, not a map
+$\Hb' \to \Hb'$, by \cref{eq:antidualadjoint}.  The two arrows are simply not
+composable, and the missing arrow between them is the Riesz map.  Inserting it
+gives the diagram which does close,
+\begin{equation}
+  \label{eq:gooddiagram}
+  \begin{tikzcd}[column sep=huge]
+    \Vb \arrow[r, "\mathcal{C}_z"] & \Hb' \arrow[r, "\Riesz", "\sim"']
+    & \Hb \arrow[r, "\mathcal{C}_z^{\adj}"] & \Vb' ,
+  \end{tikzcd}
+\end{equation}
+so that the \emph{folded operator} is
+\begin{equation}
+  \label{eq:folded}
+  \boxed{\ \Bop_z := (\Aop - z\Mass)^{\adj}\,\Riesz\,(\Aop - z\Mass)
+    \ \colon\ \Vb \longrightarrow \Vb' .\ }
+\end{equation}
+Nothing has been identified and nothing has been lost.  In particular the
+symbol $\Mass^{-1}$ that one is tempted to write in the middle of
+\cref{eq:folded} means $\Riesz$, the Riesz map of the \emph{pivot} space $\Hb$,
+and not the inverse of $\Mass \colon \Vb \to \Vb'$, which does not exist as a
+map $\Vb' \to \Vb$.  The composition is legitimate precisely because
+$\mathcal{C}_z$ lands in $\Hb' \subsetneq \Vb'$, which is the same statement as
+$\dom(A) = \Vb$.
+
+The bridge between \cref{eq:folded} and \cref{eq:colbrookforms} is the following
+identity, which is the single most useful line of this note.
+
+\begin{proposition}[the residual identity]
+  \label{prop:residual}
+  For $u \in \dom(A)$ and $z \in \C$,
+  \begin{equation}
+    \label{eq:residual}
+    \norm{(A - zI)u}_{\Hb} = \norm{(\Aop - z\Mass)u}_{\Hb'} ,
+  \end{equation}
+  and consequently, for $u,v \in \dom(A)$,
+  \begin{equation}
+    \label{eq:formfolded}
+    Q^{(1)}_{z,A}(u,v)
+      = \bigl((A-zI)u,\ (A-zI)v\bigr)_{\Hb}
+      = \dual{\Bop_z u}{v}_{\Vb' \times \Vb} .
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  \Cref{eq:residual} is \cref{eq:shift} together with the isometry in
+  \cref{eq:RM}.  For \cref{eq:formfolded}, use \cref{eq:antidualadjoint} and
+  then \cref{eq:riesz},
+  \[
+    \dual{\mathcal{C}_z^{\adj}\Riesz\mathcal{C}_z u}{v}
+      = \overline{\dual{\mathcal{C}_z v}{\Riesz \mathcal{C}_z u}}
+      = \overline{(\Riesz\mathcal{C}_z v,\ \Riesz \mathcal{C}_z u)_{\Hb}}
+      = (\Riesz\mathcal{C}_z u,\ \Riesz \mathcal{C}_z v)_{\Hb},
+  \]
+  and apply \cref{eq:shift} to both slots.
+\end{proof}
+
+In words, the $\Hb$-norm of the strong residual is the $\Hb'$-norm of the weak
+residual.  The Riesz map is an isometry, so passing between the two costs
+nothing, and the folded operator \cref{eq:folded} is the variational object
+whose Rayleigh quotient is the first quotient of \cref{eq:326}.  The generalised
+eigenvalue problem to be solved is
+\begin{equation}
+  \label{eq:pencil}
+  \Bop_z u = \lambda\, \Mass u \quad \text{in } \Vb' ,
+  \qquad \siginf(A - zI)^2 = \min \Sp(\Bop_z, \Mass),
+\end{equation}
+with the mass operator on the right-hand side and not the identity.  The second
+quotient of \cref{eq:326} is the same construction run with $\Aop^{\adj}$ and
+$\bar z$, by \cref{lem:adjoint}.
+
+\begin{remark}[relation to the modified normal equation]
+  \label{rem:lnz}
+  \Cref{eq:folded} is the continuous counterpart of the modified normal equation
+  $A^{T}TAx = A^{T}Tb$ of
+  \cite[Equation~(3.7)]{LazzarinoNakatsukasaZerbinati2026}, in which $T$
+  discretises a Riesz map $\tau \colon \Vb_h' \to \Vb_h$ inserted for exactly
+  the reason given above, that the plain normal equation performs operations on
+  inconsistent function spaces.  The point of contact, and also the point of
+  difference, is \emph{which} Riesz map.  Folding forces $\tau = \Riesz$, the
+  Riesz map of the pivot space, because that is the space in which
+  $\siginf$ is measured.  We return to this in \cref{sec:pivot}.
+\end{remark}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Where the Riesz map went in Algorithm 3.4}
+\label{sec:gram}
+
+It is worth saying plainly that none of this is a correction.  It is already in
+\cite[Algorithm~3.4, p.~115]{Colbrook2026}.  That algorithm takes linearly
+independent vectors $\{e_j\}$, which are explicitly \emph{not} assumed
+orthonormal, and forms the three matrices
+\begin{equation}
+  \label{eq:alg34}
+  \bigl[\mathsf{L}^{(1)}(z)\bigr]_{ij} = \dual{(A-zI)e_j}{(A-zI)e_i},\quad
+  \bigl[\mathsf{L}^{(2)}(z)\bigr]_{ij} = \dual{(A-zI)^*e_j}{(A-zI)^*e_i},\quad
+  \bigl[\mathsf{G}\bigr]_{ij} = \dual{e_j}{e_i},
+\end{equation}
+and then minimises the \emph{generalised} Rayleigh quotients $x^*
+\mathsf{L}^{(j)}(z)x / x^*\mathsf{G}x$.  Writing $\mathsf{A}_{ij} = a(e_j,e_i)$
+and $\mathsf{M}_{ij} = (e_j,e_i)_{\Hb}$ for the stiffness and mass matrices of a
+finite element basis, \cref{eq:formfolded} says
+\begin{equation}
+  \label{eq:matrixfolded}
+  \mathsf{L}^{(1)}(z)
+    = (\mathsf{A} - z\mathsf{M})^{*}\,\mathsf{M}^{-1}\,(\mathsf{A} - z\mathsf{M}),
+  \qquad \mathsf{G} = \mathsf{M} ,
+\end{equation}
+so that Colbrook's Gram matrix \emph{is} the mass matrix and his generalised
+eigenvalue problem \emph{is} the discretisation of the pencil
+\cref{eq:pencil}.  His own remark that ``the matrix $G_n$ is crucial for
+capturing the correct norm in the computation'' \cite[p.~115]{Colbrook2026} is
+this statement.  The framework is primal-dual consistent as it stands, and the
+consistency is invisible only when $\Hb = \ell^2(\N)$ and the basis is
+orthonormal, in which case $\mathsf{M} = I$ and all the Riesz maps disappear.
+
+There is a second, practical observation hiding in \cref{eq:matrixfolded}.  The
+matrix $\mathsf{M}^{-1}$ never has to be formed.  Folding evaluates
+$\int_\Omega \abs{(A - zI)u_h}^2$ by quadrature, directly from the strong
+residual, and that is exact whenever $u_h$ lies in $\dom(A)$ so that $(A -
+zI)e_j$ is an explicit piecewise polynomial.  Equivalently, if $W_h \supseteq
+(A - zI)V_h$ is a computable finite dimensional space, then
+\begin{equation}
+  \label{eq:sparsefactor}
+  \mathsf{L}^{(1)}(z) = \mathsf{D}(z)^{*}\,\mathsf{M}_{W}\,\mathsf{D}(z),
+\end{equation}
+where $\mathsf{D}(z)$ represents $(A - zI) \colon V_h \to W_h$ and is sparse,
+and $\mathsf{M}_W$ is the mass matrix of $W_h$, which is block diagonal if $W_h$
+is discontinuous.  This matters because the dense factor $\mathsf{M}^{-1}$ in
+\cref{eq:matrixfolded} is exactly the obstacle flagged in
+\cite[Remark~3.6]{LazzarinoNakatsukasaZerbinati2026}, and
+\cref{eq:sparsefactor} is how folding avoids it.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{No special domain is needed}
+\label{sec:kato}
+
+Our third worry was that $(A-zI)^*(A-zI)$ is not well posed as a closed and
+densely defined operator on $\dom(A)$, and that Kato constructs it on a domain
+which is smaller and which is not given explicitly.  That is correct, and it is
+also irrelevant, because the algorithm never touches that domain.
+
+\begin{theorem}[Kato]
+  \label{thm:kato}
+  Let $S$ be a closed and densely defined operator from $\Hb$ to a Hilbert space
+  $\Hb'$.  Then the following hold.
+  \begin{enumerate}
+    \item[(i)] The form $\mathfrak{h}[u,v] := (Su,Sv)$ with
+      $\dom(\mathfrak{h}) = \dom(S)$ is densely defined, closed and
+      non-negative, and the self-adjoint operator associated with it by the
+      first representation theorem is exactly $S^*S$
+      \cite[Example~VI.2.13, p.~326]{Kato1995}.
+    \item[(ii)] $S^*S$ is self-adjoint and $\dom(S^*S)$ is a \emph{core} of $S$
+      \cite[Theorem~V.3.24, p.~275]{Kato1995}.
+    \item[(iii)] $\dom\bigl((S^*S)^{1/2}\bigr) = \dom(S)$ and
+      $\norm{(S^*S)^{1/2}u} = \norm{Su}$ for $u \in \dom(S)$
+      \cite[Theorem~VI.2.23 and Equation~(VI.2.22), pp.~331 and 334]{Kato1995}.
+  \end{enumerate}
+\end{theorem}
+
+Apply this with $S = A - zI$, which is closed and densely defined because $A$
+is.  Part~(i) says that the \emph{form} domain of the folded operator is
+$\dom(A)$, no more and no less, and part~(iii) says that the form is the square
+of the norm of $\abs{A - zI} = ((A-zI)^*(A-zI))^{1/2}$ on that same domain.  The
+mysterious smaller domain of part~(ii) is $\dom(S^*S)$, and it is a core, so
+\begin{equation}
+  \label{eq:coreirrelevant}
+  \inf_{u \in \dom(S^*S)\setminus\{0\}} \frac{(S^*Su,u)}{\norm{u}^2}
+  = \inf_{u \in \dom(S)\setminus\{0\}} \frac{\norm{Su}^2}{\norm{u}^2}
+  = \siginf(S)^2 .
+\end{equation}
+Both infima are the bottom of $\Sp(S^*S)$ and the left-hand one is never the one
+that is computed.  This is why \cite[\S3.4.1]{Colbrook2026} is phrased in terms
+of quadratic \emph{forms} rather than operators, and why the sentence after
+\cite[Equation~(3.26)]{Colbrook2026} about the spectrum of $(A-zI)^*(A-zI)$
+carries no hidden domain obligation.  Kato's second representation theorem is
+what licenses the translation between the two phrasings.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{One-sided Rayleigh--Ritz replaces Babu\v{s}ka--Osborn}
+\label{sec:rayleigh}
+
+Our fourth worry was that the folded operator is unbounded with non-compact
+inverse, so that the Babu\v{s}ka--Osborn theory of \cite{BabuskaOsborn1991} and
+the framework surveyed in \cite{Boffi2010} do not apply.  They do not, and they
+are not needed.  Two features of the problem conspire to make a much weaker
+theory sufficient.
+
+First, $\Bop_z \ge 0$ and only the \emph{bottom} of its spectrum is wanted.  For
+any subspace $\Dop_h \subseteq \dom(A)$,
+\begin{equation}
+  \label{eq:onesided}
+  \Phi_h(z)^2 := \min_{u \in \Dop_h \setminus\{0\}}
+     \frac{\norm{(A-zI)u\vphantom{|}}^2_{\Hb}}{\norm{u}^2_{\Hb}}
+  \ \ge\ \siginf(A - zI)^2 ,
+\end{equation}
+simply because a minimum over a subset is at least the infimum over the whole
+set.  This is the one-sidedness $\gamma(z,A) \le \Phi_n(z,A)$ that
+\cite[Assumption~3.2.1]{Colbrook2026} demands, and which
+\cite[Theorem~3.2.3]{Colbrook2026} turns into the inclusion $\Gamma_n^\epsilon(A)
+\subseteq \Sp_\epsilon(A)$.  It costs nothing beyond conformity, $\Dop_h
+\subseteq \dom(A)$.
+
+Second, convergence needs only that the trial spaces exhaust a core.
+
+\begin{proposition}[the approximation hypothesis is a core condition]
+  \label{prop:core}
+  Let $\Dop_1 \subseteq \Dop_2 \subseteq \cdots \subseteq \dom(A)$ with
+  $\bigcup_h \Dop_h$ a core of $A$, that is, dense in $\dom(A)$ for the graph
+  norm $\norm{u}^2_{\Hb} + \norm{Au}^2_{\Hb}$.  Then $\Phi_h(z) \downarrow
+  \siginf(A - zI)$ as $h \to 0$, monotonically and locally uniformly in $z$.
+\end{proposition}
+
+The proof is the one given for \cite[Lemma~1.2.6]{Colbrook2026}, and the
+hypothesis is exactly the one stated as an input to
+\cite[Algorithm~3.4]{Colbrook2026}.  Three things are worth emphasising.
+
+\begin{itemize}
+  \item No compactness of any resolvent is used.
+  \item The bottom of $\Sp(\Bop_z)$ is allowed to be \emph{essential} spectrum.
+        This is precisely the case that Babu\v{s}ka--Osborn theory cannot treat
+        and that a one-sided Rayleigh--Ritz bound treats without noticing.
+  \item The density required is in the \emph{graph} norm, not in the energy
+        norm of $\Vb$.  The right discrete space is a subspace of the graph
+        space $\dom(A)$.
+\end{itemize}
+
+That last point is the practical content of this section.  If $\dom(A) = \Vb$,
+as happens for first-order systems whose natural energy space is their graph
+space, then any $\Vb$-conforming element is admissible and folding is a standard
+conforming Galerkin method.  This is why \cite[\S3.4.4]{Colbrook2026} can use
+plain Lagrange elements for Maxwell and observe no spectral pollution.  If
+$\dom(A) \subsetneq \Vb$, as happens for a second-order operator with $\Vb =
+H^1_0$, then $\Vb$-conforming elements are \emph{not} $\dom(A)$-conforming,
+$\bigcup_h \Dop_h$ is not a core, and neither \cref{eq:onesided} nor
+\cref{prop:core} is available.  \Cref{sec:advdiff} discusses what to do.
+
+\begin{remark}[where compactness does belong]
+  \label{rem:whereboffi}
+  Compactness is not needed for the \emph{guarantee}, but it is exactly what is
+  needed for a \emph{rate} and for an a posteriori \emph{gap}.  The
+  superconvergence estimate \cite[Proposition~3.3.12, p.~107]{Colbrook2026} and
+  the Kato--Temple inequality \cite[Theorem~3.3.11]{Colbrook2026} behind it
+  require $\lambda$ to be an isolated point of the spectrum and a computable
+  lower bound on the distance to the rest of it.  If the solution operator
+  associated with $\Bop_z$ maps into a space compactly embedded in $\Vb$, then
+  the bottom of $\Sp(\Bop_z)$ is an isolated eigenvalue and Boffi-style theory
+  \cite{Boffi2010,BoffiBrezziFortin2013} delivers both.  The two frameworks are
+  complementary rather than competing.  The core condition gives the certificate
+  and compactness, when it is available, gives the speed.
+\end{remark}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Two domains, not one}
+\label{sec:twodomains}
+
+Definition \cref{eq:326} involves both $\dom(A)$ and $\dom(A^*)$, and by
+\cref{lem:adjoint} these are
+\begin{equation}
+  \label{eq:twodomains}
+  \dom(A) = \{u \in \Vb : \Aop u \in \Hb'\},
+  \qquad
+  \dom(A^*) = \{v \in \Vb : \Aop^{\adj} v \in \Hb'\},
+\end{equation}
+which are different subspaces of $\Vb$ in general.  Consequently the two
+Rayleigh quotients of \cref{eq:326} need \emph{two} trial spaces, one a core of
+$A$ and the other a core of $A^*$, and \cref{eq:onesided} has to hold for each
+separately.  In $\ell^2(\N)$ with a single orthonormal basis this is invisible,
+and \cite[Algorithm~3.4]{Colbrook2026} accordingly asks for one family $\{e_j\}$
+whose span is a core of both.  In a finite element code the two spaces usually
+differ in their essential boundary conditions, and the distinction is very
+visible.  For the two-dimensional Maxwell system of \cref{sec:maxwell} the two
+spaces are $H_0(\rot) \times H(\Rot)$ and its swap, so a single choice works
+only because that operator is self-adjoint.  For a genuinely non-normal problem
+they must be built separately.
+
+This is also where the boundary terms of
+\cite[Equations~(3.5)--(3.6)]{LazzarinoNakatsukasaZerbinati2026} reappear.  The
+adjoint form is obtained by integration by parts, and whether the resulting
+boundary contributions vanish is a statement about the boundary conditions
+encoded in $\Vb$, not about the differential expression.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Reading off a variational formulation, two routes}
+\label{sec:tworoutes}
+
+A recurring practical question was how to read a variational formulation off
+$(\Aop - z\Mass)^{\adj}\Riesz(\Aop - z\Mass)$, given that a finite element code
+wants a bilinear form and not a composition of maps.  By
+\cref{prop:residual} the answer is that the bilinear form is
+\begin{equation}
+  \label{eq:qz}
+  q_z(u,v) = \bigl((A - zI)u,\ (A - zI)v\bigr)_{\Hb},
+  \qquad u,v \in \dom(A),
+\end{equation}
+and there are two ways to realise it.
+
+\paragraph{Route (a), least squares.}  Keep $A$ in strong form and integrate the
+product of the two residuals, $\int_\Omega (Au - zu)\,\overline{(Av - zv)}$.
+This needs $V_h \subseteq \dom(A)$, it never forms $\mathsf{M}^{-1}$, and it
+preserves the one-sidedness \cref{eq:onesided} exactly.  It is a first-order
+system least squares formulation \cite{CaiLazarovManteuffelMcCormick1994} for
+the shifted operator, and it is what \cite[Algorithm~3.4]{Colbrook2026} does.
+
+\paragraph{Route (b), integrate by parts once.}  Move a derivative from the
+first factor to the second.  This lowers the differential order of the form,
+which is what makes conforming discretisation possible in some cases, at the
+price of producing boundary terms.  Those boundary terms are precisely the ones
+that encode $\dom(A^*)$, so route (b) is where the primal-dual bookkeeping of
+\cref{sec:twodomains} has to be done honestly.  This is the manoeuvre referred
+to in \cite[p.~129]{Colbrook2026} as reformulating ``into a mixed form using
+lower-order derivatives''.
+
+The two routes give the same number whenever the boundary terms of route (b)
+vanish.  Route (a) is the robust one.  Route (b) is the one that produces the
+bilinear form a finite element code expects, and \cref{sec:maxwell,sec:dirac}
+carry it out.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Three examples}
+\label{sec:examples}
+
+\subsection{Maxwell, where everything works}
+\label{sec:maxwell}
+
+Following \cite[\S3.4.4, p.~130]{Colbrook2026}, take the two-dimensional
+first-order Maxwell system on a bounded Lipschitz domain $U \subset \R^2$.  With
+$\rot E = \partial_x E_2 - \partial_y E_1$ for vector fields and $\Rot H =
+[\partial_y H, -\partial_x H]$ for scalars, the operator is
+\begin{equation}
+  \label{eq:maxwellop}
+  A(E,H) = \bigl(\ii\,\Rot H,\ -\ii\,\rot E\bigr),
+  \qquad
+  \dom(A) = H_0(\rot;U) \times H(\Rot;U) =: \Vb ,
+\end{equation}
+on $\Hb = L^2(U)^2 \times L^2(U)$.  It is self-adjoint, and $\dom(A) = \Vb$ is
+its graph space, so by \cref{sec:rayleigh} any $\Vb$-conforming element is
+admissible.  This is the reason \cite{Colbrook2026} can use plain Lagrange
+elements for both components, imposing the boundary condition only on the space
+approximating $E$, and see no spectral pollution where the standard variational
+formulation pollutes badly.
+
+Expanding \cref{eq:qz} for \cref{eq:maxwellop} and using $\ii\overline{\ii} = 1$
+gives, for $(E,H)$ and $(F,G)$ in $\Vb$,
+\begin{multline}
+  \label{eq:maxwellqz}
+  q_z\bigl((E,H),(F,G)\bigr)
+    = (\rot E, \rot F) + (\Rot H, \Rot G)
+      + \abs{z}^2\bigl[(E,F) + (H,G)\bigr] \\
+      {} + \ii\bar z\bigl[(\rot E, G) - (\Rot H, F)\bigr]
+      + \ii z\bigl[(E, \Rot G) - (H, \rot F)\bigr],
+\end{multline}
+all inner products being those of $L^2(U)$.  This is route (a), and the two
+shift terms are Hermitian conjugates of one another as they must be.  Now apply
+route (b).  For $E \in H_0(\rot;U)$ and $G \in H(\Rot;U)$ the integration by
+parts
+\begin{equation}
+  \label{eq:rotibp}
+  (\rot E, G)_{L^2} = (E, \Rot G)_{L^2}
+\end{equation}
+holds with no boundary contribution, because the tangential trace of $E$
+vanishes.  Using \cref{eq:rotibp} twice, once as written and once with the roles
+of $(E,G)$ and $(F,H)$ exchanged, \cref{eq:maxwellqz} collapses to
+\begin{multline}
+  \label{eq:maxwellqzb}
+  q_z\bigl((E,H),(F,G)\bigr)
+    = (\rot E, \rot F) + (\Rot H, \Rot G)
+      + \abs{z}^2\bigl[(E,F) + (H,G)\bigr] \\
+      {} + \ii(z + \bar z)\bigl[(\rot E, G) - (\Rot H, F)\bigr] ,
+\end{multline}
+with $z + \bar z = 2\Real z$.  \Cref{eq:maxwellqzb} is the form we had already
+written down by hand, and \cref{eq:maxwellqz} is Colbrook's minimisation
+functional on \cite[p.~132]{Colbrook2026}.  They agree, and the agreement uses
+\cref{eq:rotibp}, which is exactly the statement that $\rot$ on $H_0(\rot)$ and
+$\Rot$ on $H(\Rot)$ are adjoint to one another.
+
+This is worth pausing on, because it answers the question we set out with.  The
+primal-dual identification in the folded Maxwell form is handled correctly, and
+the reason it is handled correctly is the \emph{asymmetry} of the boundary
+conditions between the two curl spaces.  If both components carried the
+vanishing tangential trace, or neither did, \cref{eq:rotibp} would acquire a
+boundary term and \cref{eq:maxwellqzb} would be wrong while
+\cref{eq:maxwellqz} would remain right.  Route (a) is insensitive to this and
+route (b) is not.
+
+\subsection{Dirac, where the form is first order although the operator is not}
+\label{sec:dirac}
+
+Let $\alpha_1,\alpha_2,\alpha_3,\beta$ be the Hermitian $4 \times 4$ Dirac
+matrices, so that $\alpha_j\alpha_k + \alpha_k\alpha_j = 2\delta_{jk}I$,
+$\alpha_j\beta + \beta\alpha_j = 0$ and $\beta^2 = I$
+\cite{Thaller1992}.  The free Dirac operator on $\Hb = L^2(\R^3;\C^4)$
+is
+\begin{equation}
+  \label{eq:diracop}
+  \Dop = -\ii c\, \alpha \cdot \nabla + mc^2 \beta,
+  \qquad \dom(\Dop) = H^1(\R^3;\C^4),
+\end{equation}
+and it is self-adjoint.  Its square is the Klein--Gordon operator, $\Dop^2 =
+(-c^2\Delta + m^2c^4)I_4$, which is second order.  Nevertheless the folded form
+is first order.
+
+\begin{lemma}
+  \label{lem:diracform}
+  For $u,v \in H^1(\R^3;\C^4)$,
+  \begin{equation}
+    \label{eq:diracbilinear}
+    (\Dop u, \Dop v)_{L^2} = c^2(\nabla u, \nabla v)_{L^2}
+      + m^2c^4 (u,v)_{L^2} .
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  The two cross terms are $-\ii m c^3\bigl[(\alpha\cdot\nabla u, \beta v) -
+  (\beta u, \alpha\cdot\nabla v)\bigr]$.  Integrating by parts in the first
+  summand and moving $\beta$ across in the second gives, for each $j$,
+  $-(u, \alpha_j\beta\,\partial_j v) - (u, \beta\alpha_j\,\partial_j v)
+   = -(u, (\alpha_j\beta + \beta\alpha_j)\partial_j v) = 0$.
+  For the leading term, Plancherel and $(\alpha\cdot\xi)^2 = \abs{\xi}^2 I$ give
+  $(\alpha\cdot\nabla u, \alpha\cdot\nabla v) = (\nabla u, \nabla v)$.  The
+  remaining term is $m^2c^4(\beta u, \beta v) = m^2c^4(u,v)$ since $\beta^2 = I$.
+\end{proof}
+
+Substituting \cref{eq:diracbilinear} into \cref{eq:qz},
+\begin{equation}
+  \label{eq:diracqz}
+  q_z(u,v) = c^2(\nabla u, \nabla v) + m^2c^4(u,v)
+    - \bar z\,(\Dop u, v) - z\,(u, \Dop v) + \abs{z}^2 (u,v),
+\end{equation}
+which is a bounded sesquilinear form on $H^1 \times H^1$ in which every term
+carries at most one derivative.  The Riesz map has disappeared entirely.  So
+\emph{standard $H^1$-conforming Lagrange elements are conforming for the folded
+Dirac problem}, even though the folded operator $\Dop^*\Dop$ is second order.
+This is \cref{sec:rayleigh} in miniature.  What controls conformity is the graph
+space $\dom(\Dop) = H^1$, not the order of $\Dop^*\Dop$.
+
+On a bounded domain the picture changes in the way \cref{sec:twodomains}
+predicts.  Both integrations by parts in \cref{lem:diracform} acquire boundary
+terms, $\dom(\Dop)$ is no longer all of $H^1$ but $H^1$ intersected with a
+boundary condition of MIT bag type, and that condition has to be built into the
+trial space as an essential condition.  \Cref{eq:diracqz} then carries an
+additional boundary form.  Route (a) of \cref{sec:tworoutes} remains valid
+verbatim and is what we would recommend using.
+
+\subsection{Advection-diffusion, where it bites}
+\label{sec:advdiff}
+
+Take $\Lop u = -\nu\Delta u + \beta\cdot\nabla u$ on a bounded Lipschitz domain
+$\Omega \subset \R^d$ with homogeneous Dirichlet conditions, $\Hb = L^2(\Omega)$
+and $\Vb = H^1_0(\Omega)$, so that $a(u,v) = \nu(\nabla u, \nabla v) +
+(\beta\cdot\nabla u, v)$.  This is the running example of
+\cite[\S3]{LazzarinoNakatsukasaZerbinati2026} and it is genuinely non-normal,
+which is the regime the whole exercise is aimed at.  Here
+\begin{equation}
+  \label{eq:advdiffdom}
+  \dom(A) = H^2(\Omega) \cap H^1_0(\Omega) \subsetneq \Vb ,
+\end{equation}
+on a convex or $C^{1,1}$ domain, and the inclusion is strict.  Consequently
+\begin{equation}
+  \label{eq:advdiffqz}
+  q_z(u,v) = \bigl(-\nu\Delta u + \beta\cdot\nabla u - zu,\
+                    -\nu\Delta v + \beta\cdot\nabla v - zv\bigr)_{L^2}
+\end{equation}
+is a biharmonic-type form with form domain $H^2 \cap H^1_0$.  Continuous
+piecewise linear elements are not in $H^2(\Omega)$, so they are not
+$\dom(A)$-conforming, $\bigcup_h V_h$ is not a core of $A$, and neither the
+one-sided bound \cref{eq:onesided} nor the convergence of \cref{prop:core} is
+available.  Naively assembling \cref{eq:advdiffqz} on $\mathcal{P}_1$ Lagrange
+elements is not a mildly suboptimal choice, it is outside the theory.
+
+The honest options are the following, and we would like Matt's view on which he
+intends.
+
+\begin{itemize}
+  \item Discretise $\dom(A)$ properly, with $C^1$ elements such as Argyris or
+        Bogner--Fox--Schmit, or with $C^1$ splines.  This keeps the guarantee
+        and is expensive.
+  \item Rewrite the problem as a first-order system, for instance $\sigma =
+        \nu\nabla u$ together with $-\divg\sigma + \beta\cdot\nabla u = f$, and
+        fold that.  The system operator has graph space $H^1_0(\Omega) \times
+        \Hdiv(\Omega)$ and standard elements are conforming.  But this computes
+        the pseudospectra of a \emph{different} operator, acting on $L^2 \times
+        (L^2)^d$.  Its spectrum agrees with that of $A$, its pseudospectra do
+        not.  This is the same manoeuvre that \cite[\S3.4.4]{Colbrook2026}
+        performs for Maxwell, where it is unobjectionable because the
+        first-order system is the object of physical interest.  For
+        advection-diffusion on $L^2(\Omega)$ it is a change of the question.
+  \item Accept a non-conforming space and lose the certificate, keeping only
+        the asymptotics.
+\end{itemize}
+
+It is worth noting that \cite{LazzarinoNakatsukasaZerbinati2026} chooses a
+different Riesz map for exactly this reason.  Its $\tau$ is the one induced by
+the $H^1_0$ inner product \cite[Equation~(3.20)]{LazzarinoNakatsukasaZerbinati2026},
+and the resulting normal PDE
+\begin{equation}
+  \label{eq:normalpde}
+  \nu(\nabla u, \nabla v)_{L^2}
+    + \nu^{-1}\bigl(\Pi_{\nabla}(\beta u), \Pi_{\nabla}(\beta v)\bigr)_{L^2},
+\end{equation}
+from \cite[Equation~(3.27)]{LazzarinoNakatsukasaZerbinati2026}, is a perfectly
+good $H^1_0$-conforming object.  Its Remark~3.7 warns that the $L^2$ Riesz map
+``will not be consistent with the function spaces of the continuous problem''.
+Read through \cref{sec:bridge}, that remark is exactly the statement
+\cref{eq:advdiffdom}, that the $L^2$ Riesz map demands the graph space and not
+the energy space.  \Cref{sec:pivot} takes up what this costs.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{An affine structure in \texorpdfstring{$z$}{z}}
+\label{sec:affine}
+
+The outer layer of adaptivity samples $z$ over a region of the complex plane,
+and it is worth recording that the $z$-dependence of the folded problem is
+completely explicit.  Expanding \cref{eq:qz} on $\dom(A)$,
+\begin{equation}
+  \label{eq:zaffineform}
+  q_z(u,v) = n(u,v) - \bar z\, a(u,v) - z\, a^{\adj}(u,v)
+             + \abs{z}^2 m(u,v),
+\end{equation}
+where $n(u,v) := (Au,Av)_{\Hb}$, $a(u,v) = (Au,v)_{\Hb}$, $a^{\adj}(u,v) :=
+\overline{a(v,u)} = (u,Av)_{\Hb}$ and $m(u,v) := (u,v)_{\Hb}$.  Equivalently, at
+the level of operators,
+\begin{equation}
+  \label{eq:zaffineop}
+  \Bop_z = \Aop^{\adj}\Riesz\Aop - z\,\Aop^{\adj} - \bar z\,\Aop
+           + \abs{z}^2 \Mass ,
+\end{equation}
+using $\Riesz\Mass = \iota$ and $\Mass\Riesz\Mass = \Mass$ from \cref{eq:RM}.
+In matrices this reads
+\begin{equation}
+  \label{eq:zaffinemat}
+  \mathsf{L}^{(1)}(z) = \mathsf{N} - \bar z\,\mathsf{A} - z\,\mathsf{A}^{*}
+    + \abs{z}^2\mathsf{M},
+  \qquad
+  \mathsf{N} = \mathsf{A}^{*}\mathsf{M}^{-1}\mathsf{A} ,
+\end{equation}
+which agrees with the expansion we had obtained by hand.  So four
+$z$-independent matrices are assembled once and the whole complex-plane sweep is
+a scalar recombination.  The factor $\mathsf{N}$ should be stored in the sparse
+factored form \cref{eq:sparsefactor} rather than as a dense product.  This is
+the same structural saving that \cite[Algorithm~3.5]{Colbrook2026} achieves at
+the level of the square root, by precomputing a QR factorisation of the Gram
+factor and reusing it across all sample points, and it appears to carry over to
+the finite element setting unchanged.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{How far can the pivot space be moved?}
+\label{sec:pivot}
+
+We can now say why the framework is built on an endomorphism of $\Hb$, rather
+than on a map $\Vb \to \Vb'$, and how much freedom there is.
+
+Suppose one tried to work with the triple directly and to measure everything in
+$\Vb$, replacing \cref{eq:gamma} by
+\begin{equation}
+  \label{eq:gammaV}
+  \gamma_{\Vb}(z) := \inf_{u \in \Vb\setminus\{0\}}
+    \frac{\norm{(\Aop - z\Mass)u}_{\Vb'}}{\norm{u}_{\Vb}} .
+\end{equation}
+This is attractive because it is defined on all of $\Vb$, so the conformity
+problem of \cref{sec:advdiff} evaporates and $\mathcal{P}_1$ elements are
+admissible.  It is also, up to the choice of $\tau$, the quantity whose
+conditioning governs the preconditioned normal equation of
+\cite{LazzarinoNakatsukasaZerbinati2026}.
+The difficulty is that the one-sidedness \cref{eq:onesided} is lost.  The dual
+norm $\norm{g}_{\Vb'} = \sup_{v\in \Vb} \abs{\dual{g}{v}}/\norm{v}_{\Vb}$ is a
+supremum, and restricting it to $V_h$ gives a \emph{lower} bound, while
+restricting the outer infimum to $V_h$ gives an \emph{upper} bound.  The two
+restrictions pull in opposite directions and the sign of the resulting error is
+not determined.  Recovering a certificate then requires controlling the discrete
+dual norm, which is the business of discontinuous Petrov--Galerkin methods with
+optimal test functions \cite{DemkowiczGopalakrishnan2011}.
+
+By contrast, when the target space is the pivot space, $\norm{g}_{\Hb'} =
+\norm{\Riesz g}_{\Hb}$ is computed by an \emph{integral} rather than by a
+supremum, and it is evaluated exactly by quadrature.  The only restriction is
+then the outer one, and \cref{eq:onesided} survives.  That is the reason the
+framework wants an endomorphism.  Its guarantee is a consequence of the residual
+norm being exactly computable.
+
+What survives of the freedom to choose an inner product is the following.
+
+\begin{proposition}[reweighting the pivot]
+  \label{prop:reweight}
+  Let $W$ be bounded, self-adjoint and positive on $\Hb$ with bounded inverse,
+  and let $(u,v)_W := (Wu,v)_{\Hb}$, so that $c\norm{u} \le \norm{u}_W \le
+  C\norm{u}$ with $c^2 = \min\Sp(W)$ and $C^2 = \max\Sp(W)$.  Write $\kappa :=
+  C/c$ and let $\gamma_W$ denote \cref{eq:gamma} computed in $\Hb_W := (\Hb,
+  (\cdot,\cdot)_W)$.  Then, for every $z \in \C$,
+  \begin{equation}
+    \label{eq:reweight}
+    \kappa^{-1}\gamma(z,A) \ \le\ \gamma_W(z,A) \ \le\ \kappa\,\gamma(z,A) .
+  \end{equation}
+  Consequently $\Sp(A)$ is unchanged, and for every $\epsilon > 0$
+  \begin{equation}
+    \label{eq:sandwich}
+    \Sp_{\epsilon/\kappa}(A) \ \subseteq\ \Sp^W_\epsilon(A)
+      \ \subseteq\ \Sp_{\kappa\epsilon}(A) .
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  $\Hb_W$ is a Hilbert space with the same underlying vector space, so
+  \cite[Lemma~1.2.5]{Colbrook2026} gives $\gamma_W(z,A) = \norm{(A -
+  zI)^{-1}}_{\mathcal{L}(\Hb_W)}^{-1}$.  For any bounded $T$ on $\Hb$,
+  $\norm{T}_{\mathcal{L}(\Hb_W)} = \norm{W^{1/2}TW^{-1/2}}_{\mathcal{L}(\Hb)}$,
+  and $\norm{W^{1/2}}\,\norm{W^{-1/2}} = C/c = \kappa$, so
+  $\kappa^{-1}\norm{T} \le \norm{T}_{\mathcal{L}(\Hb_W)} \le \kappa\norm{T}$.
+  Apply this with $T = (A - zI)^{-1}$ and invert.  For \cref{eq:sandwich}, if
+  $\gamma_W(z,A) < \epsilon$ then $\gamma(z,A) \le \kappa\gamma_W(z,A) <
+  \kappa\epsilon$, and if $\gamma(z,A) < \epsilon/\kappa$ then $\gamma_W(z,A)
+  \le \kappa\gamma(z,A) < \epsilon$.  Finally $\gamma_W = 0$ if and only if
+  $\gamma = 0$.
+\end{proof}
+
+So the pivot inner product may be reweighted, the spectrum is untouched, and the
+pseudospectra are sandwiched with explicit and computable constants.  If in
+addition $W$ is local enough that $\norm{\cdot}_W$ is still evaluated exactly by
+quadrature, which holds for multiplication operators and, discretely, for block
+diagonal mass matrices on discontinuous spaces, then
+\cite[Algorithm~3.4]{Colbrook2026} run in $\Hb_W$ still returns an upper bound
+for $\gamma_W$, and \cref{eq:sandwich} converts that into a rigorous enclosure
+for the original pseudospectra at a cost of one factor of $\kappa$.
+
+This is the degree of freedom that
+\cite{LazzarinoNakatsukasaZerbinati2026} exploits for preconditioning, and
+\cref{prop:reweight} is what delimits the subset of those choices that preserve
+Colbrook's certificate.  Choosing $W$ to improve the conditioning of the folded
+pencil \cref{eq:pencil}, which squares the conditioning of $A - zI$, while
+keeping $\kappa$ modest, looks to us like the most promising joint direction.
+The relevant literature on choosing such inner products for operator
+preconditioning is \cite{Kirby2010,MardalWinther2011}.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Questions}
+\label{sec:questions}
+
+\begin{question}[reweighting the pivot]
+  Is \cref{prop:reweight} a route you have considered?  Trading a factor
+  $\kappa$ in the reported $\epsilon$ against the conditioning of the folded
+  pencil seems attractive, since folding squares the conditioning of $A - zI$.
+  Does the SCI classification of \cite[Theorem~3.4.6]{Colbrook2026} survive the
+  reweighting, given that the evaluation set would have to include the weights?
+\end{question}
+
+\begin{question}[mixed reformulation, same operator or a different one?]
+  In \cref{sec:advdiff} the first-order system reformulation changes the
+  operator whose pseudospectra are computed, even though the spectra agree.  In
+  \cite[\S3.4.4]{Colbrook2026} the same manoeuvre is unobjectionable because the
+  first-order Maxwell system is the object of interest.  Do you read the phrase
+  ``reformulated into a mixed form using lower-order derivatives''
+  \cite[p.~129]{Colbrook2026} as computing the same pseudospectra, or as a
+  deliberate change of the operator?  For a second-order operator on $L^2$ we do
+  not see how to avoid $C^1$ elements without giving up \cref{eq:onesided}.
+\end{question}
+
+\begin{question}[error control for non-normal problems]
+  \Cref{rem:whereboffi} notes that \cite[Proposition~3.3.12 and
+  Theorem~3.3.11]{Colbrook2026} both assume $A$ is normal, whereas the whole
+  point of pseudospectra is the non-normal case.  The folded operator
+  \emph{is} self-adjoint, so Kato--Temple applies to $\Bop_z$ provided the
+  bottom of $\Sp(\Bop_z)$ is isolated and a lower bound on the gap is
+  computable.  Is that the intended route to a posteriori control in the
+  non-normal case?
+\end{question}
+
+\begin{question}[driving the inner adaptivity]
+  When the bottom of $\Sp(\Bop_z)$ is essential spectrum, the standard finite
+  element a posteriori theory for eigenvalues does not apply, and there is no
+  gap to exploit.  Rayleigh--Ritz still certifies an upper bound, but it
+  provides no local error indicator.  What would you use to drive mesh
+  refinement in that regime?
+\end{question}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

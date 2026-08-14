@@ -1,0 +1,399 @@
+\documentclass[11pt,a4paper]{article}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Two claims: the algorithm as stated in Colbrook 2026 §3.4.1 cannot be followed
+% by a finite element method, and what is done for Maxwell in §3.4.4 is the
+% functional analytic setting proposed here instead.
+% Source: notes/hand_notes.pdf.
+% ─────────────────────────────────────────────────────────────────────────────
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{tikz-cd}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
+            urlcolor=blue!55!black]{hyperref}
+\usepackage{cleveref}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\dual}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\Hb}{\mathcal{H}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\bcurl}{\bar\nabla\times}
+\newcommand{\hcurl}{\hat\nabla\times}
+\DeclareMathOperator{\dom}{D}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\divg}{div}
+\DeclareMathOperator{\curl}{curl}
+\newcommand{\siginf}{\sigma_{\inf}}
+\newcommand{\Astr}{A_{\mathrm{s}}}
+
+% The six lettered items of section 2 are \paragraph blocks.  The default 3.25ex
+% of lead before each is more than this note needs.
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.4ex \@plus0.4ex \@minus.2ex}{-1em}{\normalfont\normalsize\bfseries}}
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {-2.5ex \@plus -1ex \@minus -.2ex}{1.6ex \@plus.2ex}%
+  {\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-2.2ex \@plus -1ex \@minus -.2ex}{1.2ex \@plus.2ex}%
+  {\normalfont\large\bfseries}}
+\makeatother
+
+\setlength{\emergencystretch}{1em}
+
+% Compact bibliography, so the references sit on the last page of text.
+\let\oldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{%
+  \small\oldthebibliography{#1}\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{\vspace{-1.5em}The functional analytic aspects of operator folding\\
+       and finite element methods\vspace{-0.5em}}
+\author{Umberto Zerbinati\thanks{Mathematical Institute, University of Oxford.
+  Corresponding author,
+  \href{mailto:zerbinati@maths.ox.ac.uk}{zerbinati@maths.ox.ac.uk}.}
+  \and Margaret McCarthy\footnotemark[1]
+  \and Patrick E. Farrell\footnotemark[1]\vspace{-0.5em}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent
+In \cite{Colbrook2026} Colbrook introduces a very appealing algorithm for
+computing spectra, and more interestingly pseudospectra, of differential
+operators.  This note makes two claims about its relation to the finite element
+method.
+
+\smallskip
+\noindent\textbf{(a)}\ \emph{The algorithm as stated in
+\cite[\S3.4.1]{Colbrook2026} cannot be followed by a finite element method.}  It
+is phrased in terms of $A$, $A^*$, $\dom(A)$, $\dom(A^*)$ and orthogonal
+projections $\mathcal{P}_n$, and a finite element code has none of those.  It has
+a bounded sesquilinear form on $V \times V$.  \Cref{sec:stuck} lists six places
+where the passage from one to the other breaks down.
+
+\smallskip
+\noindent\textbf{(b)}\ \emph{What is actually computed for Maxwell in
+\cite[\S3.4.4]{Colbrook2026} is not that algorithm.}  It is, we believe, the
+functional analytic setting we set out in \cref{sec:path}, namely a conforming
+Rayleigh--Ritz discretisation of the pencil $\eqref{eq:starstar}\,u = \lambda Mu$
+on $V \times V$.  \Cref{sec:already} gives our evidence.
+
+\noindent If (b) is right the two are reconciled, and what is missing from
+\cite{Colbrook2026} is the bridge between them, which is \cref{sec:path}.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{The setting, as we read it}
+\label{sec:setting}
+
+Folding starts from a closed, densely defined $A$ on a Hilbert space $\Hb$.
+Since we want its spectrum, $A$ must be an \emph{endomorphism}, $A \colon
+\dom(A) \subset \Hb \to \Hb$, the classical instance being $\Delta \colon
+H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$.  Under suitable conditions on
+$\dom(A)$ and $\dom(A^*)$ one considers \cite[\S3.4.1]{Colbrook2026}
+\begin{equation}
+  \label{eq:gamma}
+  \gamma(z,A) := \min\bigl\{\siginf(A - zI),\ \siginf\bigl((A-zI)^*\bigr)\bigr\}
+    = \norm{(A-zI)^{-1}}^{-1},
+\end{equation}
+where the injection moduli come from the quadratic forms of the resolvent and
+its adjoint,
+\begin{equation}
+  \label{eq:quotients}
+  \siginf(A - zI)^2 = \!\!\inf_{f \in \dom(A)\setminus\{0\}}\!\!
+     \frac{\norm{(A-zI)f}_{\Hb}^2}{\norm{f}_{\Hb}^2},
+  \qquad
+  \siginf\bigl((A-zI)^*\bigr)^2 = \!\!\inf_{f \in \dom(A^*)\setminus\{0\}}\!\!
+     \frac{\norm{(A-zI)^*f}_{\Hb}^2}{\norm{f}_{\Hb}^2} .
+\end{equation}
+So far everything is formal and we are happy.  Our difficulty begins with the
+comment below \cite[Eq.~(3.26)]{Colbrook2026}, that this reduces the computation
+of pseudospectra to the eigenvalues of the self-adjoint operator
+\begin{equation}
+  \label{eq:folded}
+  (A - zI)^*(A - zI).
+\end{equation}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Why we cannot follow the algorithm}
+\label{sec:stuck}
+
+\paragraph{(i) The conditions on $\dom(A)$ and $\dom(A^*)$ are left unstated.}
+The sentence introducing \cite[Eq.~(3.25)]{Colbrook2026} reads ``\emph{under
+suitable conditions on $\dom(A)$ and $\dom(A^*)$}, the functions $\Phi_n(z,A)$
+converge locally uniformly to $\gamma(z,A)$ \emph{from above} and hence satisfy
+Assumption~3.2.1''.  That hypothesis carries everything, since convergence from
+above is what Assumption~3.2.1 asks for and what turns
+\cite[Thm~3.2.3]{Colbrook2026} into $\Gamma^\epsilon_n(A) \subseteq
+\Sp_\epsilon(A)$, the error control.  We cannot tell what it is.  Reading back
+from \cite[Alg.~3.4]{Colbrook2026}, which asks for vectors whose span is a core
+of $A$ and of $A^*$, we take it to be
+\begin{equation}
+  \label{eq:suitable}
+  \operatorname{ran}(\mathcal{P}^*_n) \subseteq \dom(A) \cap \dom(A^*)
+  \ \text{ for each } n,
+  \qquad
+  \textstyle\bigcup_n \operatorname{ran}(\mathcal{P}^*_n)
+  \ \text{ a core of } A \text{ and of } A^* ,
+\end{equation}
+the first half being needed for $\Phi_n$ to be defined at all.  On that reading
+one and the same finite-dimensional space must lie in \emph{both} domains, and
+those carry different boundary conditions in general.  If instead the conditions
+are meant to make \eqref{eq:folded} well posed, they are different ones.
+\Cref{eq:folded} is the operator $T^*T$ of \cite[\S V.3.7]{Kato1995}, and by
+\cite[Thm~V.3.24, p.~275]{Kato1995} it needs the strictly smaller $\dom(T^*T) =
+\{u \in \dom(T) : Tu \in \dom(T^*)\}$ with $T = A - zI$, which a discretisation
+would have to respect instead.
+
+\paragraph{(ii) Babu\v{s}ka--Osborn does not apply.}  We would like to apply
+Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} to
+\eqref{eq:folded}, and cannot, since it is unbounded with non-compact inverse.
+We take this to be deliberate, as \cite[p.~129]{Colbrook2026} says ``it is not
+necessary to assume that the operator has a compact resolvent''.  What we cannot
+see is what plays its role.  Rayleigh--Ritz on a conforming subspace bounds
+$\gamma$ from above for free, which we take to be the source of the error
+control, but it gives no rate and no local indicator, and
+\cite[Prop.~3.3.12]{Colbrook2026} gives both only for \emph{normal} $A$ with an
+isolated eigenvalue and a computable gap.  Non-normality is the case
+pseudospectra exist for.
+
+\paragraph{(iii) A primal-dual mismatch.}  Read \eqref{eq:folded} as what it
+looks like, a product of $A-zI$ with its adjoint.  The Banach adjoint is
+$(A-zI)^* \colon \Hb^* \to \Hb^*$, so we would be composing $\Hb
+\xrightarrow{A-zI} \Hb$ with $\Hb^* \xrightarrow{(A-zI)^*} \Hb^*$, and the two
+halves do not meet.  The standard repair, when $\Hb = L^2$, is to identify $\Hb$
+with its dual silently.  That does keep the composition an endomorphism.  We are
+not fond of it.
+
+\paragraph{(iv) What the identification hides.}  It makes the Riesz map coincide
+with the identity.  Writing $M \colon \Hb \to \Hb^*$ for the map it really is,
+the operator ought to be
+\begin{equation}
+  \label{eq:star}
+  M^{-1}\,(A - zI)^{*}\,M\,(A - zI),
+  \tag{$*$}
+\end{equation}
+that is $\Hb \xrightarrow{A-zI} \Hb \xrightarrow{M} \Hb^* \xrightarrow{(A-zI)^*}
+\Hb^* \xrightarrow{M^{-1}} \Hb$.
+Undoing the identification therefore only exhibits the Hilbert adjoint as
+$M^{-1}(\,\cdot\,)^*M$ applied to the Banach adjoint, and \eqref{eq:star} is
+\eqref{eq:folded} again, since $(M^{-1}(A-zI)^*M(A-zI)u, v)_{\Hb} = \dual{M(A -
+zI)u}{(A-zI)v} = ((A-zI)u, (A-zI)v)_{\Hb}$.  So we are no better off.  Finite
+element operators go into $\Hb^*$, not $\Hb$, and we do not see how to read a
+variational formulation off \eqref{eq:star}.
+
+\paragraph{(v) The trial space must be a core in the graph norm.}  Points (i) to
+(iv) are local.  The structural difficulty is that folding evaluates
+$\norm{(A-zI)u}_{\Hb}$, so the trial space must sit inside the \emph{graph}
+space $\dom(A)$ and exhaust a core of it.  For $\Delta$ on a bounded $\Omega$
+four things then go wrong at once.  Continuous piecewise linears are not in
+$H^2(\Omega)$, so $\norm{(A - zI)u_h}_{L^2}$ is not inaccurate but undefined, and
+$C^1$ elements would be needed.  On a non-convex polygon even those fail, since
+$\dom(\Delta) = \{u \in H^1_0 : \Delta u \in L^2\}$ contains corner
+singularities and has $H^2 \cap H^1_0$ as a proper \emph{closed} subspace in the
+graph norm, so no $H^2$-conforming family is a core.  Nor is $C^\infty_c(\Omega)$
+a core, its graph closure being $H^2_0(\Omega)$, so the reflex that smooth
+functions are dense is unavailable.  And $\dom(A^*)$ carries different boundary
+conditions, so the second quotient in \eqref{eq:quotients} needs a second space.
+None of this arises in \cite[\S\S3.4.2--3.4.3]{Colbrook2026}, set on $L^2(\R^d)$
+where $C^\infty_c(\R^d)$ is \emph{assumed} to be a core and the basis is Hermite
+functions, which are smooth, with no boundary.  Nor in
+\cite[\S3.4.4]{Colbrook2026}, whose operator is the \emph{first-order} Maxwell
+system, whose graph space $H_0(\curl) \times H(\curl)$ standard elements reach.
+Between them the two settings never cover a second-order operator on a bounded
+domain with boundary conditions.  The same conclusion is reached from the
+discrete side in \cite[Rmk~3.7]{LazzarinoNakatsukasaZerbinati2026}, which warns
+that the $L^2$ Riesz map ``will not be consistent with the function spaces of
+the continuous problem''.
+
+\paragraph{(vi) The estimator we want needs more than either.}  We intend to
+drive refinement by a dual weighted residual estimator
+\cite{BeckerRannacher2001,HeuvelineRannacher2001}.  DWR needs a form bounded on
+$V \times V$, a conforming $V_h$ for Galerkin orthogonality, a well posed dual
+problem, and, for an eigenvalue problem, an isolated eigenvalue to linearise
+about.  The third is free, the folded operator being self-adjoint so that the
+dual problem is the primal one.  The first two are (v) again.  The fourth is the
+hard one.  With \emph{essential} spectrum at the bottom there is no
+eigenfunction, hence no dual problem and nothing to linearise about.  The
+discrete minimiser still exists and the upper bound of (ii) still holds, so the
+certificate survives, but the estimator has no anchor.  The tool needs precisely
+the isolation that \cite[p.~129]{Colbrook2026} declines to assume.  Whether the
+bottom is isolated also depends on where $z$ sits, so the inner and outer layers
+of adaptivity are not independent.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{The setting we propose}
+\label{sec:path}
+
+Let $V \subset\subset \Hb$ with $\Hb = L^2$, taking $V$ of the type $H_0(\curl)
+\cap H(\divg 0)$ so the embedding is compact.\footnote{Two caveats.  We are
+sloppy about the components: $E$ and $H$ carry different boundary conditions, so
+the pair lives in $H_0(\curl) \times H(\curl)$ rather than $V \times V$.  And the
+solenoidal constraint buys the compact embedding at the cost of conformity,
+since standard elements are not divergence-free, as flagged in
+\cite[footnote~2, p.~130]{Colbrook2026}.}  From here $A$ is the \emph{weak}
+operator, related to the endomorphism of \cref{sec:setting} by $\Astr = M^{-1}A$,
+and only now does the shift $A - zM$ make sense.  Take
+\begin{equation}
+  \label{eq:maxwellop}
+  A \colon V \times V \to V^* \times V^*,
+  \qquad
+  \dual{A\begin{psmallmatrix} E \\ H \end{psmallmatrix}}
+       {\begin{psmallmatrix} G \\ F \end{psmallmatrix}}
+    = \bigl(-\ii\,\bcurl E,\ F\bigr)_{L^2}
+      + \bigl(\ii\,\hcurl H,\ G\bigr)_{L^2} .
+\end{equation}
+Since $A$ is \emph{first order} it goes not into $V^*$ but into $\Hb^* \subseteq
+V^*$.  So we may bring in the Riesz map $M^{-1} \colon \Hb^* \to \Hb$ and write
+the folded operator as
+\begin{equation}
+  \label{eq:starstar}
+  (A - zM)^{*}\,M^{-1}\,(A - zM),
+  \tag{$**$}
+\end{equation}
+which composes, $V \times V \xrightarrow{A - zM} \Hb^* \times \Hb^* \subseteq
+V^* \times V^* \xrightarrow{M^{-1}} \Hb \times \Hb \cong (\Hb^* \times \Hb^*)^*
+\xrightarrow{(A-zM)^*} V^* \times V^*$, the middle step being the canonical
+double dual identification, numerically an identity.  This is the continuous
+counterpart of the modified normal equation $A^{T}TAx = A^{T}Tb$ of
+\cite[Eq.~(3.7)]{LazzarinoNakatsukasaZerbinati2026}, where $T$ discretises a
+Riesz map inserted for the reason given in \cref{sec:stuck}(iii), that the plain
+normal equation acts on inconsistent function spaces.  Folding adds that the
+Riesz map is not free.  It must be that of the pivot space $\Hb$, where
+$\siginf$ is measured.
+Unlike \eqref{eq:star}, this has a variational form attached,
+\begin{multline}
+  \label{eq:varform}
+  a(E,F,H,G) = \bigl(\bcurl E,\ \bcurl F\bigr)
+             + \bigl(\hcurl H,\ \hcurl G\bigr)
+             - (\bar z + z)\,\ii \bigl(\hcurl H,\ F\bigr) \\
+             + (\bar z + z)\,\ii \bigl(\bcurl E,\ G\bigr)
+             + \bar z z\,(E,F) + \bar z z\,(H,G).
+\end{multline}
+
+\subsection{The G\aa rding inequality, and the standard finite element device}
+\label{sec:garding}
+
+\Cref{sec:stuck} got stuck because \cite{Colbrook2026} needs an endomorphism
+while a finite element method produces $A \colon V \to V^*$, an endomorphism of
+nothing, with no spectrum of its own.  Above we repaired that by
+\emph{composing} with a Riesz map, recovering the unbounded $\Astr = M^{-1}A$ on
+$\Hb$.  A finite element method usually does the opposite and \emph{inverts},
+and what comes out is compact rather than unbounded.  Two steps, the first
+free.
+
+A G\aa rding inequality is \emph{automatic}, with no hypothesis beyond $V$
+carrying the graph norm $\norm{u}_V^2 = \norm{u}_{\Hb}^2 + \norm{\Astr
+u}_{\Hb}^2$.  Applying $(s-t)^2 \ge \tfrac12 s^2 - t^2$ with $s = \norm{\Astr
+u}_{\Hb}$ and $t = \abs{z}\,\norm{u}_{\Hb}$ gives, for $u \in V$,
+\begin{equation}
+  \label{eq:garding}
+  a(u,u) = \norm{(\Astr - zI)u}_{\Hb}^2
+    \ \ge\ \tfrac12 \norm{\Astr u}_{\Hb}^2 - \abs{z}^2\norm{u}_{\Hb}^2
+    \ =\ \tfrac12 \norm{u}_V^2 - \bigl(\tfrac12 + \abs{z}^2\bigr)
+         \norm{u}_{\Hb}^2 ,
+\end{equation}
+so $a + C(\cdot,\cdot)_{\Hb}$ is coercive on $V$ for $C = \tfrac12 + \abs{z}^2$,
+the constant $\tfrac12$ being unimportant beyond its independence of $z$.
+
+Lax--Milgram then makes $\eqref{eq:starstar} + CM \colon V \to V^*$ an
+isomorphism, so the solution operator
+\begin{equation}
+  \label{eq:solop}
+  T \colon \Hb \to V, \qquad
+  a(Tf, v) + C\,(Tf, v)_{\Hb} = (f,v)_{\Hb}
+  \quad \text{for all } v \in V,
+\end{equation}
+is well defined, bounded, self-adjoint and positive.  Composed with
+$V \subset\subset \Hb$ it is a
+\emph{compact endomorphism of $\Hb$}, and this, not $\eqref{eq:starstar}$, is
+the object whose spectrum a finite element method studies.  Its nonzero
+eigenvalues are reciprocal to those of the pencil, $\lambda = \mu^{-1} - C$, so
+Riesz--Schauder gives a pencil spectrum $0 \le \lambda_1 \le \lambda_2 \le \cdots
+\to +\infty$ of finite multiplicities, equivalently
+$\eqref{eq:starstar} - \lambda M$ Fredholm of index zero for every $\lambda$.
+There is no essential spectrum, the bottom $\lambda_1$ is an isolated eigenvalue,
+equal to $\siginf(\Astr - zI)^2$ when $V$ is the whole graph space, and
+Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} applies to $T$ in
+the usual way, bringing Kato--Temple and hence DWR with it.
+
+The device does not solve the difficulty of \cref{sec:setting}, it inverts it.
+An endomorphism is produced by \emph{solving} rather than by \emph{applying},
+trading the unbounded $\Astr$ for the compact $T$ with reciprocal spectrum.  The
+G\aa rding inequality is what makes $T$ exist, the compact embedding is what
+makes it compact.
+
+We know what this costs.  A compact embedding $V \subset\subset \Hb$ of the graph
+space is the same thing as compactness of the resolvent of $\Astr$, exactly what
+\cite[p.~129]{Colbrook2026} declines to assume.  For Maxwell it forces the
+solenoidal $V$ of the footnote, which standard finite elements do not provide.
+That trade seems to us the crux of the whole question.
+
+\subsection{This appears to be what is already done for Maxwell}
+\label{sec:already}
+
+Read \cite[\S3.4.4]{Colbrook2026} back through the above.  The quantity minimised
+in step~2 on \cite[p.~132]{Colbrook2026} is
+\begin{equation}
+  \label{eq:colbrookmin}
+  \min_{(E,H) \in V_N \setminus \{0\}}
+    \frac{\int_U \abs{\ii\,\hcurl H - zE}^2
+                 + \abs{-\ii\,\bcurl E - zH}^2 \,\mathrm{d}x}
+         {\int_U \abs{E}^2 + \abs{H}^2 \,\mathrm{d}x}
+  \ =\ \min_{u_h \in V_N\setminus\{0\}}
+    \frac{\norm{(\Astr - zI)u_h}^2_{L^2}}{\norm{u_h}^2_{L^2}} ,
+\end{equation}
+over a conforming $V_N \subset V$ of \emph{plain Lagrange elements}.  Choosing a
+basis of $V_N$, the numerator is the stiffness matrix of \eqref{eq:varform},
+that is of \eqref{eq:starstar}, and the denominator is the mass matrix.  So
+\eqref{eq:colbrookmin} is precisely the Rayleigh--Ritz discretisation of the
+pencil $\eqref{eq:starstar}\,u = \lambda M u$.
+
+What is never built is as telling as what is.  The operator \eqref{eq:folded} is
+not formed.  No adjoint is applied to anything.  No domain of Kato type is
+discretised.  No projection $\mathcal{P}_n$ appears.  Only a bilinear form and a
+mass matrix are assembled, which is all a finite element code can offer.  Since
+the Maxwell operator is self-adjoint the second quotient in
+\eqref{eq:quotients} coincides with the first and is skipped, which is why the
+two-space difficulty of \cref{sec:stuck}(i) does not surface there either.
+
+This is why we suspect the algorithm as stated in \cite[\S3.4.1]{Colbrook2026}
+is not what a finite element method can follow, and that
+\cite[\S3.4.4]{Colbrook2026} follows \eqref{eq:starstar} instead.  We are not
+suggesting that section is wrong.  We are suggesting it does something the
+statement of the algorithm does not say, and that the missing step is
+\cref{sec:path}.
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Open questions}
+\label{sec:questions}
+
+\begin{enumerate}\itemsep1pt
+  \item \textbf{The main one.}  Is the computation in
+        \cite[\S3.4.4]{Colbrook2026} already the reading \eqref{eq:starstar},
+        rather than the algorithm of \cite[\S3.4.1]{Colbrook2026}?  If so, is the
+        passage between the two the one given in \cref{sec:path}, and can the
+        algorithm be restated in those terms?
+  \item Which reading of \cref{sec:stuck}(i) is meant, \eqref{eq:suitable}, so
+        that only the forms \eqref{eq:quotients} on $\dom(A)$ and $\dom(A^*)$ are
+        ever needed, or Kato's $\dom(T^*T)$, so that \eqref{eq:folded} itself
+        must be realised?
+  \item Is the mismatch of \cref{sec:stuck}(iii) real, and is the Riesz map in
+        \eqref{eq:starstar} the right repair?  Is it forced to be the Riesz map
+        of the pivot space $\Hb$ rather than that of $V$?
+  \item \Cref{sec:garding} removes the essential spectrum that blocks DWR in
+        \cref{sec:stuck}(vi), at the price of the compact embedding, which is
+        compactness of the resolvent and is what \cite{Colbrook2026} deliberately
+        avoids.  Is that trade the right one when the goal is a finite element
+        method with a computable local error indicator?  If not, what drives
+        refinement when the bottom of the folded spectrum is essential?
+\end{enumerate}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

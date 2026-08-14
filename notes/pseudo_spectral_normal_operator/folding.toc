@@ -1,0 +1,18 @@
+\contentsline {section}{\numberline {1}What this note is about}{2}{section.1}%
+\contentsline {section}{\numberline {2}Notation, fixed once}{3}{section.2}%
+\contentsline {section}{\numberline {3}From a variational operator to Colbrook's endomorphism}{4}{section.3}%
+\contentsline {section}{\numberline {4}Folding without a primal-dual error}{5}{section.4}%
+\contentsline {section}{\numberline {5}Where the Riesz map went in Algorithm 3.4}{6}{section.5}%
+\contentsline {section}{\numberline {6}No special domain is needed}{7}{section.6}%
+\contentsline {section}{\numberline {7}One-sided Rayleigh--Ritz replaces Babu\v {s}ka--Osborn}{8}{section.7}%
+\contentsline {section}{\numberline {8}Two domains, not one}{9}{section.8}%
+\contentsline {section}{\numberline {9}Reading off a variational formulation, two routes}{9}{section.9}%
+\contentsline {paragraph}{Route (a), least squares.}{9}{section*.2}%
+\contentsline {paragraph}{Route (b), integrate by parts once.}{9}{section*.3}%
+\contentsline {section}{\numberline {10}Three examples}{9}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Maxwell, where everything works}{9}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Dirac, where the form is first order although the operator is not}{10}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Advection-diffusion, where it bites}{11}{subsection.10.3}%
+\contentsline {section}{\numberline {11}An affine structure in $z$}{12}{section.11}%
+\contentsline {section}{\numberline {12}How far can the pivot space be moved?}{12}{section.12}%
+\contentsline {section}{\numberline {13}Questions}{13}{section.13}%
