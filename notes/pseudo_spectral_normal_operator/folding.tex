@@ -12,7 +12,9 @@
 \usepackage{tikz-cd}
 \usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,
             urlcolor=blue!55!black]{hyperref}
-\usepackage{cleveref}
+\usepackage[nameinlink]{cleveref}
+\usepackage{todonotes}
+\newcommand{\pef}[1]{\todo[inline, color=green!40]{PEF: #1}}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
@@ -63,18 +65,16 @@
 \maketitle
 
 \noindent
-In \cite{Colbrook2026} Colbrook introduces a very appealing algorithm for
-computing spectra, and more interestingly pseudospectra, of differential
-operators.  This note makes two claims about its relation to the finite element
-method.
+In \cite{Colbrook2026} Colbrook introduces very appealing algorithms for
+computing spectra and pseudospectra. This note makes two points regarding its application in
+the context of the finite element method.
 
 \smallskip
-\noindent\textbf{(a)}\ \emph{The algorithm as stated in
-\cite[\S3.4.1]{Colbrook2026} cannot be followed by a finite element method.}  It
-is phrased in terms of $A$, $A^*$, $\dom(A)$, $\dom(A^*)$ and orthogonal
-projections $\mathcal{P}_n$, and a finite element code has none of those.  It has
-a bounded sesquilinear form on $V \times V$.  \Cref{sec:stuck} lists six places
-where the passage from one to the other breaks down.
+\noindent\textbf{(a)}\ \emph{It is not straightforward to apply he algorithm as stated in
+\cite[\S3.4.1]{Colbrook2026} in the context of a finite element method.}  The algorithm
+is phrased in the language of spectral theory, in terms of e.g.~$A$, $A^*$, $\dom(A)$, $\dom(A^*)$ and orthogonal
+projections $\mathcal{P}_n$. These are not the natural language in which finite element discretisations are expressed. \Cref{sec:stuck} lists some
+difficulties we have encountered in passing from one setting to the other.
 
 \smallskip
 \noindent\textbf{(b)}\ \emph{What is actually computed for Maxwell in
@@ -82,18 +82,23 @@ where the passage from one to the other breaks down.
 functional analytic setting we set out in \cref{sec:path}, namely a conforming
 Rayleigh--Ritz discretisation of the pencil $\eqref{eq:starstar}\,u = \lambda Mu$
 on $V \times V$.  \Cref{sec:already} gives our evidence.
+\pef{I can't parse this point. How can a functional analytic setting be computed for Maxwell in Colbrook's book?}
 
-\noindent If (b) is right the two are reconciled, and what is missing from
+If (b) is right the two are reconciled \pef{What two? What reconciliation? Confused here}, and what is missing from
 \cite{Colbrook2026} is the bridge between them, which is \cref{sec:path}.
 
 % ═════════════════════════════════════════════════════════════════════════════
-\section{The setting, as we read it}
+\section{The setting of Colbrook}
 \label{sec:setting}
 
+We exclusively consider the folding strategy.
 Folding starts from a closed, densely defined $A$ on a Hilbert space $\Hb$.
 Since we want its spectrum, $A$ must be an \emph{endomorphism}, $A \colon
 \dom(A) \subset \Hb \to \Hb$, the classical instance being $\Delta \colon
-H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$.  Under suitable conditions on
+H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$.
+\pef{This isn't obviously an endomorphism, because $L^2$ will contain e.g.~$C^0$ functions whose boundary
+trace is not zero?}
+Under suitable conditions on
 $\dom(A)$ and $\dom(A^*)$ one considers \cite[\S3.4.1]{Colbrook2026}
 \begin{equation}
   \label{eq:gamma}
@@ -126,10 +131,11 @@ of pseudospectra to the eigenvalues of the self-adjoint operator
 The sentence introducing \cite[Eq.~(3.25)]{Colbrook2026} reads ``\emph{under
 suitable conditions on $\dom(A)$ and $\dom(A^*)$}, the functions $\Phi_n(z,A)$
 converge locally uniformly to $\gamma(z,A)$ \emph{from above} and hence satisfy
-Assumption~3.2.1''.  That hypothesis carries everything, since convergence from
+Assumption~3.2.1''. \pef{Have you checked the final version of the book? And mention what $\Phi_n$ is.} That hypothesis carries everything, since convergence from
 above is what Assumption~3.2.1 asks for and what turns
 \cite[Thm~3.2.3]{Colbrook2026} into $\Gamma^\epsilon_n(A) \subseteq
-\Sp_\epsilon(A)$, the error control.  We cannot tell what it is.  Reading back
+\Sp_\epsilon(A)$, the error control. \pef{This previous sentence strongly reads like AI.} We cannot find in the book what these
+assumptions are. Reading back
 from \cite[Alg.~3.4]{Colbrook2026}, which asks for vectors whose span is a core
 of $A$ and of $A^*$, we take it to be
 \begin{equation}
@@ -141,15 +147,17 @@ of $A$ and of $A^*$, we take it to be
   \ \text{ a core of } A \text{ and of } A^* ,
 \end{equation}
 the first half being needed for $\Phi_n$ to be defined at all.  On that reading
-one and the same finite-dimensional space must lie in \emph{both} domains, and
+one and the same finite-dimensional space must lie in \emph{both} domains (of $A$ and $A^*$), and
 those carry different boundary conditions in general.  If instead the conditions
-are meant to make \eqref{eq:folded} well posed, they are different ones.
+are meant to make \eqref{eq:folded} well posed, they are different ones. \pef{What is `they'?}
 \Cref{eq:folded} is the operator $T^*T$ of \cite[\S V.3.7]{Kato1995}, and by
 \cite[Thm~V.3.24, p.~275]{Kato1995} it needs the strictly smaller $\dom(T^*T) =
 \{u \in \dom(T) : Tu \in \dom(T^*)\}$ with $T = A - zI$, which a discretisation
 would have to respect instead.
 
-\paragraph{(ii) Babu\v{s}ka--Osborn does not apply.}  We would like to apply
+\paragraph{(ii) Babu\v{s}ka--Osborn does not apply.} 
+\pef{So what? He never said Babu\v{s}ka--Osborn should apply?}
+We would like to apply
 Babu\v{s}ka--Osborn theory \cite{BabuskaOsborn1991,Boffi2010} to
 \eqref{eq:folded}, and cannot, since it is unbounded with non-compact inverse.
 We take this to be deliberate, as \cite[p.~129]{Colbrook2026} says ``it is not
@@ -158,16 +166,16 @@ see is what plays its role.  Rayleigh--Ritz on a conforming subspace bounds
 $\gamma$ from above for free, which we take to be the source of the error
 control, but it gives no rate and no local indicator, and
 \cite[Prop.~3.3.12]{Colbrook2026} gives both only for \emph{normal} $A$ with an
-isolated eigenvalue and a computable gap.  Non-normality is the case
-pseudospectra exist for.
+isolated eigenvalue and a computable gap.  But we wish to consider non-normal
+operators, since we are trying to compute pseudospectra?
 
-\paragraph{(iii) A primal-dual mismatch.}  Read \eqref{eq:folded} as what it
-looks like, a product of $A-zI$ with its adjoint.  The Banach adjoint is
+\paragraph{(iii) A primal-dual mismatch.}  Read \eqref{eq:folded} literally, a product of $A-zI$ with its adjoint.  The Banach adjoint is
 $(A-zI)^* \colon \Hb^* \to \Hb^*$, so we would be composing $\Hb
 \xrightarrow{A-zI} \Hb$ with $\Hb^* \xrightarrow{(A-zI)^*} \Hb^*$, and the two
-halves do not meet.  The standard repair, when $\Hb = L^2$, is to identify $\Hb$
-with its dual silently.  That does keep the composition an endomorphism.  We are
-not fond of it.
+halves do not meet. \pef{Won't his obvious reply be `I am considering the Hilbert adjoint'?}
+The standard repair, when $\Hb = L^2$, is to identify $\Hb$
+with its dual silently.  That does keep the composition an endomorphism. Silently identifying
+a space with its dual is evil, for the reasons we now outline.
 
 \paragraph{(iv) What the identification hides.}  It makes the Riesz map coincide
 with the identity.  Writing $M \colon \Hb \to \Hb^*$ for the map it really is,
