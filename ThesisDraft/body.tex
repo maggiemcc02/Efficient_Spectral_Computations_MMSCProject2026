@@ -654,7 +654,7 @@ Following Flood, Farrell, and Brubeck, we choose the first of the two approaches
 
 \chapter{Methodology}
 
-\section{The Inner Loop: Pairing Colbrook's Algorithm with Adaptivity}
+\section{The Inner Loop: An Adaptive Refinement Technique for Colbrook's Algorithm}
 
 As discussed, Colbrook's algorithm can be used to compute bounds on the distance to the spectrum without suffering from the pitfalls of the discretize-then-solve approach. To obtain these bounds, we compute the smallest eigenvalues of auxiliary eigenproblems for the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ However, as shown in Section \ref{Matt Max}, if the discretization of these eigenproblems is too coarse, the computed bounds from Colbrook's algorithm may be poor. 
 
@@ -663,7 +663,7 @@ In an effort to improve these bounds, we apply the DWR method to estimate the er
 In this section, we explore the details of our application of DWR to Colbrook's algorithm. In the first subsection, we explore the needed assumptions for the succesful application of the DWR error estimate in \eqref{DWR} to the auxiliary eigenproblems in Colbrook's algorithm. In the second subsection, we discuss our adaptation of \eqref{DWR} to account for eigenvalues of multiplicity greater than one. Finally, in the last three subsections, we outline our methodology for pairing DWR with Colbrook's algorithm and demonstrate its success when applied to the Maxwell eigenproblem. 
 
 
-\subsection{Needed Assumptions}
+\subsection{The Needed Assumptions}
 
 The DWR error estimate in \eqref{DWR} is formulated for infinte-dimensional eigenproblems as opposed to infinite-dimensional spectral computations. In particular, \eqref{DWR} is derived under the assumption that the eigenvalue that the desired eigenvalue, $\lambda,$ has an associated eigenfunction $u.$ As a result, the error estimate requires an approximation of the eigenvalue, $\lambda_h,$ and an approximation of the corresponding discrete eigenfunction, $u_h$. 
 
@@ -678,7 +678,7 @@ With this in mind, it is not clear how to apply the DWR error estimate for eigen
 
 Assuming that the smallest eigenvalues of the auxiliary eigenproblems in Colbrook's algorithm approximate finite-multiplicity eigenvalues of the corresponding infinite-dimensional folded operators with finite multiplicity, we still need to account for the possibility that the target eigenvalue has multiplicity greater than one.
 
-To see this, consider the case in which the closed and densely defined operator $A:D(A) \subset H \rightarrow H$ is self-adjoint. It is known that self-adjoint operators have real eigenvalues. Thus, we restrict our spectral search to $z \in \mathbb{R}.$ The folded operator for a given $z \in \mathbb{R}$ is  $(A-zI)^*(A-zI) = (A-zI)(A-zI)^* = (A-zI)^2.$ Thus, if $\lambda$ is an eigenvalue of $A$ with multiplicity greater than one, then $(\lambda - z)^2$ is an eigenvalue of the folded operator with multiplicity that is at least the multiplicity of $\lambda.$ 
+To see this, consider the case in which the closed and densely defined linear operator $A:D(A) \subset H \rightarrow H$ is self-adjoint. It is known that self-adjoint operators have real eigenvalues. Thus, we restrict our spectral search to $z \in \mathbb{R}.$ The folded operator for a given $z \in \mathbb{R}$ is  $(A-zI)^*(A-zI) = (A-zI)(A-zI)^* = (A-zI)^2.$ Thus, if $\lambda$ is an eigenvalue of $A$ with multiplicity greater than one, then $(\lambda - z)^2$ is an eigenvalue of the folded operator with multiplicity that is at least the multiplicity of $\lambda.$ 
 
 % For example, consider the Maxwell eigenproblem \eqref{Max} and $z\in \mathbb{R}.$ Furthermore, consider the eigenvalue $\omega^2 = 1$ with multiplicity two. For all values of $z\in \mathbb{R}$ that are closer to $\omega^2 = 1$ than to any other value of $\omega^2,$ the smallest eigenvalue of the corresponding folded operator is $(1-z)^2$ with multiplicity two.
 
@@ -688,7 +688,7 @@ Let $\lambda$ be the smallest eigenvalue of an infinite-dimensional eigenproblem
 
 To use DWR to estimate the error in the smallest computed eigenvalue, we require an enriched approximation $u_h^+$ that corresponds to the chosen discrete eigenfunction $u_h.$ When $\lambda$ is an eigenvalue with multiplicity one, this matching is simple: we compute $u_h$ and $u_h^+,$ normalize them, and align their phases. When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, it is more challenging to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
 
-To overcome this issue, we propose a least squares approach to matching $u_h$ with an enriched approximation $u_h^+.$ In particular, given the enriched approximation of the $m$-dimensional eigenbasis, we construct the linear combination of computed enriched eigenfunctions that `best matches' $u_h.$ Here, the notion of a `best match' is decided using a least squares problem. Given the computed enriched basis $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ we take $u_h^+$ to be the solution of
+To overcome this challenge, we propose a least squares approach to matching $u_h$ with an enriched approximation $u_h^+.$ In particular, given the enriched approximation of the $m$-dimensional eigenbasis, we construct the linear combination of computed enriched eigenfunctions that `best matches' $u_h.$ Here, the notion of a `best match' is decided using a least squares problem. Given the computed enriched basis $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ we take $u_h^+$ to be the solution of
 \begin{equation}\label{least}
     \arg \min_{v \in E_h^+} \|u_h - v \|_H,
 \end{equation}
@@ -717,9 +717,9 @@ As a result, we can use \eqref{DWR} to estimate the error in the smallest eigenv
 
 %\subsection{An Adaptive Mesh Refinement Technique}
 
-\subsection{Application to Colbrook's Algorithm}
+\subsection{An Adaptive Mesh Refinement Technique} \label{AMR}
 
-With our DWR error estimate \eqref{DWR} at hand, we can estimate the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in Colbrook's algorithm. In doing so, we can use the error estimate to correct the computed eigenvalues and to drive an adaptive refinement technique for each $z \in \operatorname{Grid}$ in Colbrook's algorithm, Algorithm \ref{pseudospec}.
+With our DWR error estimate \eqref{DWR} and its localization \eqref{local eta} at hand, we can estimate the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in Colbrook's algorithm. In doing so, we can use the error estimate to correct the computed eigenvalues and to drive an adaptive refinement technique for each $z \in \operatorname{Grid}$ in Colbrook's algorithm, Algorithm \ref{pseudospec}.
 
  Standard adaptive mesh refinement techniques follow an adaptive feedback loop:
 % \begin{figure}[h!]
@@ -787,7 +787,14 @@ To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a 
 \subsection{Application to the Maxwell Eigenproblem}
 
 
-\section{The Outer Loop: Adaptively Refining the Complex Plane in Colbrook's Algorithm}
+\section{The Outer Loop: Pairing Inner and Outer Adaptivity for Colbrook's Algorithm}
+
+With the adaptive refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Colbrook's algorithm. However, two questions remain. First, how should we pick the test points in the complex plane, that is, the set $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given $z \in \operatorname{Grid},$ when should we adaptively refine the auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, there is little benefit in computing an accurate bound on the distance to the spectrum.
+
+% Finally, if we decide to apply the refinement technique to an auxiliary eigenproblem, what stopping criterion should we enforce? 
+
+In this section, we answer these two questions. Our answer to the first question will determine a method for adaptively picking test points in the complex plane. Our answer to the second question will determine the relationship between `outer refinement' of the complex plane and `inner refinement' of the auxiliary eigenproblems that arise at each test point. Together, these ideas give rise to our proposed methodology, which combines both inner and outer refinement with Colbrook's algorithm to efficiently resolve the pseudospectra of infinite-dimensional operators. 
+
 
 \subsection{The Inner Refinement Criteria}
 
