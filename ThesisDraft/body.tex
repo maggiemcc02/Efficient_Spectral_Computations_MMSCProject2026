@@ -186,7 +186,7 @@ Spectral invisibility occurs when the discretization of the infinite-dimensional
 Even when the discretize-and-solve approach avoids both spectral pollution and spectral invisibility, there is a fundamental issue that arises when an infinite-dimensional operator is discretized to quickly. For general operators, the \textit{essential spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in an `infinite-dimensional' way\footnote{We omit a formal definition of the essential spectrum because there are at least five technical definitions for non-normal operators. The curious reader can consult \cite[Ch. 8]{Matt}.} \cite{Matt}. Contrastly, the \textit{discrete spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in an `finite-dimensional' way. Thus, the discrete spectrum can be thought of the subset of $\Sp{A}$ that contains the eigenvalues of $A$ with finite multiplicity. 
 Immediately discretizing $A$ with a finite matrix results in a finite, discrete set of eigenvalues. As a result, the discretize-and-solve approach may struggle to capture the essential spectrum of an operator, and to distinguish it from the discrete spectrum.  
 
-\subsection{The Maxwell Eigenproblem and Spectral Pollution}
+\subsection{The Maxwell Eigenproblem and Spectral Pollution}\label{Maxwell Sect}
 
 
 To illustrate the effect of these failure modes, we consider the Maxwell eigenproblem, a famous example for which na\"{i}ve finite element discretizations exhibit spectral pollution \cite{Boffi}. 
@@ -482,15 +482,60 @@ The computation of $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ needed for Algorithm \r
 
 Fill!
 
-\subsection{(Not Done) Application to the Maxwell Eigenproblem} \label{Matt Max}
-\begin{itemize}
-    \item Show that we get good results if discretization is not too coarse. 
-    \item Motivate DWR 
-\end{itemize}
+\subsection{Application to the Maxwell Eigenproblem} \label{Matt Max}
+
+To demonstrate the success of Colbrook's algorithm, we apply it to the Maxwell eigenproblem \eqref{Max} of Section \ref{Maxwell Sect}. To do so, we consider the closed and densely defined operator $A: D(A) \subset H \rightarrow H,$ where
+\begin{equation} \label{max op}
+    A(\mathbf{E}, H) = (i \textbf{rot} H, - i \text{rot} E)_H.
+\end{equation}
+Here, $\Omega = (0, \pi)^2,$ $H = L^2(\Omega) \times L^2(\Omega),$ and $D(A) = H_0(\text{rot} ; \Omega) \times H(\textbf{rot};\Omega).$
+
+
+To apply Colbrook's algorithm, i.e., Algorithm \ref{pseudospec}, we first recognize that $A$ is self-adjoint. As a result, $\Sp{A} \subset \mathbb{R}$ and $\gamma(z, A) = \operatorname{dist}(z, \Sp{A}).$ Furthermore, since $A$ is self-adjoint, we only consider a single folded operator, $(A-zI)^*(A-zI),$ and its corresponding auxiliary eigenproblem.
+ % As a result, $A$ is normal and $\gamma(z, A) = \operatorname{dist}(z, \Sp{A}).$
+% Since the spectrum of a self-adjoint operator is real, we can restrict our test points for Algorithm \ref{pseudospec} to the real line, i.e., $\operatorname{Grid} \subset \mathbb{R}.$
+
+To formulate the auxiliary eigenproblem used to compute $\Phi_n(z, A)$ at each $z \in \operatorname{Grid} \subset \mathbb{C},$ we follow the discussion of Section \ref{Fix matt} and define
+\begin{align}
+    &a_z(u, v) \defeq ((A-zI) u, (A-zI) v)_{H},\\
+    &m(u, v) \defeq (u, v)_{H}.
+\end{align}
+With this, 
+\begin{equation}
+    \gamma^2(z, A) = \operatorname{dist}^2(z, \Sp{A}) = \inf_{u \in D(A)\setminus \{0\}} \frac{a_z(u, u)}{m(u, u)}.
+\end{equation}
+
+
+To discretize, we restrict ourselves to the finite-element space $V_h \subset D(A).$ In doing so, the auxiliary eigenproblem aims to find the smallest eigenvalue, which we will denote by $\mu_n(z),$ such that
+\begin{equation} \label{max aux}
+    a_z(u_h, v_h) = \mu_n(z) m(u_h, v_h) \qquad \forall v_h \in V_h.
+\end{equation}
+With this, Colbrook's bound on the distance to the spectrum is
+\begin{equation} \label{max phi}
+    \Phi_n(z, A) = \sqrt{\mu_n(z)}.
+\end{equation}
+Thus, to implement Algorithm \ref{pseudospec}, we iterate over $z \in \operatorname{Grid} \subset \mathbb{C}$, compute the smallest eigenvalue of \eqref{max aux}, and approximate the bound on the distance to the spectrum using \eqref{max phi}. 
+
+% he first mesh in this sequence is shown in Figure \ref{Mesh32}. 
+
+To demonstrate the success of Colbrook's approach, we consider structured triangular meshes with $N = 32$ and $N=128$ cells along each side of the domain. As in Section \ref{Maxwell Sect}, we take $V_h$ to be the space of linear Lagrange elements that satisfy the required zero-tangential trace boundary condition. Since $\Sp{A} \subset \mathbb{R},$ we take $\operatorname{Grid} \subset \mathbb{R}.$ In particular, we set
+\begin{equation} \label{1grid}
+    \operatorname{Grid} = \{0.01j : j = 1, 2 \dots, 400 \}.
+\end{equation}
+For each $z \in \operatorname{Grid},$ we assemble \eqref{max aux} in Firedrake and compute the smallest eigenvalue using SLEPc's Krylov-Schur method with a shift-and-invert spectral transformation \cite{Firedrake, slep}. In doing so, we compute $\Phi_n(z, A)$ as in \eqref{max phi}. The results are displayed in Figure \ref{FirstMatt}.
+
+% \input{figures/mesh32}
+\input{figures/Matt_Maxwell}
+
+Notice that despite our choice of linear Lagrange elements, Colbrook's algorithm avoids the spectral pollution exhibited by the discretize-then-solve approach in Section \ref{Maxwell Sect}. However, notice that for coarse discretizations, Colbrook's bound on the distance to the spectrum is poor. As a result,  in Figure \ref{FirstMatt}, we employ uniform mesh refinement to increase the accuracy of the bound. 
+
+Extensive uniform refinement at each $z \in \operatorname{Grid}$ can very quickly make Colbrook's algorithm computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling Colbrook's algorithm with an adaptive mesh refinement technique driven by the Dual-Weighted-Residual (DWR) method for symmetric eigenproblems. We discuss the DWR method next.
+% that focuses the computational effort of solving the auxiliary eigenproblems in regions of the domain where the approximation of $\mu_n(z)$ is poor. 
+
 
 \section{The Dual-Weighted Residual (DWR) Method for Symmetric Eigenproblems}
 
-In this section, we provide an overview of the Dual-weighted Residual (DWR) method that we apply to the auxilliary eigenproblems in Colbrook's algorithm. In the first subsection, we discuss the role of \textit{a posteriori} error estimates in constructing adaptive finite element methods. In the subsections that follow, we introduce the DWR error estimate for symmetric eigenproblems and discuss its localization for adaptive mesh refinement.
+In this section, we provide an overview of the Dual-weighted Residual (DWR) method that we apply to the auxiliary eigenproblems in Colbrook's algorithm. In the first subsection, we discuss the role of \textit{a posteriori} error estimates in constructing adaptive finite element methods. In the subsections that follow, we introduce the DWR error estimate for symmetric eigenproblems and discuss its localization for adaptive mesh refinement.
 
 \subsection{Adaptive Finite Element Methods}
 
@@ -665,7 +710,7 @@ In an effort to improve these bounds, we apply the DWR method to estimate the er
 In this section, we explore the details of our application of DWR to Colbrook's algorithm. In the first subsection, we explore the needed assumptions for the succesful application of the DWR error estimate in \eqref{DWR} to the auxiliary eigenproblems in Colbrook's algorithm. In the second subsection, we discuss our adaptation of \eqref{DWR} to account for eigenvalues of multiplicity greater than one. Finally, in the last three subsections, we outline our methodology for pairing DWR with Colbrook's algorithm and demonstrate its success when applied to the Maxwell eigenproblem. 
 
 
-\subsection{The Needed Assumptions}
+\subsection{The Needed Assumptions}\label{ASSUMPSect}
 
 The DWR error estimate in \eqref{DWR} is formulated for infinite-dimensional eigenproblems as opposed to infinite-dimensional spectral computations. In particular, \eqref{DWR} is derived under the assumption that the desired eigenvalue, $\lambda,$ has an associated eigenfunction $u.$ As a result, the error estimate requires an approximation of the eigenvalue, $\lambda_h,$ and an approximation of the corresponding discrete eigenfunction, $u_h$. 
 
@@ -765,13 +810,13 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a set $z\in \op
     \begin{equation}
         \mu_{n,c}^{(j)}(z) \defeq \eta^{(j)}(z) + \mu_n^{(j)}(z).
     \end{equation}
-    Use the method of Rognes and Logg to compute the local error indicators $\eta_T^{(j)}$, as given by \eqref{local eta}, for each cell $T$ in the mesh that defines $V_h^{(j)}$ \cite{logg, joe, pablo}. 
+    Use the method of Rognes and Logg to compute the local error indicators $\eta_T^{(j)}(z)$, as given by \eqref{local eta}, for each cell $T$ in the mesh that defines $V_h^{(j)}$ \cite{logg, joe, pablo}. 
 
     
     \item \textbf{Mark:}\footnote{This marking scheme was obtained from \cite{Pslides} where it is said to be simpler than the famous Dörfler marking routine, but performs similarly in practice \cite{Dorf, Pslides}.} 
     Mark the cells that have a local error that is considered too large. For our implementation, we mark the cells whose local error estimate satisfies
-    \begin{equation}
-        \eta_T^{(j)} \ge \theta \max_{k} \eta_k^{(j)}, \, \text{ for some } \, \theta \in [0,1].
+    \begin{equation} \label{mark}
+        \eta_T^{(j)}(z) \ge \theta \max_{k} \eta_k^{(j)}(z), \, \text{ for some } \, \theta \in [0,1].
     \end{equation}
     Unless otherwise stated, we take $\theta = 1/2.$
 
@@ -786,7 +831,27 @@ To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a 
 
 %\subsection{Application to Colbrook's Algorithm}
 
-\subsection{(Not Done) Application to the Maxwell Eigenproblem}
+\subsection{Application to the Maxwell Eigenproblem}\label{DWRMatt}
+
+We now return to the Maxwell eigenproblem stated in \eqref{Max}. In Section \ref{Matt Max}, we applied Colbrook's algorithm to the Maxwell operator \eqref{max op}. The numerical experiments in that section 
+showed that Colbrook's approach avoids the spectral pollution exhibited by the discretize-then-solve approach of Section \ref{Maxwell Sect}. However, as shown in Figure \ref{FirstMatt}, coarse discretizations of the auxiliary eigenproblems can produce poor bounds on the distance to the spectrum. In an effort to compute these bounds accurately, without resorting to extensive uniform refinement, we now couple Colbrook's algorithm with the adaptive mesh refinement technique in Section \ref{AMR}.
+
+To do so, we take the starting mesh to be an unstructured triangular mesh generated by Netgen, with the maximum element diameter of $\pi/32$ \cite{Schoberl1997}. We take $V_h$ to be the space of linear Lagrange elements satisfying the zero tangential trace boundary condition in \eqref{Max}. The enriched space $V_h^+$ is obtained by increasing the polynomial degree of $V_h$ by one. As in Section \ref{Matt Max}, we take $\operatorname{Grid} \subset \mathbb{R}.$ In particular, we set
+\begin{equation} \label{2grid}
+    \operatorname{Grid} = \{2 + jh : j = 0, \dots, 100\}.
+\end{equation}
+Notice that, as opposed to the choice of $\operatorname{Grid}$ in Section \ref{Matt Max}, i.e., \eqref{1grid}, we no longer consider test points near $z=0.$ Recall from Section \ref{ASSUMPSect} that our adaptive mesh refinement technique can only be applied when the bottom of the spectrum of the folded operator is an eigenvalue of finite multiplicity. For the Maxwell operator \eqref{max op}, the choice of $\operatorname{Grid}$ in \eqref{2grid} avoids the case in which this smallest eigenvalue has infinite multiplicity. Further details on this choice are given in Appendix \ref{AppendMax}.
+
+% As discussed in Section \ref{Maxwell Sect}, the Maxwell problem \eqref{2D var max} has zero eigenvalue with an infinite-dimensional eigenspace. Thus, for test points $z$ near zero, the smallest eigenvalue of the folded operator may have infinite multiplicity. However, to apply the adaptive mesh refinement technique of Section \ref{AMR}, we require the smallest eigenvalue of the folded operator to have a finite multiplicity. We therefore restrict our test points to a portion of the real line that avoids the infinite-multiplicity eigenvalue of the folded operator. This choice is discussed further in Appendix \ref{AppendMax}.
+
+
+
+To couple Colbrook's algorithm with the adaptive mesh refinement technique of Section \ref{AMR}, we iterate over each $z \in \operatorname{Grid}$ and compute the smallest eigenvalues, $\mu_n(z)$ and $\mu_n^+(z),$ of the auxiliary eigenproblem, \eqref{max aux}, posed on $V_h$ and $V_h^+,$ respectively. We then solve the least squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with an enriched eigenfunction $u_h^+ \in V_h^+.$ Using $u_h$ and $u_h^+$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_n(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{n, c}(z) \defeq \eta(z) + \mu_n(z).$ Furthermore, we compute the corrected bound on the distance to the spectrum $\Phi_{n,c}(z,A) = \sqrt{ \mu_{n,c}(z) }.$ 
+Using the localization procedure of Rognes and Logg, we compute a local error estimate $\eta_T(z)$ for each cell $T$ of the mesh that defines $V_h$ and $V_h^+$. We then mark and refine all cells for which \eqref{mark} holds. This results in a new mesh and, consequently, a new $V_h$ and $V_h^+$ for the discretization of the auxiliary eigenproblem. 
+
+This process is repeated for each $z \in \operatorname{Grid}$ until a user-defined stopping criterion has been satisfied. In the next Chapter, we will develop a specific stopping criterion that couples the accuracy required for the auxiliary eigenproblems with the desired resolution of the $\epsilon$-pseudospectrum. In the present setting, whose aim is to demonstrate the benefit of pairing Colbrook's algorithm with adaptive refinement of the auxiliary eigenproblems, we perform five steps of the adaptive mesh refinement technique at each $z \in \operatorname{Grid}.$ The results of this experiment are displayed in Figure \ref{DWRResult}. Notice that the DWR-corrected bound is substantially more accurate than the bound obtained on a uniform mesh. This result further motivates the coupling of Colbrook's algorithm with the adaptive mesh refinement technique of Section \eqref{AMR}.
+
+\input{figures/MattDWRPlot}
 
 
 \section{The Outer Loop: Pairing Inner and Outer Adaptivity for Colbrook's Algorithm}
