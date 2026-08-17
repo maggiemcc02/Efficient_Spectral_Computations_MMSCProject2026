@@ -1,0 +1,174 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+
+\definecolor{meshOrange}{RGB}{238,145,0}
+\definecolor{cellGreen}{RGB}{135,220,20}
+\definecolor{eigenPurple}{RGB}{155,0,190}
+\definecolor{axisGray}{RGB}{75,85,85}
+
+% Define environments
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{definition}{Definition}
+% \newtheorem{lemma}{Lemma}
+% \newtheorem{corollary}{Corollary}
+
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+
+
+\title{Speeding up Outer Loop for Self-Adjoint Problems}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Matt's Folded Operator}
+
+Let $z = x + iy.$ Matt's folded operator is $F(z) \defeq (A-zI)^*(A-zI).$ Assume that $A^*=A.$ Then,
+$F(z) = (A-\overline{z}I)(A-zI).$
+
+Next, plug in $z$ and expand
+\begin{align}
+    F(z) &= (A-xI + iyI)(A-xI-iyI)\\
+    &=(A-zI)^2 + y^2 I.
+\end{align}
+
+Furthermore, for the injection modulus, we have
+\begin{align}
+    \|(A-zI) u \|^2 &= \| (A-zI) u - iyu \|^2 \\
+    &= \| (A-xI)u \|^2 + y^2 \|u\|^2 + 2 \Re\{ (A-xI)u, -iyu ) \} \\
+    &= \| (A-xI)u \|^2 + y^2 \|u\|^2.
+\end{align}
+Taking the infinum over unit vectors, we obtain
+\begin{equation}
+    \gamma(z, A)^2 = \gamma(x, A)^2 + y^2. 
+\end{equation}
+
+\section{FEM Eigenproblem}
+
+Next, we consider $B_z \defeq (A-zM)^*M^{-1}(A-zM) = (A-\overline{z}M)M^{-1}(A-zM).$ Expanding, we have 
+\begin{align}
+    B_z &= AM^{-1}A - (z + \overline z) A + |z|^2 M \\
+    &= AM^{-1} A - 2xA + (x^2 + y^2) M.
+\end{align}
+Notice that 
+\begin{equation}
+    B_x = (A-xM)M^{-1}(A-xM) = AM^{-1}A - 2xA + x^2 M.
+\end{equation}
+Thus, 
+\begin{equation}
+    B_z = B_x + y^2 M.
+\end{equation}
+Now, define the sesquilinear forms 
+\begin{align}
+    a_z(u_h, v_h) &= \langle B_z u_h, v_h \rangle \\
+    &= \langle B_x u_h, v_h \rangle + y^2 \langle M u_h, v_h \rangle  \\
+    &= a_x(u_h, v_h) + y^2 m(u_h, v_h).
+\end{align}
+Thus, the eigenproblem 
+\begin{equation}
+    a_z(u_h, v_h) = \lambda_h(z) m(u_h, v_h),
+\end{equation}
+can be written as 
+\begin{equation}
+    a_x(u_h, v_h) = (\lambda_h(z) - y^2) m(u_h, v_h) = \lambda_h(x) m(u_h, v_h).
+\end{equation}
+In other words, for each distinct $x,$ we can solve $a_x(u_h, v_h) = \lambda_h(x) m(u, v)$ and find $\lambda_h(z)$ by adding $y^2.$ Furthermore, the eigenfunctions carry over as well. That is, $E_h(z) = E_h(x),$ where $E_h(\cdot)$ denotes the eigenspace for $\lambda_h(\cdot).$
+
+With this, we can conclude that for $z$ values that share the same real part, Matt's bound on the distance to the spectrum depends only on a shift by the square of the imaginary part:
+\begin{equation}
+    \Phi_n(z, A) = \sqrt{\lambda_h(z)} = \sqrt{\lambda_h(x) + y^2}.
+\end{equation}
+
+
+\section{DWR Error Estimate}
+
+Notice that the imaginary part of $z$ does not affect the primal residual:
+\begin{align}
+    \rho_z(v) &\defeq a_z(u_h, v) - \lambda_h(z) m(u_h, v) \\
+    &= a_x(u_h, v) + y^2 m(u_h, v) - \lambda_h(z) m(u_h, v) \\
+    &= a_x(u_h, v) - (\lambda_h(z) - y^2) m(u_h, v) \\
+    &= a_x(u_h, v) - \lambda_h(x) m(u_h, v) \\
+    &= \rho_x(v).  
+\end{align}
+Since the residual only depends on $x,$ and the eigenfunctions only depend on $x,$ the DWR error estimate depends only on $x$:
+\begin{align}
+    \lambda(z) - \lambda_h(z) &\approx \frac{\rho_z(u_h^+(z) - u_h(z))}{1 - 1/2 \| u_h^+(z) - u_h(z) \|_m^2 }\\
+    &= \frac{\rho_z(u_h^+(x) - u_h(x))}{1 - 1/2 \| u_h^+(x) - u_h(x) \|_m^2 }.
+\end{align}
+
+
+\section{What does this mean?}
+
+If correct, this means we can drastically speed up our computations. For each $x,$ we do the expensive adaptive eigensolves. Then, for each `column' (every $z$ that shares $x$) in the complex plane, we compute the needed $\Phi_n(z, A)$ using the shift by $y^2.$ The error estimate computed at $x$ carries over to every other point in that column.
+
+\end{document}
