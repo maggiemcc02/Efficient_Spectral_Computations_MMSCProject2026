@@ -1,0 +1,76 @@
+\begin{algorithm}[ht]
+\caption{Coupled Inner and Outer Refinement for Colbrook's Algorithm.}
+\label{outerloop}
+
+\textbf{Input:} Initial triangulation $\mathcal{T}_0$ of $D\subset\mathbb{C}$, initial finite element space $V_h^{(j)}$ for the $j$-th auxiliary eigenproblem ($j \in \{1, 2\})$,
+$\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of freedom for the adaptive mesh refinement technique. 
+
+\begin{algorithmic}[1]
+
+    \State Set $k=0$.
+
+    \While{there are unclassified triangles in $\mathcal{T}_k$}
+
+        \For{each unclassified triangle $K\in\mathcal{T}_k$}
+
+            \State Let $z_K$ be the barycentre of $K$ and set
+            $h_K=\operatorname{diam}(K)$.
+        
+            \For{$j\in\{1,2\}$}
+                \State \parbox[t]{0.82\linewidth}{
+                    Starting from the finite element space $V_h,$ apply the adaptive mesh refinement technique of Section~\ref{AMR}
+                    to the $j$-th auxiliary eigenproblem at $z_K$ until
+                        $|\eta^{(j)}(z_K)| \leq h_k^2/2,$
+                    or until the prescribed maximum number of degrees of freedom
+                    is reached.
+                } 
+                \newline{}
+                \EndFor
+    
+            \State Compute
+                $ \Phi_n(z_K,A) $ as in \eqref{approx phi}
+                % =
+                % \sqrt{
+                %     \min\left\{
+                %         \mu_n^{(1)}(z_K),
+                %         \mu_n^{(2)}(z_K)
+                %     \right\}
+                % }.$
+
+            \State Compute the corrected approximation $\Phi_{n,c}(z_K,A)$ as in \eqref{phi err}.
+            
+            % =\sqrt{
+            %         \min\left\{
+            %             \mu_{n,c}^{(1)}(z_K),
+            %             \mu_{n,c}^{(2)}(z_K)
+            %         \right\}
+            %     }.$
+
+            \State Compute $R$ as in \eqref{R}.
+
+            \If{$\Phi_n(z_K,A)+R<\epsilon$}
+                \State Classify $K$ as \textsc{inside}.
+            \ElsIf{$\Phi_n(z_K,A)-R>\epsilon$}
+                \State Classify $K$ as \textsc{outside}.
+            \ElsIf{$h_K<h_{\mathrm{tol}}$}
+                \State Classify $K$ as \textsc{contour}.
+            \Else
+                \State Mark $K$ for outer refinement.
+            \EndIf
+
+        \EndFor
+
+        \State Refine each marked triangle into four sub-triangles.
+
+        \State Form $\mathcal{T}_{k+1}$ from the newly created sub-triangles.
+
+        \State Set $k\gets k+1$.
+
+    \EndWhile
+
+\end{algorithmic}
+
+\textbf{Output:} A classified triangulation whose \textsc{in} triangles approximate the inside of the $\epsilon$-pseudospectrum, whose \textsc{out} triangles approximate the outside of the $\epsilon$-pseudospectrum, and whose \textsc{contour} triangles approximate the $\epsilon$-pseudospectral contour
+$\gamma(z,A)=\epsilon$.
+
+\end{algorithm}

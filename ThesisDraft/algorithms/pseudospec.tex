@@ -1,0 +1,18 @@
+\begin{algorithm}[ht]
+\caption{Colbrook's Algorithm for Computing $\Spe{A}$.}
+\label{pseudospec}
+
+\textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$.
+
+\begin{algorithmic}[1]
+    \State For each $z\in\operatorname{Grid}$, compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z).$
+    \State Set $\Phi_n(z, A) = \sqrt{ \min \left\{ \mu_n^{(1)}(z), \mu_n^{(2)}(z)\ \right\}}.$
+    \State Set
+    $\Gamma_n^\epsilon(A)
+    =\{z\in\operatorname{Grid}:\Phi_n(z,A)<\epsilon\}$.
+\end{algorithmic}
+
+\textbf{Output:} $\Gamma_n^\epsilon(A)$, an approximation of
+$\operatorname{Sp}_\epsilon(A)$.
+
+\end{algorithm}

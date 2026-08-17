@@ -108,7 +108,7 @@ Hence, when $A$ is a normal operator, the norm of the resolvent can be used to c
 
 
 
- \subsection{The Pseudospectra of Linear Operators}
+ \subsection{The Pseudospectra of Linear Operators}\label{pseudo sec}
 
 % Consider the matrix $B \in \mathbb{C}^{n \times n}$ and assume that it has $n$ distinct eigenvalues. Then, $B$ has a set of $n$ linearly independent eigenvectors that are unique up to normalization by scalar factors \cite{Nick}. In this case, we can consider the eigendecomposition $B = V \Lambda V^{-1},$ where $V$ is the matrix of the eigenvectors of $B$ and $\Lambda$ is the diagonal matrix of the corresponding eigenvalues.  
 
@@ -120,7 +120,7 @@ Hence, when $A$ is a normal operator, the norm of the resolvent can be used to c
 
 % one way to ask how `far' $B$ is from being normal is to ask how far $\kappa_2(V)$ is from one. 
 
-To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask if $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from ``yes" to ``no". Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large \cite{Nick}. This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ In particular, for $\epsilon > 0,$ the $\epsilon$-\textit{pseudospectrum} of $B$ is the following set:
+To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask if $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from ``yes" to ``no". Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large, where $\|\cdot\|$ denotes the matrix norm of interest \cite{Nick}. This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ In particular, for $\epsilon > 0,$ the $\epsilon$-\textit{pseudospectrum} of $B$ is the following set:
 \begin{equation} \label{eps B}
     \operatorname{Sp}_{\epsilon}(B) = \{z \in \mathbb{C}:\|(B-zI)^{-1} \|^{-1} \le \epsilon \} = \operatorname{Cl} \left(\{z \in \mathbb{C} : \|(B-zI)^{-1} \|^{-1} < \epsilon \} \right),
 \end{equation}
@@ -142,11 +142,11 @@ In infinite dimensions, we consider a closed and densely defined  linear operato
 As before, we adopt the convention that if $z \in \Sp{A},$ then $\|(A-zI)^{-1}\|_{H}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{H} = \infty$ \cite{Matt, Nick}.
 Similarly to \eqref{eps stab B}, the $\epsilon$-pseudospectrum of $A$ can be defined as follows \cite{Matt, Nick}:
 \begin{equation} 
-    \Spe{A} = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(H), \|E\| < \epsilon} \operatorname{Sp}(A+E) \right).
+    \Spe{A} = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(H), \|E\|_H < \epsilon} \operatorname{Sp}(A+E) \right).
 \end{equation}
 % As before, this second definition tells us that the pseudospectra of $A$ describe how far perturbations in $A$ impact its spectral values. Th
 
-As is the case in finite-dimensions, the pseudospectra of $A$ can be used to explore the conditioning of the spectrum of $A.$ When $A$ is a normal operator, $ \|(A-zI)^{-1} \|^{-1} = \operatorname{dist}(z, \Sp{A}).$ In this case,
+As is the case in finite-dimensions, the pseudospectra of $A$ can be used to explore the conditioning of the spectrum of $A.$ When $A$ is a normal operator, $ \|(A-zI)^{-1} \|_H^{-1} = \operatorname{dist}(z, \Sp{A}).$ In this case,
 \begin{equation}
     \Spe{A} = \Sp{A} + \mathfrak{B}_{\epsilon}(0),
 \end{equation}
@@ -319,7 +319,7 @@ With this example in mind, it is clear that the pitfalls of the discretize-the-s
 
 The pitfalls of the discretize-then-solve approach motivate the development of alternative approaches for computing the spectra of infinite-dimensional operators. In recent work, Matthew Colbrook has proposed an alternative approach that avoids these pitfalls by working with the infinite-dimensional operator as far as possible, thereby delaying discretization. In this way, Colbrook shows that when and how discretization is introduced is crucial to the reliable computation of spectra. 
 
-In this section, we introduce Colbrook's algorithm for computing pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for two main reasons. First, Colbrook's algorithm for pseudospectra can be applied to a much broader class of operators than his algorithm for spectra and forms the computational component of his algorithm for computing spectra. Second, as discussed previously, the pseudospectra of an operator are often more informative than the spectrum alone. 
+In this section, we introduce Colbrook's algorithm for computing pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for three main reasons. First, Colbrook's algorithm for pseudospectra can be applied to a much broader class of operators than his algorithm for spectra. Second, Colbrook's algorithm for pseudospectra forms the main computational component of his algorithm for computing spectra. Finally, as discussed in Section \ref{pseudo sec}, the pseudospectra of an operator are often more informative than the spectrum alone. 
 
 In the first subsection, we introduce the fundamental tool for Colbrook's algorithm, namely, the injection modulus of an operator. In the second subsection, we use this tool to build Colbrook's algorithm for computing pseudospectra. Then, in the third subsection, we specialize the algorithm to the finite element setting. Finally, in the final subsection, we demonstrate the success of Colbrook's algorithm by applying it to the Maxwell eigenproblem. 
 
@@ -336,13 +336,13 @@ One of the most fundamental tools in Colbrook's algorithm is the following funct
 \begin{equation}
     \gamma(z, A) = \min \left\{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \right\}.
 \end{equation}
-With this, Colbrook characterizes the resolvent norm $\|(A-zI)^{-1}\|$ in the following way:
+With this, Colbrook characterizes the resolvent norm $\|(A-zI)^{-1}\|_H$ in the following way:
 \begin{lemma}[Injection Moduli and Resolvent Norms \cite{Matt}]
    Let $A$ be a closed and densely defined operator on a Hilbert space $H.$ We have that
    \begin{equation} \label{gamma}
-       \gamma(z, A) = \|(A-zI)^{-1}\|^{-1},
+       \gamma(z, A) = \|(A-zI)^{-1}\|_H^{-1},
    \end{equation}
-   where we adopt the convention that $\|(A-zI)^{-1}\|^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
+   where we adopt the convention that $\|(A-zI)^{-1}\|_H^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
 \end{lemma} \label{gamma and norm}
 
 In finite dimensions, we have that $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I)$ for every $z \in \mathbb{C}.$ However, in infinite dimensions, it is possible to have $z \in \Sp{A}$ and $\sigma_{\inf}(A-zI) \ne \sigma_{\inf}(A^*-\overline{z}I).$ To see this, consider the right-shift operator as defined in \eqref{right shift}, i.e., the operator $A:l^2(\mathbb{N}) \rightarrow l^2(\mathbb{N)}$ defined by $A(x_1, x_2, \dots) = (0, x_1, x_2, \dots).$ This operator satisfies $\|Ax\|_{l^2(\mathbb{N})} = \|x\|_{l^2(\mathbb{N})}.$ Thus, $\sigma_{\inf}(A) = 1.$ Now consider its Hilbert adjoint $A^*,$ which is the left-shift operator $A^*(x_1, x_2, \dots) = (x_2, x_3, \dots).$ Notice that $A^*(1, 0, \dots) = (0, 0, \dots).$ Hence, $\sigma_{\inf}(A) \ne \sigma_{\inf}(A^*) = 0.$
@@ -435,24 +435,26 @@ Under Assumption \ref{assump}, we have that
 \end{equation}
 Furthermore, in \cite{Matt} Colbrook shows that the output of Algorithm \ref{pseudospec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as $n \rightarrow \infty.$
 
-\begin{algorithm}[ht]
-\caption{Computing $\Spe{A}$.}
-\label{pseudospec}
+\input{algorithms/pseudospec}
 
-\textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$.
+% \begin{algorithm}[ht]
+% \caption{Computing $\Spe{A}$.}
+% \label{pseudospec}
 
-\begin{algorithmic}[1]
-    \State For each $z\in\operatorname{Grid}$, compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z).$
-    \State Set $\Phi_n(z, A) = \sqrt{ \min \left\{ \mu_n^{(1)}(z), \mu_n^{(2)}(z)\ \right\}}.$
-    \State Set
-    $\Gamma_n^\epsilon(A)
-    =\{z\in\operatorname{Grid}:\Phi_n(z,A)<\epsilon\}$.
-\end{algorithmic}
+% \textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$.
 
-\textbf{Output:} $\Gamma_n^\epsilon(A)$, an approximation of
-$\operatorname{Sp}_\epsilon(A)$.
+% \begin{algorithmic}[1]
+%     \State For each $z\in\operatorname{Grid}$, compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z).$
+%     \State Set $\Phi_n(z, A) = \sqrt{ \min \left\{ \mu_n^{(1)}(z), \mu_n^{(2)}(z)\ \right\}}.$
+%     \State Set
+%     $\Gamma_n^\epsilon(A)
+%     =\{z\in\operatorname{Grid}:\Phi_n(z,A)<\epsilon\}$.
+% \end{algorithmic}
 
-\end{algorithm}
+% \textbf{Output:} $\Gamma_n^\epsilon(A)$, an approximation of
+% $\operatorname{Sp}_\epsilon(A)$.
+
+% \end{algorithm}
 
 The computation of $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ needed for Algorithm \ref{pseudospec} depends on the chosen discretization. In the next subsection, we employ the finite element method to compute $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ as the smallest eigenvalues of two auxiliary eigenproblems.
 
@@ -594,9 +596,9 @@ With this result, we can estimate the error in approximating an eigenvalue of \e
 
 % To formulate an adaptive refinement technique, we require local error estimates that describe the contribution that each cell of the current mesh makes to the error in the quantity of interest. These local error estimates are obtained via a localization procedure applied to \textit{a posteriori} error estimates, such as \eqref{DWR}.
 
-A common approach for localizing DWR error estimates is to decompose the integrals appearing in the error estimate over the cells of the mesh and to integrate by parts on each cell. This results in a sum of residual contributions from both the interior and the facets of each cell. Since interior cell facets are shared by two cells, it is common practice to equally distribute the interior facet contributions between adjacent cells. In doing so, the original error estimate is decomposed into the sum of error contributions for each cell of the mesh. For worked examples of this localization procedure, the curious reader may consult \cite{Bangerth, Heuveline, logg, joe}. 
+A common approach for localizing DWR error estimates is to decompose the integrals appearing in the error estimate over the cells of the mesh and to integrate by parts on each cell. This results in a sum of residual contributions from both the cells and the facets of the mesh. Since interior cell facets are shared by two cells, it is common practice to equally distribute the interior facet contributions between adjacent cells. In doing so, the original error estimate is decomposed into the sum of error contributions for each cell of the mesh. For worked examples of this localization procedure, the curious reader may consult \cite{Bangerth, Heuveline, logg, joe}. 
 
-Traditionally, this localization procedure had to be performed by hand on a problem-by-problem basis. Consequently, the local error indicators required for adaptive mesh refinement had to be re-derived and implemented for each new problem of interest, thereby limiting the practical use of DWR error control to expert users \cite{logg}. This difficulty was addressed by Marie Rognes and Anders Logg, who devised a method for automating the localization of DWR error estimates \cite{logg}. 
+Traditionally, this localization procedure had to be performed by hand on a problem-by-problem basis. Consequently, the local error indicators required for adaptive mesh refinement had to be re-derived and implemented for each new problem of interest. As a result, the practical use of DWR error control was limited to expert users \cite{logg}. This difficulty was addressed by Marie Rognes and Anders Logg, who devised a method for automating the localization of DWR error estimates \cite{logg}. 
 
 
 Let $\mathcal{T}_h$ denote the mesh underlying the current discretization, let $T$ index each cell of the mesh, and let $\partial T$ denote the boundary of $T.$ In \cite{logg}, Rognes and Logg noticed that for a large class of problems, the localization procedure described above takes a specific form. In particular, they noticed that localization results in an error estimate that can be written as a sum of contributions from the cells and the facets of the mesh. In the present setting, this observation yields the following localization of \eqref{DWR}:
@@ -625,7 +627,7 @@ Rognes and Logg's automated localization procedure was implemented in Firedrake 
 
 Notice that by applying Galerkin orthogonality, the primal residual in \eqref{resid} can be written as $\rho(u_h, \lambda_h)(u-\varphi_h) = \rho(u_h, \lambda_h)(u)$ for any $\varphi_h \in V_h.$ Thus, to compute the global error estimate \eqref{DWR}, the subtraction could be suppressed \cite{Bangerth}. However, after localization, we do not expect Galerkin orthogonality to hold on each cell of the mesh. Thus, we expect the choice of $\varphi_h$ to impact the local error estimates \eqref{local eta} and the adaptive refinement procedure that results.
 
-Two common choices for $\varphi_h$ are $\varphi_h = u_h$ and $\varphi_h = I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretization error in the eigenfunction while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it has been shown that the first choice allows for the separation of the error incurred by discretization and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our local error estimates \eqref{local eta}\footnote{We note that both choices were tested numerically and produced similar results.}.
+Two common choices for $\varphi_h$ are $\varphi_h = u_h$ and $\varphi_h = I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretization error in the eigenfunction while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it was shown that choosing $\varphi_h = u_h$ allows for the separation of the error incurred by discretization and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our error estimates\footnote{We note that both choices were tested numerically and produced similar results.}.
 
 To compute either $u-u_h$ or $u - I_h u_h$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be no need to approximate it. Thus, for the practical computation of \eqref{DWR} and $\eqref{local eta},$ we have to approximate the terms involving $u.$ In particular, we have to apprroximate $e \defeq u-u_h$ in the remainder term of \eqref{DWR}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
 
@@ -658,7 +660,7 @@ Following Flood, Farrell, and Brubeck, we choose the first of the two approaches
 
 As discussed, Colbrook's algorithm can be used to compute bounds on the distance to the spectrum without suffering from the pitfalls of the discretize-then-solve approach. To obtain these bounds, we compute the smallest eigenvalues of auxiliary eigenproblems for the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ However, as shown in Section \ref{Matt Max}, if the discretization of these eigenproblems is too coarse, the computed bounds from Colbrook's algorithm may be poor. 
 
-In an effort to improve these bounds, we apply the DWR method to estimate the error in the computed smallest eigenvalues of the auxiliary eigenproblems. We use these error estimates in two ways. First, we use the error estimate to correct the computed eigenvalues, thereby improving the computed eigenvalues, and thus the computed bounds on the distance to the spectrum. Second, we use localized DWR error estimates to drive an adaptive refinement technique that concentrates the computational effort in regions of the mesh where the computed eigenvalue error is large. 
+In an effort to improve these bounds, we apply the DWR method to estimate the error in the computed smallest eigenvalues of the auxiliary eigenproblems. We use these error estimates in two ways. First, we use the error estimate to correct the computed eigenvalues, thereby improving the computed eigenvalues, and thus the computed bounds on the distance to the spectrum. Second, we use localized DWR error estimates to drive an adaptive mesh refinement technique that concentrates the computational effort in regions of the mesh where the computed eigenvalue error is large. 
 
 In this section, we explore the details of our application of DWR to Colbrook's algorithm. In the first subsection, we explore the needed assumptions for the succesful application of the DWR error estimate in \eqref{DWR} to the auxiliary eigenproblems in Colbrook's algorithm. In the second subsection, we discuss our adaptation of \eqref{DWR} to account for eigenvalues of multiplicity greater than one. Finally, in the last three subsections, we outline our methodology for pairing DWR with Colbrook's algorithm and demonstrate its success when applied to the Maxwell eigenproblem. 
 
@@ -670,7 +672,7 @@ The DWR error estimate in \eqref{DWR} is formulated for infinite-dimensional eig
 In Algorithm \ref{pseudospec}, the approximated bounds on the distance to the spectrum, $\Phi_n(z, A),$ are obtained by computing the bottom of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ There is no requirement that these spectral bottoms are eigenvalues of finite multiplicity with associated eigenfunctions. For example, there can be values of $z$ in the essential spectrum of an operator $A$ for which $\|(A-zI)x_n\| \rightarrow 0,$ $\|x_n\|_{H} = 1,$ and $\{x_n\}_{n\in \mathbb{N}} \in D(A)$ converges weakly to zero\footnote{This phenomenon is called a Weyl sequence and can be used to characterize the essential spectrum of an operator. For more information, see Chapter 8 of \cite{Matt}.} \cite{Matt}. 
 
 With this in mind, it is not clear how to apply the DWR error estimate for eigenvalues when the computed eigenfunction $u_h$ does not reflect a geniune eigenfunction $u.$ We therefore restrict our attention to operators for which the bottom of the spectrum of each corresponding folded operator is an eigenvalue of finite multiplicity. The precise conditions on the operator $A$ for which this is the case is beyond the scope of this current report, and are left as a task for future work. Furthermore, in future work, we aim to extend the current DWR framework to acount for folded operators whose spectral bottom is an element of the essential spectrum.
-
+% \footnote{A precise proof requires a compact embedding of the folded operator's domain in the Hilbert space, a proof that a Gårding inquality holds. When these conditions hold,  the folded operator is a Fredholm operator of index zero .}
 
 
 \subsection{The DWR Method for Multiple Eigenvalues}
@@ -789,7 +791,7 @@ To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a 
 
 \section{The Outer Loop: Pairing Inner and Outer Adaptivity for Colbrook's Algorithm}
 
-With the adaptive mesh refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Colbrook's algorithm. However, two questions remain. First, how should we pick the test points in the complex plane, that is, the set $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given $z \in \operatorname{Grid},$ when should we adaptively refine the auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, there is little benefit in computing an accurate bound on the distance to the spectrum.
+With the adaptive mesh refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Colbrook's algorithm. However, two questions remain. First, how should we pick the test points in the complex plane, that is, the set $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given $z \in \operatorname{Grid},$ when should we adaptively refine the auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, for a far-away $z,$ there is little benefit in computing an accurate bound on the distance to the spectrum.
 
 % Finally, if we decide to apply the refinement technique to an auxiliary eigenproblem, what stopping criterion should we enforce? 
 
@@ -798,7 +800,7 @@ In this section, we answer these two questions. Our answer to the first question
 
 \subsection{The Inner Refinement Criteria}
 
-Our adaptive mesh refinement technqiue in Section \ref{AMR} estimates the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in Colbrook's algorithm. In particular, for each auxiliary eigenproblem (EQNs) we compute 
+Our adaptive mesh refinement technique in Section \ref{AMR} estimates the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in Colbrook's algorithm. In particular, for each auxiliary eigenproblem we compute 
 \begin{equation} \label{eta ests}
     \eta^{(1)}(z) \approx  \mu^{(1)}(z) - \mu_n^{(1)}(z), \text{ and } \eta^{(2)}(z) \approx  \mu^{(2)}(z) - \mu_n^{(2)}(z),
 \end{equation}
@@ -807,7 +809,7 @@ respectively. Moreover, in our adaptive mesh refinement technique, we use \eqref
     \mu_{n,c} ^{(1)}(z) \defeq  \eta^{(1)}(z) + \mu_n^{(1)}(z), \text{ and } \mu_{n,c} ^{(2)}(z) \defeq  \eta^{(2)}(z) + \mu_n^{(2)}(z).
 \end{equation}
 
-Although this tecnhnique focuses on error estimates for the computed eigenvalues of the auxiliary eigenproblems, the quantity of interest for Colbrook's algorithm is the approximate bound on the distance to the spectrum, $\Phi_n(z, A)$ in \eqref{approx phi}. As a result, we want to use \eqref{eta ests} to approximate the error in $\Phi_n(z, A),$ that is, 
+This technique focuses on error estimates for the computed eigenvalues of the auxiliary eigenproblems. However, the quantity of interest for Colbrook's algorithm is the approximate bound on the distance to the spectrum, i.e., $\Phi_n(z, A)$ in \eqref{approx phi}. As a result, we want to use \eqref{eta ests} to approximate the error in $\Phi_n(z, A),$ that is,
 \begin{equation} \label{phi err}
     | \gamma(z, A) - \phi_n(z, A)| = \left| \sqrt{ \min { \mu^{(1)}(z), \mu^{(1)}(z) \}} } - \sqrt{ \min \{ \mu_n^{(1)}(z), \mu_n^{(1)}(z) \}} \right|.
 \end{equation}
@@ -855,7 +857,7 @@ Rearranging and applying the triangle inequality yields
     \right|
     \Big).
 \end{align}
-Then, applying the reverse triangle inequality, we obtain 
+Then, applying the reverse triangle inequality, followed by triangle inequality, we obtain 
 \begin{align}
     \left| \gamma^2(z, A) - \Phi_n^2(z, A) \right| \le \left|\mu^{(1)}(z)-\mu_n^{(1)}(z) \right| + \left|\mu^{(2)}(z)-\mu_n^{(2)}(z) \right|.
 \end{align}
@@ -880,7 +882,7 @@ Notice that \eqref{noncom bound} is not computable because we do not know $\mu^{
     \sqrt{|\eta^{(2)}|}.
 \end{align}
 
-Using \eqref{pract bound}, we can control the error in $\Phi_n(z, A)$ by controlling the errors $\eta^{(1)}$ and $\eta^{(2)}$ in the smallest eigenvalues of the auxiliary eigenvalues. We can therefore formulate the stopping criterion for the adaptive refinement technique of Section \ref{AMR} in a way that relfects the desired accuracy for $\Phi_n(z, A).$ To do so, we must decide what accuracy we require at each test point $z$ in the complex plane. We must also decide how refinement of the auxiliary eigenproblems should be coupled with refinement of $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the $ \epsilon$-pseudospectrum of interest. We address these questions next. 
+Using \eqref{pract bound}, we can control the error in $\Phi_n(z, A)$ by controlling the errors $\eta^{(1)}$ and $\eta^{(2)}$ in the smallest eigenvalues of the auxiliary eigenvalues. We can therefore formulate the stopping criterion for the adaptive mesh refinement technique of Section \ref{AMR} in a way that reflects the desired accuracy for $\Phi_n(z, A).$ To do so, we must decide what accuracy we require at each test point $z$ in the complex plane. We must also decide how refinement of the auxiliary eigenproblems should be coupled with refinement of $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the $ \epsilon$-pseudospectrum of interest. We address these questions next. 
 
 
 % However, we have not yet discussed what that desired accuracy is. What stopping criteria should be used in our pairing of Colbrook's algorithm with adaptive mesh refinement? Surely, we would like employ adaptivity until the computed bound on the distance to the spectrum, i.e., 
@@ -899,9 +901,9 @@ Using \eqref{pract bound}, we can control the error in $\Phi_n(z, A)$ by control
 
 \subsection{The Outer Refinement Criteria}
 
-Given a fixed $\epsilon > 0,$ we want to use Colbrook's algorithm, Algorithm \ref{pseudospec}, to efficiently compute the $\epsilon$-pseudospectrum of a closed and densely-defined linear operator $A.$ To do so, we propose an approach that couples refinement of $\operatorname{Grid} \subset \mathbb{C}$ with our adaptive refinement technique of Section \ref{AMR}. In this subsection, we outline the specifics of this coupling.
+Given a fixed $\epsilon > 0,$ we want to use Colbrook's algorithm, Algorithm \ref{pseudospec}, to efficiently compute the $\epsilon$-pseudospectrum of a closed and densely-defined linear operator $A.$ To do so, we propose an approach that couples refinement of $\operatorname{Grid} \subset \mathbb{C}$ with our adaptive mesh refinement technique of Section \ref{AMR}. In this subsection, we outline the specifics of this coupling.
 
-We begin by fixing a bounded region $\mathcal{D}$ in the complex plane where we want to resolve the $\epsilon$-pseudospectrum of $A.$ Let $\mathcal{T}_k$ denote a triangulation of $\mathcal{D}$ at outer refinement level $k.$ For each triangle $K \in \mathcal{T}_k,$ we denote the barycentre by $z_K$ and the diameter by 
+We begin by fixing a bounded region $\mathcal{D}$ in the complex plane where we want to resolve the $\epsilon$-pseudospectrum of $A.$ Let $\mathcal{T}_k$ denote a triangulation of $\mathcal{D}$ at the outer refinement level $k.$ For each triangle $K \in \mathcal{T}_k,$ we denote the barycentre of $K$ by $z_K$ and the diameter of $K$ by 
 \begin{equation} \label{diam}
     h_K = \max_{z, w \in K} |z-w|.
 \end{equation}
@@ -909,22 +911,22 @@ We begin by fixing a bounded region $\mathcal{D}$ in the complex plane where we 
 \begin{equation} \label{Grid}
     \operatorname{Grid} = \{ z_K : K \in \mathcal{T}_K \}.
 \end{equation}
-In other words, for each triangle $ K \in \mathcal{T}_k,$ we consider the barycentre $z_K$ and employ Colbrook's algorithm to compute $\Phi_n(z_K, A).$ This construction of \eqref{Grid} is illustrated by Figure \ref{Triang}.
+In other words, for each triangle $ K \in \mathcal{T}_k,$ we consider the barycentre $z_K$ and employ Colbrook's algorithm to compute $\Phi_n(z_K, A).$ This setup is illustrated in Figure \ref{Triang}.
 \input{figures/grid}
 
 Consider a triangle $K \in \mathcal{T}_k$ with barycentre $z_K,$ as illustrated in Figure \ref{Triang}. We want to determine whether the contour representing the boundary of the $\epsilon$-pseudospectrum, i.e., the curve $\gamma(z, A) = \epsilon$, passes through this triangle. To do so, we first make use of the following result:
-\begin{lemma} \label{lemma}
-    Let $\gamma(z,A)$ be defined as in \eqref{var gamma}. Then $\gamma(\,\cdot\,,A)$ is $1$-Lipschitz; that is,
+\begin{lemma}[The Resolvent Norm is 1-Lipschitz\footnote{This result is stated as a part of Exercise 1.8 in \cite{Matt}. We developed the proof using arguments similar to the proof of Lemma 3.4 in \cite{proofpaper}.}] \label{lemma}
+    Let $\gamma(z,A)$ be defined as in \eqref{var gamma}. Then $\gamma(\,\cdot\,,A)$ is $1$-Lipschitz, that is,
     \begin{equation}
         |\gamma(z,A)-\gamma(w,A)| \leq |z-w|,
         \qquad \forall z,w\in\mathbb{C}.
     \end{equation}
 \end{lemma}
-\begin{proof}\footnote{This result is stated as a part of Exercise 1.8 in \cite{Matt}. We developed it using arguments similar to the proof of Lemma 3.4 in \cite{proofpaper}.}
-    Recall from \eqref{var gamma} that $\gamma(z, A) = \min\left\{ \sqrt{\mu^{(1)}(z)}, \sqrt{\mu^{(1)}(z)} \right\},$ where 
+\begin{proof}
+    Recall from \eqref{var gamma} that $\gamma(z, A) = \min\left\{ \sqrt{\mu^{(1)}(z)}, \sqrt{\mu^{(2)}(z)} \right\},$ where 
     \begin{align}
-    \mu^{(1)}(z) &= \inf_{f \in D(A), \|f\|=1} \|(A-zI) f \|_H^2,\\
-    \mu^{(2)}(z) &= \inf_{f \in D(A^*), \|f\|=1} \|(A-zI)^*f\|_H^2.
+    \mu^{(1)}(z) &= \inf_{f \in D(A), \|f\|_H=1} \|(A-zI) f \|_H^2,\\
+    \mu^{(2)}(z) &= \inf_{f \in D(A^*), \|f\|_H=1} \|(A-zI)^*f\|_H^2.
     \end{align}
     Notice that 
     \begin{equation}
@@ -932,9 +934,9 @@ Consider a triangle $K \in \mathcal{T}_k$ with barycentre $z_K,$ as illustrated 
     \end{equation}
     Thus, 
     \begin{equation}
-        \|(A-zI)f\| \le \|(A-wI) f \| + \|(w-z) f \|.
+        \|(A-zI)f\|_H \le \|(A-wI) f \|_H + \|(w-z) f \|_H.
     \end{equation}
-    Taking the infinum over all $f \in D(A)$ such that $\|f\|=1,$ we obtain
+    Taking the infinum over all $f \in D(A)$ such that $\|f\|_H=1,$ we obtain
     \begin{equation} \label{g1w}
         \sqrt{\mu^{(1)}(z)} \le \sqrt{\mu^{(1)}(w)} + |z-w|.
     \end{equation}
@@ -942,7 +944,7 @@ Consider a triangle $K \in \mathcal{T}_k$ with barycentre $z_K,$ as illustrated 
     \begin{equation}
         \sqrt{\mu^{(1)}(w)} \le \sqrt{\mu^{(1)}(z)} + |z-w|.
     \end{equation}
-    Thus, $\mu^{(1)}(\cdot)$ is 1-Lipschitz:
+    Thus, $\sqrt{\mu^{(1)}(\cdot)}$ is 1-Lipschitz:
     \begin{equation}
         \left| \sqrt{\mu^{(1)}(z)} - \sqrt{\mu^{(1)}(w)} \right| \le |z-w|.
     \end{equation}
@@ -964,7 +966,7 @@ where $h_K$ is as defined in \eqref{diam}. Using \eqref{pract bound}, we write
     +
     \sqrt{|\eta^{(2)}|} + h_K,
 \end{equation}
-where we have used `$\lesssim $' to indicate that \eqref{pract bound} is a heuristic error bound. Consequently, we can treat \eqref{necessary} as a necessary condition for the pseudospectral contour $\gamma(z, A) = \epsilon$ to pass through triangle $K.$
+where we have used `$\lesssim $' to indicate that \eqref{pract bound} is a heuristic error bound. With this, we can treat \eqref{necessary} as a necessary condition for the pseudospectral contour $\gamma(z, A) = \epsilon$ to pass through triangle $K.$
 
 Next, consider an arbitrary $w \in K.$ Using \eqref{necessary}, we have that
 \begin{align}
@@ -972,13 +974,13 @@ Next, consider an arbitrary $w \in K.$ Using \eqref{necessary}, we have that
     & \le |w-z_K| + | \gamma(z_K, A) - \Phi_n(z_K, A) | \\
     &\le h_K + | \gamma(z_K, A) - \Phi_n(z_K, A) |\\
     & \lesssim h_K + \sqrt{|\eta^{(1)}|}+\sqrt{|\eta^{(2)}|} \\ 
-    &\coloneqq R.
+    &\coloneqq R. \label{R}
 \end{align}
 Rearranging, we obtain
 \begin{equation}
     \Phi_n(z_K, A) - R \le \gamma(w, A) \le \Phi_n(z_K, A) + R.
 \end{equation}
-This result yields three cases that we can use to decide whether we should refine $K,$ or if the information we have computed so far tells us that $K$ lies either inside or outside the $\epsilon$-pseudospectrum. We discuss each case in turn:
+From this result, we obtain three cases that we can use to determine whether $K$ can be classified as lying inside or outside the $\epsilon$-pseudospectrum, or whether $K$ should be refined. We discuss each case in turn:
 \begin{enumerate}[label=\textbf{\arabic*}.] 
 
 \item \textbf{Triangle $K$ lies entirely within the $\mathbf{\epsilon}$-pseudospectrum.}
@@ -1013,18 +1015,19 @@ Hence, we do not have enough information to decide whether the pseudospectral co
 % \end{equation}
 % and we do not have enough information to decide whether the pseudospectral contour $\gamma(z, A) = \epsilon$ passes through $K.$ In this case, we refine $K$ and re-check the three cases for each sub-triangle. 
 \end{enumerate}
-With these three cases in mind, in the next subsection we construct a coupling between the adaptive mesh refinement technique of Section \ref{AMR} and the outer refinement strategy developed in this section. In doing so, we construct an efficient method for computing pseudospectra with Colbrook's algorithm. 
+
+In the next subsection we construct a coupling between the adaptive mesh refinement technique of Section \ref{AMR} and the outer refinement strategy developed in this section. In doing so, we construct an efficient method for computing pseudospectra with Colbrook's algorithm. 
 
 
 \subsection{Our Implementation}
 
-We now construct our methodology for efficient pseudospectral computations using Colbrook's algorithm. The method couples the inner refinement technique of Section \ref{AMR} with the outer refinement technique of the previous subsection. The main idea behind this coupling is to require that the auxiliary eigenproblems of Colbrook's algorithm are solved only to an accuracy that agrees with the resolution of the complex plane.
+In this subsection, we construct our methodology for efficient pseudospectral computations using Colbrook's algorithm. The method couples the inner refinement technique of Section \ref{AMR} with the outer refinement technique of the previous subsection. The main idea behind this coupling is to only solve the auxiliary eigenproblems of Colbrook's algorithm to an accuracy that agrees with the current resolution of the complex plane.
 
-As before, let $\mathcal{T}_k$ denote the triangulation of a bounded region $\mathcal{D} \subset \mathbb{C}$ at the outer refinement level $k.$ Let $K$ index each triangle with barycentre $z_K$ and diameter $h_K.$ Furthermore, set $\operatorname{Grid}$ to be the collection of barycentres, as in \eqref{Grid}. 
+As before, let $\mathcal{T}_k$ denote the triangulation of a bounded region $\mathcal{D} \subset \mathbb{C}$ at the outer refinement level $k.$ Let $K$ index each triangle with barycentre $z_K$ and diameter $h_K.$ Furthermore, as in \eqref{Grid}, set $\operatorname{Grid}$ to be the collection of barycentres.
 
-For each $z_K \in \operatorname{Grid},$ we solve for the smallest eigenvalues of the two auxiliary eigenproblems that arise in Colbrook's algorithm, Algorithm \ref{pseudospec}. In particular, we discretize the eigenproblems using the finite element method and employ the adaptive mesh refinement technique of Section \ref{AMR} to adapt the underlying meshes until 
+For each $z_K \in \operatorname{Grid},$ we solve for the smallest eigenvalues of the two auxiliary eigenproblems that arise in Colbrook's algorithm, Algorithm \ref{pseudospec}. In particular, we discretize the eigenproblems using the finite element method and employ the adaptive mesh refinement technique of Section \ref{AMR} to adapt the underlying meshes until the error estimates, $\eta^{(1)}$ and $\eta^{(2)}$ in \eqref{eta ests}, satisfy
 \begin{equation} \label{inner crit}
-    |\eta^{(1)}| \le h_K^2/2, \text{ and } |\eta^{(2}| \le h_K^2/2,
+    |\eta^{(1)}| \le h_K^2/2, \text{ and } |\eta^{(2)}| \le h_K^2/2,
 \end{equation}
 or until a prescribed maximum number of degrees of freedom has been reached. These stopping criteria have been chosen so that the error incurred from approximating the smallest eigenvalues of the auxiliary eigenproblems is of the same order as the $\mathcal{O}(h_K)$ uncertainty in representing the triangle $K$ with its barycentre $z_K.$ In this way, the auxiliary eigenproblems are not solved to a greater accuracy than what is warranted by the resolution of the complex plane. 
 
@@ -1032,13 +1035,14 @@ Once \eqref{inner crit} has been satisfied, we compute $\Phi_n(z_K, A)$ as in \e
 \begin{equation} \label{phi corr}
     \Phi_{n,c}(z_K, A) = \sqrt{ \min \left\{ \mu_{n,c}^{(1)}(z), \mu_{n,c}^{(2)}(z) \right\}   }.
 \end{equation}
-Then, using the classification criteria of the previous subsection, we decide how to classify $K.$ In particular, if \eqref{case 1} holds, we classify $K$ as lying entirely within the $\epsilon$-pseudospectrum. If \eqref{case 2} holds, we classify $K$ as lying entirely outside the $\epsilon$-pseudospectrum. If \eqref{case 3} holds, the current information available does not allow us to determine whether $K$ is inside or outside the $\epsilon$-pseudospectrum. As a result, we mark $K$ for refinement.
 
-A triangle that has been marked for refinement is refined by connecting the four midpoints of its three edges, resulting in four sub-triangles. Once we have iterated over every barycentre of the triangles in $\mathcal{T}_k$, the sub-triangles that result from refinement are used to create the updated triangulation $\mathcal{T}_{k+1}.$ We then iterate over the new set of barycentres and repeat the same classification procedure. Since the sub-triangles have a smaller diameter than the triangles in $\mathcal{T}_k,$ the stopping criterion \eqref{inner crit} for the adaptive refinement technique at each barycentre will be more stringent. In this way, the outer refinement of the complex plane requires increasingly greater accuracy in the inner refinement of the auxiliary eigenproblems. 
+Using the classification criteria of the previous subsection, we next decide how to classify $K.$ If \eqref{case 1} holds, we classify $K$ as lying entirely within the $\epsilon$-pseudospectrum. If \eqref{case 2} holds, we classify $K$ as lying entirely outside of the $\epsilon$-pseudospectrum. If \eqref{case 3} holds, the current information available does not allow us to determine whether $K$ is inside or outside the $\epsilon$-pseudospectrum. As a result, we mark $K$ for refinement. A triangle that has been marked for refinement is refined by connecting the four midpoints of its three edges, resulting in four sub-triangles. 
 
-This coupling of our outer and inner refinement techniques is summarized in Algorithm ?. With this approach, the computational effort of Colbrook's algorithm is concentrated near the pseudospectral contour $\gamma(z, A) = \epsilon.$ To implement this approach, we begin with a relatively coarse triangulation of the complex plane together with coarse discretizations of the auxiliary eigenproblems that arise at each barycentre. As we near the pseudospectral contour in the complex plane, both the triangulation of the complex plane and the corresponding discretizations of the auxiliary eigenproblems are refined. We continue this coupled refinement process until every triangle that would otherwise be marked for refinement has its diameter below a prescribed tolerance. At that stage, the remaining triangles are taken to approximate the $\epsilon$-pseudospectral contour. In the next Chapter, we will demonstrate the success of this approach by applying Algorithm ? to numerous examples.
+Once we have iterated over the barycentre of each triangle in $\mathcal{T}_k$, the sub-triangles that result from refinement are used to create the updated triangulation $\mathcal{T}_{k+1}.$ We then iterate over the new set of barycentres and repeat the same classification procedure. Since the sub-triangles have a smaller diameter than the triangles in $\mathcal{T}_k,$ the stopping criterion \eqref{inner crit} for the adaptive mesh refinement technique will be more demanding. In this way, the outer refinement of the complex plane requires increasingly greater accuracy in the inner refinement of the auxiliary eigenproblems. 
 
-STILL NEED TO WRITE IN ALGORITHM!
+This coupling of our outer and inner refinement techniques is summarized in Algorithm \ref{outerloop}. With this approach, the computational effort of Colbrook's algorithm is concentrated near the pseudospectral contour $\gamma(z, A) = \epsilon.$ To implement this approach, we begin with a relatively coarse triangulation of the complex plane together with coarse discretizations of the auxiliary eigenproblems that arise at each barycentre. As we near the pseudospectral contour in the complex plane, both the triangulation of the complex plane and the corresponding discretizations of the auxiliary eigenproblems are refined. We continue this coupled refinement process until every triangle that would otherwise be marked for refinement has its diameter below a prescribed tolerance. At that stage, the remaining triangles are taken to approximate the $\epsilon$-pseudospectral contour. In the next Chapter, we will demonstrate the success of this approach by applying Algorithm \ref{outerloop} to numerous examples.
+
+\input{algorithms/Outer}
 
 % begin with a triangulation $\mathcal{T}_0$ and form $\operatorname{Grid} \subset \mathbb{C}$ from the barycentres $z_K$ for each $K \in \mathcal{T}_0.$ Iterating over each barycentre $z_K \in \operatorname{Grid}$, we solve the auxiliary eigenproblems (EQNS) using the adaptive mesh refinement technique outlined in Section \ref{AMR}. In particular, we adapt the mesh that defines the finite element discretization until the error in the computed smallest eigenvalues satisfies
 % \begin{equation}
