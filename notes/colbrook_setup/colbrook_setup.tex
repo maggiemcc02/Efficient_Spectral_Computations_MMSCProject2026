@@ -1,0 +1,96 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+
+\newcommand{\Hb}{\mathcal{H}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\DeclareMathOperator{\dom}{D}
+\newcommand{\siginf}{\sigma_{\inf}}
+
+\title{Setting up Variational Eigenproblems for Colbrook's Algorithm}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+This note clarifies our confusion about how to set up variational eigenproblems for Colbrook's algorithm for computing spectra and pseudospectra.
+
+\section{The setting of Colbrook}
+
+We exclusively consider the folding strategy.
+Folding starts from a closed, densely defined $A$ on a Hilbert space $\Hb$.
+Since we want its spectrum, $A$ must be an \emph{endomorphism}, $A \colon
+\dom(A) \subset \Hb \to \Hb$, the classical instance being $\Delta \colon
+H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$, i.e.~$\Hb = L^2(\Omega)$, and
+$\dom(A) = H^2(\Omega) \cap H^1_0(\Omega) \subset \Hb$. Under suitable conditions on
+$\dom(A)$ and $\dom(A^*)$ one considers
+\begin{equation}
+  \gamma(z,A) := \min\bigl\{\siginf(A - zI),\ \siginf\bigl((A-zI)^*\bigr)\bigr\}
+    = \norm{(A-zI)^{-1}}^{-1},
+\end{equation}
+where the injection moduli come from the quadratic forms of the resolvent and
+its adjoint,
+\begin{equation}
+  \siginf(A - zI)^2 = \inf_{f \in \dom(A)\setminus\{0\}}
+     \frac{\norm{(A-zI)f}_{\Hb}^2}{\norm{f}_{\Hb}^2},
+  \qquad
+  \siginf\bigl((A-zI)^*\bigr)^2 = \inf_{f \in \dom(A^*)\setminus\{0\}}
+     \frac{\norm{(A-zI)^*f}_{\Hb}^2}{\norm{f}_{\Hb}^2} .
+\end{equation}
+This reduces the computation of pseudospectra to the eigenvalues of the self-adjoint operator
+\begin{equation}
+  (A - zI)^*(A - zI).
+\end{equation}
+
+\section{The standard Dirichlet Laplace eigenproblem}
+
+The standard variational setup for the Dirichlet Laplace eigenproblem does not directly give us the endomorphism $A$ above. Instead, it involves two different operators acting on different spaces.
+
+Let $\Omega \subset \R^d$ be a bounded domain. We define the trial space $V = H^1_0(\Omega)$ and the pivot space $\Hb = L^2(\Omega)$, so that we have the Gelfand triple $V \subset \Hb \cong \Hb^* \subset V^*$.
+
+First, we define the \emph{weak Laplacian} $L \colon H^1_0(\Omega) \to H^{-1}(\Omega)$. This operator is defined via the Dirichlet form:
+\begin{equation}
+    \langle L u, v \rangle_{V^*, V} = (\nabla u, \nabla v)_{L^2(\Omega)} \quad \text{for all } u, v \in H^1_0(\Omega).
+\end{equation}
+
+Second, we define the \emph{mass operator} $M \colon L^2(\Omega) \to V^*$, which maps an $L^2$ function $u$ to the linear functional that computes the $L^2$-inner product with $v$:
+\begin{equation}
+    \langle M u, v \rangle_{V^*, V} = (u, v)_{L^2(\Omega)} \quad \text{for all } v \in H^1_0(\Omega).
+\end{equation}
+Note that the standard setup typically writes this simply as the $L^2$ inner product, but interpreting $M$ as an operator into $V^*$ is the precise functional analytic setting.
+
+The standard variational eigenproblem is then to find $\lambda \in \C$ and $u \in H^1_0(\Omega) \setminus \{0\}$ such that
+\begin{equation}
+    L u = \lambda M u \quad \text{in } V^*.
+\end{equation}
+These are the ingredients we have at our disposal to define the densely defined endomorphic operator $A$ required for Colbrook's folding algorithm.
+
+\section{Different approaches for defining the endomorphism}
+
+We explore different ways to combine $L$ and $M$ into an endomorphism.
+
+\paragraph{The solution operator approach.}
+One can define the solution operator $T$ mapping $L^2(\Omega)$ right-hand sides to solutions in $L^2(\Omega)$ (this is the approach taken by Boffi). Formally, we define
+\begin{equation}
+    T = L^{-1} M \colon L^2(\Omega) \to L^2(\Omega).
+\end{equation}
+More precisely, for $f \in L^2(\Omega)$, $Tf = u \in H^1_0(\Omega) \subset L^2(\Omega)$ is the unique solution to $L u = M f$.
+Because of the compact embedding $H^1_0(\Omega) \subset\subset L^2(\Omega)$, $T$ is a \emph{compact} operator on $L^2(\Omega)$. Its non-zero eigenvalues are the reciprocals of the eigenvalues of the original problem ($T u = \lambda^{-1} u$). 
+However, since $T$ is compact, its spectrum is fundamentally different from an unbounded differential operator (it only has essential spectrum at $0$). It is a different beast and not what Colbrook's algorithm is designed to study when analyzing spectral pollution and essential spectra.
+
+\paragraph{The $M^{-1} L$ approach.}
+Does $M^{-1} L$ work to define an unbounded endomorphism $A$? Let us check if the spaces match up. 
+The weak Laplacian $L$ maps $H^1_0(\Omega) \to H^{-1}(\Omega)$. However, $M^{-1}$ is only defined on the range of $M$, which comprises exactly those functionals in $H^{-1}(\Omega)$ that can be represented by $L^2$ functions. 
+Thus, $A = M^{-1} L$ is only well-defined on the subspace of $u \in H^1_0(\Omega)$ for which $L u \in \text{range}(M) \subset H^{-1}(\Omega)$. Identifying $\text{range}(M)$ with $L^2(\Omega)$, this domain is precisely $D(A) = \{ u \in H^1_0(\Omega) : \Delta u \in L^2(\Omega) \}$, which is the graph space from Section 1. 
+So $A = M^{-1} L$ does define the correct unbounded endomorphism $A \colon D(A) \subset L^2(\Omega) \to L^2(\Omega)$. The fundamental issue, however, is that standard $H^1$-conforming finite elements do not lie in $D(A)$, making it difficult to discretise this operator directly for the folding algorithm without $C^1$ elements.
+
+\paragraph{Applying the Riesz map.}
+Could we apply the Riesz map of $H^1_0(\Omega)$ to bridge the gap? The Riesz map $R_V \colon V \to V^*$ is defined by $\langle R_V u, v \rangle = (u, v)_V$. If we use the standard $H^1_0$ inner product $(u, v)_V = (\nabla u, \nabla v)_{L^2}$, then the Riesz map $R_V$ coincides exactly with the weak Laplacian $L$. 
+Therefore, applying the inverse Riesz map $R_V^{-1}$ to $L$ just means applying $L^{-1}$ to $L$, which gives the identity on $H^1_0(\Omega)$. On the other hand, applying it to the right-hand side means applying $L^{-1} M$, which returns us to the compact solution operator $T = L^{-1} M$ discussed above.
+
+\end{document}
