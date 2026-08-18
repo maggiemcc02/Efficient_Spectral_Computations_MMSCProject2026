@@ -103,46 +103,41 @@ So $A = M^{-1} L$ does define the correct unbounded endomorphism $A \colon D(A) 
 Could we apply the Riesz map of $H^1_0(\Omega)$ to bridge the gap? The Riesz map $R_V \colon V \to V^*$ is defined by $\langle R_V u, v \rangle = (u, v)_V$. If we use the standard $H^1_0$ inner product $(u, v)_V = (\nabla u, \nabla v)_{L^2}$, then the Riesz map $R_V$ coincides exactly with the weak Laplacian $L$. 
 Therefore, applying the inverse Riesz map $R_V^{-1}$ to $L$ just means applying $L^{-1}$ to $L$, which gives the identity on $H^1_0(\Omega)$. On the other hand, applying it to the right-hand side means applying $L^{-1} M$, which returns us to the compact solution operator $T = L^{-1} M$ discussed above.
 
-\paragraph{\uzt{The variational realisation of the $M^{-1}L$ approach.}}
-\uzt{Folding $M^{-1}L$ is, we believe, exactly the setting proposed in Section~3 of our own note.
-Throughout, the bracket following $V$ or $\Hb$ records our choice in the three cases we care about, in the order [\,first-order Dirac folding of the Laplacian, first-order Maxwell, the Laplacian read as $H^2 \cap H^1_0 \to (L^2)^*$\,].
-We never form $M^{-1}L$ as an operator on $L^2(\Omega)$.
-Instead we keep the $V \Vcases \to V^*$ picture throughout and write the folded operator as}
+\paragraph{\uzt{The variational viewpoint.}}
+Above we have considered the operator $M^{-1}L$ where $L$ is the ``weak'' Laplacian and $M$ is the $L^2$ Riesz map, i.e.
 \begin{equation}
-    \uzt{(L - zM)^* \, M^{-1} \, (L - zM),}
+	L:H^1_0(\Omega) \to H^{-1}(\Omega),\qquad M:L^2 \to (L^2)^*,
 \end{equation}
-\uzt{with $M^{-1} \colon \Hb^* \to \Hb$, $\Hb \Hcases$, the Riesz map of the \emph{pivot} space, so that the composition reads $V \xrightarrow{L - zM} \Hb^* \subseteq V^* \xrightarrow{M^{-1}} \Hb \cong (\Hb^*)^* \xrightarrow{(L-zM)^*} V^*$ for the same $V$ and $\Hb$, the middle step being the canonical double dual identification and numerically an identity.
-Notice that $M^{-1}(L - zM) = M^{-1}L - z$ on $\dom(A)$, so that using the definition of $M$ gives}
+unfortunately as pointed out above on the all $H^1_0(\Omega)$ the operator $M^{-1}L$ is not well defined and we try to repair this via the endomorphism $A$ with its own domain of definition which is precisely,
 \begin{equation}
-    \uzt{a(u,v) \coloneqq \bigl\langle (L - zM)^* M^{-1} (L - zM)\,u,\ v \bigr\rangle_{V^*,V}
-    = \bigl((M^{-1}L - z)u,\ (M^{-1}L - z)v\bigr)_{L^2(\Omega)}
-    \quad \text{for all } u, v \in \dom(A),}
+	A: L^2 \to L^2, \qquad A=M^{-1}L_{|_D}, \qquad D=\{u \in H^1_0(\Omega) \; : \; \Delta u \in L^2(\Omega)\}.
 \end{equation}
-\uzt{which is precisely the sesquilinear form of $(A - zI)^*(A - zI)$ with $A = M^{-1}L$.
-The display above is therefore not a different operator from the one of the previous paragraph, but the same one written so that both outer factors are allowed to stay in $V^*$.
-The operator $M^{-1}L$ is not something a finite element code can apply, whereas the sesquilinear form attached to the display above, $a(u,v)$, is assembled in Firedrake, and its Rayleigh quotient is exactly the quantity that $\siginf$ minimises.
-Note also that the choice of Riesz map is forced: it must be the one of $\Hb \Hcases$, in which $\siginf$ is measured.}
+Notice that unless our domain is convex and we can apply a Miranda-Talenti inequality we have that $D \neq H^2\cap H^1_0$.
+This approach comes with various issues, first of it is not familiar to people in FEM land, but more importantly  the operator is unbounded and its solution operator does not actually fit the Babuska-Obsorn theory that we would like to use to have a priori error estimates. This because this theory relay on the painr $(G, T)$ of a bounded linear operator $G: V \to V^*$ and its corresponding \underline{compact} solution operator $T:H \to B \subset H$.
 
-\uzt{It is worth being precise about why the third case is the awkward one, and in particular why $C^1$ elements do not settle it.
-With $V = H^2(\Omega) \cap H^1_0(\Omega)$ the trial space has to be a core of $\Delta$ in the graph norm $\norm{u}_{L^2}^2 + \norm{\Delta u}_{L^2}^2$, and $C^1$ elements achieve this precisely when $\Omega$ is convex.
-For convex or smooth $\Omega$ elliptic regularity gives $\dom(\Delta) = H^2 \cap H^1_0$, the graph norm is equivalent to the $H^2$ norm, and an $H^2$-conforming family is dense in $\dom(\Delta)$ as one would hope.
-For a polygon with a reentrant corner of interior angle $\omega > \pi$ this breaks down.
-Grisvard's decomposition reads}
+For this reason we would like propose a different functional analytical view point, that rests on the following identity:
 \begin{equation}
-    \uzt{\dom(\Delta) = \bigl(H^2(\Omega) \cap H^1_0(\Omega)\bigr) \oplus S,
-    \qquad S = \operatorname{span}\bigl\{\, r^{k\pi/\omega}\sin(k\pi\theta/\omega)
-    \ :\ k\pi/\omega < 1 \,\bigr\},}
+	M^{-1}(L-zM)=(M^{-1} - z) \Rightarrow G\coloneqq(L-ZM)^* M^{-1} (L-zM) = (M^{-1}L-z)^* M^* (M^{-1}L - z),
 \end{equation}
-\uzt{and none of the finitely many functions spanning $S$ lies in $H^2$.
-Because $S$ is finite dimensional, $H^2 \cap H^1_0$ is a \emph{closed} proper subspace of $\dom(\Delta)$ in the graph norm.
-The graph closure of any $H^2$-conforming family is therefore trapped inside it and can never be a core, and neither raising the polynomial degree nor refining the mesh helps.
-This is why we would not call the $C^1$ requirement separate and fixable: it is fixable exactly when $\Omega$ is convex (and this is also our reason for preferring to fold a first-order system !).}
+notice that everything make sense because we have made use of the canonical double dual identification (which is not a \underline{crime} contrary to the Riesz dual identification, see Brezzi--Boffi--Fortin). The previous equation tell us something very interesting, both folding the $A$ endomorphism and the operator $G:V\to V^*$, are associated to the same bilinear form (that we can assemble in Firedrake !), i.e.
+\begin{equation}
+	a(u,v) \coloneqq \langle (L-zM)^* M^{-1} (L-zM) u, v \rangle_{(V^*,V)} = (Au, Av)_{L^2(\Omega)}.
+\end{equation}
 
-\paragraph{\uzt{Where Babu\v{s}ka--Osborn enters.}}
-\uzt{In our case the solution operator does return, and is a much more useful endomorphism than the $T = L^{-1}M$ discussed above.
-We fold first and only then invert.
-A G\aa rding inequality for the folded form is automatic once $V \Vcases$ carries the graph norm, and inverting the \emph{shifted folded pencil}, rather than $L$, produces a compact self-adjoint solution operator on $\Hb \Hcases$ whose non-zero eigenvalues are reciprocal to those of the folded problem.
-This is the step we are reluctant to give up.
-Babu\v{s}ka--Osborn theory applies to that operator in the usual way, so we obtain an a priori estimate in terms of the best approximation of the eigenspace by $V_h$, and we can apply a dual weighted residual estimator to drive refinement.}
-
+Let us now take a closer look at the operator $G:V\to V^*$, this operator is perfectly well defined (once again thank to the double dual identification) if $(L-zM)$ goes from $V$ to $H^*$:
+\begin{equation}
+	V \overset{(L-zM)}{\longrightarrow} H^* \subset V^* \overset{M^{-1}}{\longrightarrow} V \subset H \sim (H^*)^* \overset{(L-zM)^*}{\longrightarrow} V^*.
+\end{equation}
+This setting works for the following scenarios:
+\begin{enumerate}
+	\item Dirac folding, $V=H^1 (\Omega) \times H^1_0(\Omega)$ and $H=L^2(\Omega)$;
+	\item First order Maxwell folding, $V=H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega) \times H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega)$ and $H=L^2(\Omega)$;
+	\item Laplace folding, $V=H^1_0(\Omega)\cap H^2(\Omega) $ and $H=L^2(\Omega)$, with $\Omega$ convex.
+\end{enumerate}
+Notice that in all this cases we have $V\subset\!\subset H$, hence we can introduce (with no use of elliptic regularity !) the solution operator associated to $G:V\to V^*$, i.e.
+\begin{equation}
+	T: H \to H, \qquad a(Tf,v) = (f,v)_H, \qquad \forall v \in V,
+\end{equation}
+which in turns allow us to make use of the Babuska-Osborn theory perfectly explained in Boffi's acta on the pair $(G,T)$.
 \end{document}
+
