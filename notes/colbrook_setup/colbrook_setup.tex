@@ -113,9 +113,10 @@ unfortunately as pointed out above on the all $H^1_0(\Omega)$ the operator $M^{-
 	A: L^2 \to L^2, \qquad A=M^{-1}L_{|_D}, \qquad D=\{u \in H^1_0(\Omega) \; : \; \Delta u \in L^2(\Omega)\}.
 \end{equation}
 Notice that unless our domain is convex and we can apply a Miranda--Talenti inequality we have that $D \neq H^2\cap H^1_0$.
-This approach comes with various issues. First, it is not familiar to variational people. Second and more importantly  the operator is unbounded and its solution operator does not actually fit the Babu\v{s}ka--Obsorn theory that we would like to use to have a priori error estimates. This because this theory relies on the pair $(G, T)$ of a bounded linear operator $G: V \to V^*$ and its corresponding \underline{compact} solution operator $T:H \to B \subset H$.
+This approach comes with various issues. First, it is not familiar to variational people. Second and more importantly  the operator is unbounded and its solution operator does not actually fit the Babu\v{s}ka--Obsorn theory that we would like to use to have a priori error estimates. This because this theory relies on the pair $(G, T)$ of a bounded linear operator $G: V \to V^*$ and its corresponding \underline{compact} solution operator $T:\mathcal{H} \to B \subset \mathcal{H}$.
 
-For this reason we would like propose an equivalent but different functional analytical viewpoint. It rests on the following calculations. Noting that
+For this reason we would like propose an equivalent but different functional analytical viewpoint. It will have the same computations, but permit the
+application of Babu\v{s}ka--Osborn theory. It rests on the following calculations. Noting that
 \begin{align}
 	M^{-1}(L-zM)
 	&= M^{-1}L-zI
@@ -137,22 +138,22 @@ we have
 \end{align}
 Notice that everything make sense because we have made use of the canonical double dual identification (which is not a \underline{crime} contrary to the Riesz dual identification, see Brezzi--Boffi--Fortin). The previous equation tells us something very interesting: both the folding of the endomorphic $A$ and the operator $G:V\to V^*$ are associated to the same bilinear form (that we can assemble in Firedrake!), i.e.
 \begin{equation}
-	a(u,v) \coloneqq \langle (L-zM)^* M^{-1} (L-zM) u, v \rangle_{(V^*,V)} = (Au, Av)_{L^2(\Omega)}.
+	a_z(u,v) \coloneqq \langle (L-zM)^* M^{-1} (L-zM) u, v \rangle_{(V^*,V)} = \bigl((A-zI)u, (A-zI)v\bigr)_{L^2(\Omega)}.
 \end{equation}
 
-Let us now take a closer look at the operator $G:V\to V^*$. This operator is perfectly well-defined (once again thank to the double dual identification) if $(L-zM)$ goes from $V$ to $H^*$:
+Let us now take a closer look at the operator $G:V\to V^*$. This operator is perfectly well-defined (once again thank to the double dual identification) if $(L-zM)$ maps from $V$ to $\mathcal{H}^*$:
 \begin{equation}
-	V \overset{(L-zM)}{\longrightarrow} H^* \subset V^* \overset{M^{-1}}{\longrightarrow} V \subset H \sim (H^*)^* \overset{(L-zM)^*}{\longrightarrow} V^*.
+	V \overset{(L-zM)}{\longrightarrow} \mathcal{H}^* \subset V^* \overset{M^{-1}}{\longrightarrow} V \subset \mathcal{H} \sim (\mathcal{H}^*)^* \overset{(L-zM)^*}{\longrightarrow} V^*.
 \end{equation}
 This setting works for the following scenarios:
 \begin{enumerate}
-	\item Dirac folding, $V=H^1 (\Omega) \times H^1_0(\Omega)$ and $H=L^2(\Omega)$;
-	\item First order Maxwell folding, $V=H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega) \times H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega)$ and $H=L^2(\Omega)$;
-	\item Laplace folding, $V=H^1_0(\Omega)\cap H^2(\Omega) $ and $H=L^2(\Omega)$, with $\Omega$ convex.
+	\item Dirac folding, $V=H^1 (\Omega) \times H^1_0(\Omega)$ and $\mathcal{H}=L^2(\Omega)$;
+	\item First order Maxwell folding, $V=H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega) \times H_0(\text{curl};\,\Omega)\cap H(\text{div}; \Omega)$ and $\mathcal{H}=L^2(\Omega)$;
+	\item Laplace folding, $V=H^1_0(\Omega)\cap H^2(\Omega) $ and $\mathcal{H}=L^2(\Omega)$, with $\Omega$ convex.
 \end{enumerate}
-Notice that in all this cases we have $V\subset\!\subset H$, hence we can introduce (with no use of elliptic regularity !) the solution operator associated to $G:V\to V^*$, i.e.
+Notice that in all this cases we have $V\subset\!\subset \mathcal{H}$, and hence we can introduce (with no use of elliptic regularity!) the solution operator associated to $G:V\to V^*$, i.e.
 \begin{equation}
-	T: H \to H, \qquad a(Tf,v) = (f,v)_H, \qquad \forall v \in V,
+	T: \mathcal{H}\to \mathcal{H}, \qquad a(Tf,v) = (f,v)_H, \qquad \forall v \in V,
 \end{equation}
-which in turns allow us to make use of the Babuska-Osborn theory perfectly explained in Boffi's acta on the pair $(G,T)$.
+which in turns allow us to make use of the Babu\v{s}ka--Osborn theory as explained in Boffi's Acta Numerica article.
 \end{document}
