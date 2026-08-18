@@ -942,9 +942,9 @@ Notice that \eqref{noncom bound} is not computable because we do not know $\mu^{
     \sqrt{\left|\mu^{(2)}(z)-\mu_n^{(2)}(z)\right|}
     \notag\\
     &\approx
-    \sqrt{|\eta^{(1)}|}
+    \sqrt{|\eta^{(1)}(z)|}
     +
-    \sqrt{|\eta^{(2)}|}.
+    \sqrt{|\eta^{(2)}(z)|}.
 \end{align}
 
 Using \eqref{pract bound}, we can control the error in $\Phi_n(z, A)$ by controlling the errors $\eta^{(1)}$ and $\eta^{(2)}$ in the smallest eigenvalues of the auxiliary eigenvalues. We can therefore formulate the stopping criterion for the adaptive mesh refinement technique of Section \ref{AMR} in a way that reflects the desired accuracy for $\Phi_n(z, A).$ To do so, we must decide what accuracy we require at each test point $z$ in the complex plane. We must also decide how refinement of the auxiliary eigenproblems should be coupled with refinement of $\operatorname{Grid} \subset \mathbb{C},$ so that the computational effort of Colbrook's algorithm is concentrated near the $ \epsilon$-pseudospectrum of interest. We address these questions next. 
@@ -1027,18 +1027,18 @@ Assume that the pseudospectral contour $\gamma(z, A)=\epsilon$ does pass through
 \end{align}
 where $h_K$ is as defined in \eqref{diam}. Using \eqref{pract bound}, we write
 \begin{equation} \label{necessary}
-    |\Phi_n(z_k, A) - \epsilon| \lesssim     \sqrt{|\eta^{(1)}|}
+    |\Phi_n(z_k, A) - \epsilon| \lesssim     \sqrt{|\eta^{(1)}(z_K)|}
     +
-    \sqrt{|\eta^{(2)}|} + h_K,
+    \sqrt{|\eta^{(2)}(z_K)|} + h_K,
 \end{equation}
 where we have used `$\lesssim $' to indicate that \eqref{pract bound} is a heuristic error bound. With this, we can treat \eqref{necessary} as a necessary condition for the pseudospectral contour $\gamma(z, A) = \epsilon$ to pass through triangle $K.$
 
-Next, consider an arbitrary $w \in K.$ Using \eqref{necessary}, we have that
+Next, consider an arbitrary $w \in K.$ Using \eqref{necessary} and \eqref{pract bound}, we have that
 \begin{align}
     | \gamma(w, A) - \Phi_n(z_K, A)| &\le |\gamma(w, A) - \gamma(z_K, A) | + | \gamma(z_K, A) - \Phi_n(z_K, A) |\\
     & \le |w-z_K| + | \gamma(z_K, A) - \Phi_n(z_K, A) | \\
     &\le h_K + | \gamma(z_K, A) - \Phi_n(z_K, A) |\\
-    & \lesssim h_K + \sqrt{|\eta^{(1)}|}+\sqrt{|\eta^{(2)}|} \\ 
+    & \lesssim h_K + \sqrt{|\eta^{(1)}(z_K)|}+\sqrt{|\eta^{(2)}(z_K)|} \\ 
     &\coloneqq R. \label{R}
 \end{align}
 Rearranging, we obtain
@@ -1090,15 +1090,15 @@ In this subsection, we construct our methodology for efficient pseudospectral co
 
 As before, let $\mathcal{T}_k$ denote the triangulation of a bounded region $\mathcal{D} \subset \mathbb{C}$ at the outer refinement level $k.$ Let $K$ index each triangle with barycentre $z_K$ and diameter $h_K.$ Furthermore, as in \eqref{Grid}, set $\operatorname{Grid}$ to be the collection of barycentres.
 
-For each $z_K \in \operatorname{Grid},$ we solve for the smallest eigenvalues of the two auxiliary eigenproblems that arise in Colbrook's algorithm, Algorithm \ref{pseudospec}. In particular, we discretize the eigenproblems using the finite element method and employ the adaptive mesh refinement technique of Section \ref{AMR} to adapt the underlying meshes until the error estimates, $\eta^{(1)}$ and $\eta^{(2)}$ in \eqref{eta ests}, satisfy
+For each $z_K \in \operatorname{Grid},$ we solve for the smallest eigenvalues of the two auxiliary eigenproblems that arise in Colbrook's algorithm, Algorithm \ref{pseudospec}. In particular, we discretize the eigenproblems using the finite element method and employ the adaptive mesh refinement technique of Section \ref{AMR} to adapt the underlying meshes until the error estimates, $\eta^{(1)}(z_K)$ and $\eta^{(2)}(z_K)$ in \eqref{eta ests}, satisfy
 \begin{equation} \label{inner crit}
-    |\eta^{(1)}| \le h_K^2/2, \text{ and } |\eta^{(2)}| \le h_K^2/2,
+    |\eta^{(1)}(z_K)| \le h_K^2/2, \text{ and } |\eta^{(2)}(z_K)| \le h_K^2/2,
 \end{equation}
 or until a prescribed maximum number of degrees of freedom has been reached. These stopping criteria have been chosen so that the error incurred from approximating the smallest eigenvalues of the auxiliary eigenproblems is of the same order as the $\mathcal{O}(h_K)$ uncertainty in representing the triangle $K$ with its barycentre $z_K.$ In this way, the auxiliary eigenproblems are not solved to a greater accuracy than what is warranted by the resolution of the complex plane. 
 
 Once \eqref{inner crit} has been satisfied, we compute $\Phi_n(z_K, A)$ as in \eqref{approx phi}. Using the DWR corrected eigenvalues, $\mu_{n,c}^{(1)}(z_K)$ and $\mu_{n,c}^{(2)}(z_K)$ in \eqref{corrected}, we also compute the corrected approximation
 \begin{equation} \label{phi corr}
-    \Phi_{n,c}(z_K, A) = \sqrt{ \min \left\{ \mu_{n,c}^{(1)}(z), \mu_{n,c}^{(2)}(z) \right\}   }.
+    \Phi_{n,c}(z_K, A) = \sqrt{ \min \left\{ \mu_{n,c}^{(1)}(z_K), \mu_{n,c}^{(2)}(z_K) \right\}   }.
 \end{equation}
 
 Using the classification criteria of the previous subsection, we next decide how to classify $K.$ If \eqref{case 1} holds, we classify $K$ as lying entirely within the $\epsilon$-pseudospectrum. If \eqref{case 2} holds, we classify $K$ as lying entirely outside of the $\epsilon$-pseudospectrum. If \eqref{case 3} holds, the current information available does not allow us to determine whether $K$ is inside or outside the $\epsilon$-pseudospectrum. As a result, we mark $K$ for refinement. A triangle that has been marked for refinement is refined by connecting the four midpoints of its three edges, resulting in four sub-triangles. 
