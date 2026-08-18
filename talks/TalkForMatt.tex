@@ -270,8 +270,34 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \end{frame}
 
 % -----------------------------------------------------------------------------
+% \begin{frame}{Application to Maxwell}
+% \begin{overlayarea}{\textwidth}{0.87\textheight}
+
+% \begin{itemize}
+%     \item Start on an unstructured mesh with $\operatorname{maxh}=\pi/32$.
+%     \item Apply five fixed levels of adaptivity for each $z$.
+% \end{itemize}
+
+% \vspace{0.15cm}
+
+% \begin{center}
+%     \only<1>{%
+%         \includegraphics[width=0.5\linewidth]{plot1_N=32.pdf}
+%     }
+%     \only<2>{%
+%         \includegraphics[width=0.5\linewidth]{plot2_N=32.pdf}
+%     }
+%     \only<3>{%
+%         \includegraphics[width=0.5\linewidth]{plot3_N=32.pdf}
+%     }
+% \end{center}
+
+% \end{overlayarea}
+% \end{frame}
+
+
+% -----------------------------------------------------------------------------
 \begin{frame}{Application to Maxwell}
-\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item Start on an unstructured mesh with $\operatorname{maxh}=\pi/32$.
@@ -281,37 +307,74 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \vspace{0.15cm}
 
 \begin{center}
+
     \only<1>{%
-        \includegraphics[width=0.5\linewidth]{plot1_N=32.pdf}
+        \includegraphics[
+            width=0.78\linewidth,
+            height=0.68\textheight,
+            keepaspectratio
+        ]{plot_overlay1_N=32.pdf}
     }
+
     \only<2>{%
-        \includegraphics[width=0.5\linewidth]{plot2_N=32.pdf}
+        \includegraphics[
+            width=0.78\linewidth,
+            height=0.68\textheight,
+            keepaspectratio
+        ]{plot_overlay2_N=32.pdf}
     }
+
     \only<3>{%
-        \includegraphics[width=0.5\linewidth]{plot3_N=32.pdf}
+        \includegraphics[
+            width=0.78\linewidth,
+            height=0.68\textheight,
+            keepaspectratio
+        ]{plot_overlay3_N=32.pdf}
     }
+
+    \only<4>{%
+        \includegraphics[
+            width=0.78\linewidth,
+            height=0.68\textheight,
+            keepaspectratio
+        ]{plot_overlay4_N=32.pdf}
+    }
+
 \end{center}
 
-\end{overlayarea}
 \end{frame}
+
 % -----------------------------------------------------------------------------
 \begin{frame}{Some Adapted Meshes}
 
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.48\textwidth}
-\centering
-\placeholdergraphic[0.95\linewidth]{4.2cm}{adapted_mesh_z1.pdf}{Adapted mesh for $z=z_1$}
+\begin{columns}[c,onlytextwidth]
 
-\vspace{0.15cm}
-{\footnotesize (a) Adapted mesh for $z=z_1$}
-\end{column}
-\begin{column}{0.48\textwidth}
-\centering
-\placeholdergraphic[0.95\linewidth]{4.2cm}{adapted_mesh_z2.pdf}{Adapted mesh for $z=z_2$}
+    \begin{column}{0.48\textwidth}
+        \centering
+        \includegraphics[
+            width=\linewidth,
+            height=0.70\textheight,
+            keepaspectratio
+        ]{maxwell_mesh_2_clean (2).png}
 
-\vspace{0.15cm}
-{\footnotesize (b) Adapted mesh for $z=z_2$}
-\end{column}
+        \vspace{0.15cm}
+
+        {\small $z=2$}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+        \centering
+        \includegraphics[
+            width=\linewidth,
+            height=0.70\textheight,
+            keepaspectratio
+        ]{maxwell_mesh_1_clean.png}
+
+        \vspace{0.15cm}
+
+        {\small $z=4$}
+    \end{column}
+
 \end{columns}
 
 \end{frame}
