@@ -22,6 +22,9 @@
 \usepackage[most]{tcolorbox}
 \usetikzlibrary{positioning, arrows.meta, shapes.geometric, decorations.pathreplacing, calc}
 
+% Hide Beamer's navigation icons in the footer.
+\setbeamertemplate{navigation symbols}{}
+
 % Colours copied from the reference style file.
 \definecolor{softblue}{RGB}{232,238,246}
 \definecolor{softpink}{RGB}{252,232,242}
@@ -140,16 +143,22 @@
     \item<2-> However, for coarse discretizations of the folded problems, the computed lower bound on the distance to the spectrum may not be tight.
 \end{itemize}
 
-\vspace{0.4cm}
+\vspace{0.15cm}
 
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.48\textwidth}
     \only<3->{%
-        \includegraphics[width=0.95\linewidth]{dist_plot_N=32 (2).pdf}
+        \centering
+        \includegraphics[width=0.90\linewidth]{dist_plot_N=32 (2).pdf}\par
+        \small $N=32$
     }
 \end{column}
 \begin{column}{0.48\textwidth}
-    \only<4->{\includegraphics[width=0.95\linewidth]{dist_plot_N=128 (3).pdf}}
+    \only<4->{%
+        \centering
+        \includegraphics[width=0.90\linewidth]{dist_plot_N=128 (3).pdf}\par
+        \small $N=128$
+    }
 \end{column}
 \end{columns}
 
@@ -158,6 +167,7 @@
 
 % -----------------------------------------------------------------------------
 \begin{frame}{First Idea: Apply Adaptivity to the Eigenproblems}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item<1-> We discretize the Rayleigh quotients defining $\gamma(z,A)$ and obtain generalized eigenproblems.
@@ -179,13 +189,15 @@ We want to improve $\Phi_n(z,A)$ using an error estimate for the auxiliary eigen
 \end{specbox}
 }
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{DWR for Symmetric Eigenproblems}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
-    \item<1-> Let $A$ be self-adjoint, as is the case for the folded operator.
+    \item<1-> Let $A: V \to V^*$ be self-adjoint, as is the case for the folded operator.
     \item<2-> Consider the symmetric generalized eigenproblem
     \[
         A u = \lambda M u .
@@ -198,7 +210,7 @@ We want to improve $\Phi_n(z,A)$ using an error estimate for the auxiliary eigen
     \]
 \end{itemize}
 
-\vspace{-0.05cm}
+\vspace{-0.25cm}
 
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.49\textwidth}
@@ -223,10 +235,12 @@ Find $(u_h,\lambda_h)\in V_h\times\mathbb{C}$ such that
 \end{column}
 \end{columns}
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{DWR for Symmetric Eigenproblems}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item<1-> DWR gives an error representation for the eigenvalue error.
@@ -252,10 +266,12 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \end{specbox}
 }
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Application to Maxwell}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item Start on an unstructured mesh with $\operatorname{maxh}=\pi/32$.
@@ -276,6 +292,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
     }
 \end{center}
 
+\end{overlayarea}
 \end{frame}
 % -----------------------------------------------------------------------------
 \begin{frame}{Some Adapted Meshes}
@@ -301,6 +318,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Next Idea: Inner and Outer Refinement}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item<1-> We want accurate and efficient pseudospectral pictures in the complex plane.
@@ -322,10 +340,12 @@ Then, for arbitrary $\varphi_h\in V_h$,
     \hspace*{0.8cm}Refine the finite element meshes used for the folded eigensolves.
 \end{enumerate}
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Inner Refinement}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{itemize}
     \item<1-> DWR yields an error estimate for each auxiliary eigenproblem:
@@ -357,10 +377,12 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \end{specbox}
 }
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Outer Refinement Criteria}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.47\textwidth}
@@ -458,6 +480,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \end{column}
 \end{columns}
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -492,6 +515,7 @@ Rearranging gives
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Outer Refinement}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 From the enclosure
 \[
@@ -528,10 +552,12 @@ we classify each triangle as follows.
 \end{center}
 }
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{The Coupling}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{enumerate}
     \item<1-> Iterate over the barycentres $z_K$.
@@ -547,6 +573,7 @@ we classify each triangle as follows.
     \item<5-> Stop once remaining triangles reach the diameter tolerance; these are marked as contour triangles.
 \end{enumerate}
 
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -579,6 +606,7 @@ Thus the eigenvalues are
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Results: Dirac Poisson, $\varepsilon = 0.2,$ diameter tolerance $0.01.$}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{center}
     \only<1>{%
@@ -603,6 +631,7 @@ Thus the eigenvalues are
         ]{sweep6 (1).pdf}
     }
 \end{center}
+\end{overlayarea}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -655,6 +684,7 @@ On $(0, \pi)^2$, the eigenvalues are
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Results: Maxwell, $\varepsilon = 0.2,$ diameter tolerance $0.02.$}
+\begin{overlayarea}{\textwidth}{0.87\textheight}
 
 \begin{center}
     \only<1>{%
@@ -679,6 +709,7 @@ On $(0, \pi)^2$, the eigenvalues are
         ]{sweep_004 (1).pdf}
     }
 \end{center}
+\end{overlayarea}
 \end{frame}
 
 
