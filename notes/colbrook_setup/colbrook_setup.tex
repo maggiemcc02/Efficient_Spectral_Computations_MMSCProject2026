@@ -112,19 +112,35 @@ unfortunately as pointed out above on the all $H^1_0(\Omega)$ the operator $M^{-
 \begin{equation}
 	A: L^2 \to L^2, \qquad A=M^{-1}L_{|_D}, \qquad D=\{u \in H^1_0(\Omega) \; : \; \Delta u \in L^2(\Omega)\}.
 \end{equation}
-Notice that unless our domain is convex and we can apply a Miranda-Talenti inequality we have that $D \neq H^2\cap H^1_0$.
-This approach comes with various issues, first of it is not familiar to people in FEM land, but more importantly  the operator is unbounded and its solution operator does not actually fit the Babuska-Obsorn theory that we would like to use to have a priori error estimates. This because this theory relay on the painr $(G, T)$ of a bounded linear operator $G: V \to V^*$ and its corresponding \underline{compact} solution operator $T:H \to B \subset H$.
+Notice that unless our domain is convex and we can apply a Miranda--Talenti inequality we have that $D \neq H^2\cap H^1_0$.
+This approach comes with various issues. First, it is not familiar to variational people. Second and more importantly  the operator is unbounded and its solution operator does not actually fit the Babu\v{s}ka--Obsorn theory that we would like to use to have a priori error estimates. This because this theory relies on the pair $(G, T)$ of a bounded linear operator $G: V \to V^*$ and its corresponding \underline{compact} solution operator $T:H \to B \subset H$.
 
-For this reason we would like propose a different functional analytical view point, that rests on the following identity:
-\begin{equation}
-	M^{-1}(L-zM)=(M^{-1} - z) \Rightarrow G\coloneqq(L-ZM)^* M^{-1} (L-zM) = (M^{-1}L-z)^* M^* (M^{-1}L - z),
-\end{equation}
-notice that everything make sense because we have made use of the canonical double dual identification (which is not a \underline{crime} contrary to the Riesz dual identification, see Brezzi--Boffi--Fortin). The previous equation tell us something very interesting, both folding the $A$ endomorphism and the operator $G:V\to V^*$, are associated to the same bilinear form (that we can assemble in Firedrake !), i.e.
+For this reason we would like propose an equivalent but different functional analytical viewpoint. It rests on the following calculations. Noting that
+\begin{align}
+	M^{-1}(L-zM)
+	&= M^{-1}L-zI
+	= A-zI \label{eq:folding-identity}
+\end{align}
+and
+\begin{align}
+	L-zM
+	&= M\bigl(M^{-1}L-zI\bigr)
+	= M(A-zI),
+\end{align}
+we have
+\begin{align}
+	G \coloneqq (L-zM)^*M^{-1}(L-zM)
+	&= \bigl(M(A-zI)\bigr)^*M^{-1}M(A-zI) \notag\\
+	&= (A-zI)^*M^*M^{-1}M(A-zI) \notag\\
+	&= (A-zI)^*M^*(A-zI)
+	= (M^{-1}L-zI)^*M^*(M^{-1}L-zI). \notag
+\end{align}
+Notice that everything make sense because we have made use of the canonical double dual identification (which is not a \underline{crime} contrary to the Riesz dual identification, see Brezzi--Boffi--Fortin). The previous equation tells us something very interesting: both the folding of the endomorphic $A$ and the operator $G:V\to V^*$ are associated to the same bilinear form (that we can assemble in Firedrake!), i.e.
 \begin{equation}
 	a(u,v) \coloneqq \langle (L-zM)^* M^{-1} (L-zM) u, v \rangle_{(V^*,V)} = (Au, Av)_{L^2(\Omega)}.
 \end{equation}
 
-Let us now take a closer look at the operator $G:V\to V^*$, this operator is perfectly well defined (once again thank to the double dual identification) if $(L-zM)$ goes from $V$ to $H^*$:
+Let us now take a closer look at the operator $G:V\to V^*$. This operator is perfectly well-defined (once again thank to the double dual identification) if $(L-zM)$ goes from $V$ to $H^*$:
 \begin{equation}
 	V \overset{(L-zM)}{\longrightarrow} H^* \subset V^* \overset{M^{-1}}{\longrightarrow} V \subset H \sim (H^*)^* \overset{(L-zM)^*}{\longrightarrow} V^*.
 \end{equation}
@@ -140,4 +156,3 @@ Notice that in all this cases we have $V\subset\!\subset H$, hence we can introd
 \end{equation}
 which in turns allow us to make use of the Babuska-Osborn theory perfectly explained in Boffi's acta on the pair $(G,T)$.
 \end{document}
-
