@@ -128,22 +128,34 @@ and
 	&= M\bigl(M^{-1}L-zI\bigr)
 	= M(A-zI),
 \end{align}
-we have
+we set $C_z\coloneqq M^{-1}(L-zM)=A-zI:V\to\mathcal{H}$, let
+$C_z':\mathcal{H}^*\to V^*$ denote its dual operator, and let
+$J_{\mathcal{H}}:\mathcal{H}\to\mathcal{H}^{**}$ be the canonical injection.
+Since $L-zM=MC_z$ and the $L^2$ Riesz map satisfies
+$M'J_{\mathcal{H}}=M$, the variational folding operator is
 \begin{align}
-	G \coloneqq (L-zM)^*M^{-1}(L-zM)
-	&= \bigl(M(A-zI)\bigr)^*M^{-1}M(A-zI) \notag\\
-	&= (A-zI)^*M^*M^{-1}M(A-zI) \notag\\
-	&= (A-zI)^*M^*(A-zI)
-	= (M^{-1}L-zI)^*M^*(M^{-1}L-zI). \notag
+	G \coloneqq (L-zM)'J_{\mathcal{H}}M^{-1}(L-zM)
+	&= (MC_z)'J_{\mathcal{H}}C_z \notag\\
+	&= C_z'M'J_{\mathcal{H}}C_z \notag\\
+	&= C_z'MC_z. \label{eq:variational-folding}
 \end{align}
-Notice that everything make sense because we have made use of the canonical double dual identification (which is not a \underline{crime} contrary to the Riesz dual identification, see Brezzi--Boffi--Fortin). The previous equation tells us something very interesting: both the folding of the endomorphic $A$ and the operator $G:V\to V^*$ are associated to the same bilinear form (that we can assemble in Firedrake!), i.e.
+Here the primes denote dual operators; they are not the Hilbert-space adjoint
+of the unbounded operator $A$. The previous equation tells us something very
+interesting: both the folding of the endomorphic $A$ and the operator
+$G:V\to V^*$ are associated to the same bilinear form (that we can assemble
+in Firedrake!), i.e.
 \begin{equation}
-	a_z(u,v) \coloneqq \langle (L-zM)^* M^{-1} (L-zM) u, v \rangle_{(V^*,V)} = \bigl((A-zI)u, (A-zI)v\bigr)_{L^2(\Omega)}.
+	a_z(u,v) \coloneqq \langle C_z'MC_z u,v\rangle_{(V^*,V)}
+	= \bigl(C_z u,C_z v\bigr)_{\mathcal{H}}
+	= \bigl((A-zI)u,(A-zI)v\bigr)_{\mathcal{H}}.
 \end{equation}
 
 Let us now take a closer look at the operator $G:V\to V^*$. This operator is perfectly well-defined (once again thank to the double dual identification) if $(L-zM)$ maps from $V$ to $\mathcal{H}^*$:
 \begin{equation}
-	V \overset{(L-zM)}{\longrightarrow} \mathcal{H}^* \subset V^* \overset{M^{-1}}{\longrightarrow} V \subset \mathcal{H} \sim (\mathcal{H}^*)^* \overset{(L-zM)^*}{\longrightarrow} V^*.
+	V \overset{L-zM}{\longrightarrow} \mathcal{H}^*
+	\overset{M^{-1}}{\longrightarrow} \mathcal{H}
+	\overset{J_{\mathcal{H}}}{\longrightarrow} \mathcal{H}^{**}
+	\overset{(L-zM)'}{\longrightarrow} V^*.
 \end{equation}
 This setting works for the following scenarios:
 \begin{enumerate}
