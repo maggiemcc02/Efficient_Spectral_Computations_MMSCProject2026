@@ -37,7 +37,10 @@ Folding starts from a closed, densely defined $A$ on a Hilbert space $\Hb$.
 Since we want its spectrum, $A$ must be an \emph{endomorphism}, $A \colon
 \dom(A) \subset \Hb \to \Hb$, the classical instance being $\Delta \colon
 H^2(\Omega) \cap H^1_0(\Omega) \to L^2(\Omega)$, i.e.~$\Hb = L^2(\Omega)$, and
-$\dom(A) = H^2(\Omega) \cap H^1_0(\Omega) \subset \Hb$. Under suitable conditions on
+$\dom(A) = H^2(\Omega) \cap H^1_0(\Omega) \subset \Hb$.
+We use \({}^*\) for the Hilbert adjoint of a densely defined endomorphism on
+$\Hb$, and \({}'\) for the Banach dual operator:
+if $B:X\to Y$ is bounded, then $B':Y^*\to X^*$. Under suitable conditions on
 $\dom(A)$ and $\dom(A^*)$ one considers
 \begin{equation}
   \gamma(z,A) := \min\bigl\{\siginf(A - zI),\ \siginf\bigl((A-zI)^*\bigr)\bigr\}
@@ -68,7 +71,7 @@ First, we define the \emph{weak Laplacian} $L \colon H^1_0(\Omega) \to H^{-1}(\O
     \langle L u, v \rangle_{V^*, V} = (\nabla u, \nabla v)_{L^2(\Omega)} \quad \text{for all } u, v \in H^1_0(\Omega).
 \end{equation}
 
-Second, we define the \emph{mass operator} $M \colon L^2(\Omega) \to V^*$, which maps an $L^2$ function $u$ to the linear functional that computes the $L^2$-inner product with $v$:
+Second, we define the \emph{mass operator} $M \colon L^2(\Omega) \to V^*$, which maps an $L^2$ function $u$ to the linear functional that computes the $L^2$-inner product with $u$:
 \begin{equation}
     \langle M u, v \rangle_{V^*, V} = (u, v)_{L^2(\Omega)} \quad \text{for all } v \in H^1_0(\Omega).
 \end{equation}
@@ -93,18 +96,21 @@ More precisely, for $f \in L^2(\Omega)$, $Tf = u \in H^1_0(\Omega) \subset L^2(\
 Because of the compact embedding $H^1_0(\Omega) \subset\subset L^2(\Omega)$, $T$ is a \emph{compact} operator on $L^2(\Omega)$. Its non-zero eigenvalues are the reciprocals of the eigenvalues of the original problem ($T u = \lambda^{-1} u$). 
 However, since $T$ is compact, its spectrum is fundamentally different from an unbounded differential operator (it only has essential spectrum at $0$). It is a different beast and not what Colbrook's algorithm is designed to study when analyzing spectral pollution and essential spectra.
 
+\paragraph{Applying the Riesz map.}
+Could we apply the Riesz map of $H^1_0(\Omega)$ to bridge the gap? The Riesz map $R_V \colon V \to V^*$ is defined by $\langle R_V u, v \rangle = (u, v)_V$. If we use the standard $H^1_0$ inner product $(u, v)_V = (\nabla u, \nabla v)_{L^2}$, then the Riesz map $R_V$ coincides exactly with the weak Laplacian $L$. 
+Therefore, applying the inverse Riesz map $R_V^{-1}$ to $L$ just means applying $L^{-1}$ to $L$, which gives the identity on $H^1_0(\Omega)$. On the other hand, applying it to the right-hand side means applying $L^{-1} M$, which returns us to the compact solution operator $T = L^{-1} M$ discussed above.
+
+
 \paragraph{The $M^{-1} L$ approach.}
 Does $M^{-1} L$ work to define an unbounded endomorphism $A$? Let us check if the spaces match up. 
 The weak Laplacian $L$ maps $H^1_0(\Omega) \to H^{-1}(\Omega)$. However, $M^{-1}$ is only defined on the range of $M$, which comprises exactly those functionals in $H^{-1}(\Omega)$ that can be represented by $L^2$ functions. 
 Thus, $A = M^{-1} L$ is only well-defined on the subspace of $u \in H^1_0(\Omega)$ for which $L u \in \text{range}(M) \subset H^{-1}(\Omega)$. Identifying $\text{range}(M)$ with $L^2(\Omega)$, this domain is precisely $D(A) = \{ u \in H^1_0(\Omega) : \Delta u \in L^2(\Omega) \}$, which is the graph space from Section 1. 
 So $A = M^{-1} L$ does define the correct unbounded endomorphism $A \colon D(A) \subset L^2(\Omega) \to L^2(\Omega)$. Of course, the computational problem with this approach is that standard $H^1$-conforming finite elements do not lie in $D(A)$, making it difficult to discretise this operator directly for the folding algorithm without $C^1$ elements, but this is a separate (and fixable) difficulty.
 
-\paragraph{Applying the Riesz map.}
-Could we apply the Riesz map of $H^1_0(\Omega)$ to bridge the gap? The Riesz map $R_V \colon V \to V^*$ is defined by $\langle R_V u, v \rangle = (u, v)_V$. If we use the standard $H^1_0$ inner product $(u, v)_V = (\nabla u, \nabla v)_{L^2}$, then the Riesz map $R_V$ coincides exactly with the weak Laplacian $L$. 
-Therefore, applying the inverse Riesz map $R_V^{-1}$ to $L$ just means applying $L^{-1}$ to $L$, which gives the identity on $H^1_0(\Omega)$. On the other hand, applying it to the right-hand side means applying $L^{-1} M$, which returns us to the compact solution operator $T = L^{-1} M$ discussed above.
+However, note that $M$ is not always invertible (e.g.~an eigenproblem for the incompressible Stokes equations, with the right-hand side only depending on the velocity), so this is not a general solution.
 
 \paragraph{\uzt{The variational viewpoint.}}
-Above we have considered the operator $M^{-1}L$ where $L$ is the ``weak'' Laplacian and $M$ is the $L^2$ Riesz map, i.e.
+We have considered the operator $M^{-1}L$ where $L$ is the ``weak'' Laplacian and $M$ is the $L^2$ Riesz map, i.e.
 \begin{equation}
 	L:H^1_0(\Omega) \to H^{-1}(\Omega),\qquad M:L^2 \to (L^2)^*,
 \end{equation}
@@ -139,18 +145,26 @@ $M'J_{\mathcal{H}}=M$, the variational folding operator is
 	&= C_z'M'J_{\mathcal{H}}C_z \notag\\
 	&= C_z'MC_z. \label{eq:variational-folding}
 \end{align}
-Here the primes denote dual operators; they are not the Hilbert-space adjoint
-of the unbounded operator $A$. The previous equation tells us something very
-interesting: both the folding of the endomorphic $A$ and the operator
-$G:V\to V^*$ are associated to the same bilinear form (that we can assemble
-in Firedrake!), i.e.
+Recall that here the primes denote Banach
+dual operators, not the Hilbert adjoint of the unbounded operator $A$. The
+previous equation tells us something very interesting: both the folding of
+the endomorphic $A$ and the operator $G:V\to V^*$ are associated to the same
+bilinear form (that we can assemble in Firedrake!), i.e.
 \begin{equation}
-	a_z(u,v) \coloneqq \langle C_z'MC_z u,v\rangle_{(V^*,V)}
-	= \bigl(C_z u,C_z v\bigr)_{\mathcal{H}}
+	\begin{aligned}
+	a_z(u,v)
+	&\coloneqq \left\langle
+	(L-zM)'J_{\mathcal{H}}M^{-1}(L-zM)u,v
+	\right\rangle_{(V^*,V)}\\
+	&= \langle C_z'MC_z u,v\rangle_{(V^*,V)}\\
+	&= \bigl(C_z u,C_z v\bigr)_{\mathcal{H}}
 	= \bigl((A-zI)u,(A-zI)v\bigr)_{\mathcal{H}}.
+	\end{aligned}
 \end{equation}
 
-Let us now take a closer look at the operator $G:V\to V^*$. This operator is perfectly well-defined (once again thank to the double dual identification) if $(L-zM)$ maps from $V$ to $\mathcal{H}^*$:
+Let us now take a closer look at the operator $G:V\to V^*$. This operator is
+perfectly well-defined, using the canonical injection into the double dual,
+if $(L-zM)$ maps from $V$ to $\mathcal{H}^*$:
 \begin{equation}
 	V \overset{L-zM}{\longrightarrow} \mathcal{H}^*
 	\overset{M^{-1}}{\longrightarrow} \mathcal{H}
