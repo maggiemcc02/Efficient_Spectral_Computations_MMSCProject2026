@@ -1106,7 +1106,7 @@ Hence, we do not have enough information to decide whether the pseudospectral co
 % and we do not have enough information to decide whether the pseudospectral contour $\gamma(z, A) = \epsilon$ passes through $K.$ In this case, we refine $K$ and re-check the three cases for each sub-triangle. 
 \end{enumerate}
 
-In the next subsection we construct a coupling between the adaptive mesh refinement technique of Section \ref{AMR} and the outer refinement strategy developed in this section. In doing so, we construct an efficient method for computing pseudospectra with Colbrook's algorithm. 
+In the next subsection, we construct a coupling between the adaptive mesh refinement technique of Section \ref{AMR} and the outer refinement strategy developed in this section. In doing so, we construct an efficient method for computing pseudospectra with Colbrook's algorithm. 
 
 
 \subsection{Our Implementation}
@@ -1148,6 +1148,67 @@ This coupling of our outer and inner refinement techniques is summarized in Algo
 
 
 \chapter{(Not Done) Numerical Examples}
-\section{Dirac Folding of the 1D Poisson Eigenproblem}
+
+In this Chapter, we demonstrate the success of Algorithm \ref{outerloop} by applying it to chosen numerical examples. For our first example, we explore the pseudospectra of a one-dimensional Dirac-type operator. We then return to the Maxwell eigenproblem 
+introduced in Section \eqref{Maxwell Sect}.
+
+
+\section{One-Dimensional Dirac Folding of the Poisson Problem}
+
+For our first example, we consider the following self-adjoint, one-dimensional
+Dirac-type operator posed on $\Omega=(0,\pi)$:
+\begin{equation} \label{dirac pois}
+    A(u, \sigma) = (-i\sigma', -i u'), 
+\end{equation}
+where  $D(A) = H_0^1(\Omega) \times H^1(\Omega)$ is dense in $L^2(\Omega) \times L^2(\Omega)$ \cite{dirac}.
+
+What is special about this operator is its relation to the Poisson eigenproblem. To see this, consider the eigenproblem $AU = \lambda U,$ where $U = (u, \sigma)^T.$ The two equations are
+\begin{align}
+-i \sigma' &= \lambda u, \label{eq1}\\
+-i u' &= \lambda \sigma. \label{eq2}
+\end{align}
+For $\lambda \ne 0,$ we can solve for $\sigma$ in the \eqref{eq2} and substitute the result into the \eqref{eq1} to obtain 
+\begin{equation} \label{pois}
+    -u'' = \lambda^2u.
+\end{equation}
+Notice that \eqref{pois} is the one-dimensional Poisson eigenproblem with Dirichlet boundary conditions. Thus, 
+\begin{equation}
+    \lambda = \pm n, \qquad n = 1, 2, \dots
+\end{equation}
+Furthermore, \eqref{dirac pois} has a zero eigenvalue. Setting $\lambda = 0$ yields $u'=0$ and $\sigma'=0.$ Since $u$ satsifies Dirichlet boundary conditions, $u=0.$ However, since there are no boundary conditions imposed on $\sigma,$ we can take $\sigma = c$ for any constant $c.$ In this way, $U = (0, c)^T$ is an eigenfunction of \eqref{dirac pois} corresponding to $\lambda = 0.$ 
+
+Since \eqref{dirac pois} is self-adjoint and has a compact resolvent, its spectrum consists only of its eigenvalues (CITE!).
+Thus, since \eqref{dirac pois} is normal, its  $\epsilon$-pseudospectum is the collection of $\epsilon$-balls centred at each eigenvalue of \eqref{dirac pois}. 
+
+
+For the numerical experiment of this section, we use Algorithm \ref{outerloop} to compute the $\epsilon = 0.2$ pseudospectrum of \eqref{dirac pois} both accurately and efficiently. 
+To do so, we first formulate the auxiliary eigenproblems needed for Colbrook's algorithm. Since \eqref{dirac pois} is self-adjoint, we can formulate the auxiliary eigenproblems as we did for the Maxwell problem in Section \ref{Matt Max}. That is, we consider a $V_h \subset D(A)$ and seek the smallest eigenvalue $\mu_n(z)$ that satisfies 
+\begin{equation} \label{dirac eig}
+    a_z(u_h, v_h) = \mu_n(z) m(u_h, v_h),
+\end{equation}
+where
+\begin{align}
+    &a_z(u, v) \defeq ((A-zI) u, (A-zI) v)_{H},\\
+    &m(u, v) \defeq (u, v)_{H}.
+\end{align}
+With this, the desired approximation of the bound on the distance to the spectrum is
+\begin{equation}
+    \Phi_n(z, A) = \sqrt{\mu_n(z)}.
+\end{equation}
+
+
+ To implement Algorithm \ref{outerloop}, we consider the region $D = [-0.5, 4.5] \times [-1, 1]$ in the complex plane. For our initial triangulation $\mathcal{T}_0,$ we partition $D$ into a uniform
+array of $20 \times 8$ squares with sidelength $0.25$, and subdivide each square into two triangles as in Figure \ref{Triang}.  
+  For the initial finite element discretization of \eqref{dirac eig}, we partition $\Omega = (0, \pi)$ into sixteen subintervals and take $V_h \subset D(A)$ to be the corresponding quadratic Lagrange finite element space. 
+
+  For the outer stopping tolerance, which controls the diameter of the triangles in the complex plane, we take $h_{\text{tol}} = 0.01.$ Since \eqref{dirac pois} is self-adjoint, the inner stopping tolerance \eqref{inner crit} becomes
+  \begin{equation}
+    |\eta(z)| \le h_K^2,
+  \end{equation}
+  where $\eta(z)$ is the computed DWR error estimate \eqref{DWR} for $\mu_n(z)$ in \eqref{dirac eig}.
+  
+
+
+
 \section{The Maxwell Eigenproblem}
 
