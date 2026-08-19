@@ -313,7 +313,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
             width=0.78\linewidth,
             height=0.68\textheight,
             keepaspectratio
-        ]{new_plot_overlay1_N=32.pdf}
+        ]{up_plot_overlay1_N=32.pdf}
     }
 
     \only<2>{%
@@ -321,7 +321,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
             width=0.78\linewidth,
             height=0.68\textheight,
             keepaspectratio
-        ]{new_plot_overlay2_N=32.pdf}
+        ]{up_plot_overlay2_N=32.pdf}
     }
 
     \only<3>{%
@@ -329,7 +329,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
             width=0.78\linewidth,
             height=0.68\textheight,
             keepaspectratio
-        ]{new_plot_overlay3_N=32.pdf}
+        ]{up_plot_overlay3_N=32.pdf}
     }
 
     \only<4>{%
@@ -337,7 +337,7 @@ Then, for arbitrary $\varphi_h\in V_h$,
             width=0.78\linewidth,
             height=0.68\textheight,
             keepaspectratio
-        ]{new_plot_overlay4_N=32.pdf}
+        ]{up_plot_overlay4_N=32.pdf}
     }
 
 \end{center}
@@ -433,9 +433,8 @@ Then, for arbitrary $\varphi_h\in V_h$,
 \[
     \left|\gamma(z,A)-\Phi_n(z,A)\right|
     \leq
-    \sqrt{\left|\eta^{(1)}(z)\right|}
-    +
-    \sqrt{\left|\eta^{(2)}(z)\right|} .
+    \sqrt{\left|\eta^{(1)}(z)\right|
+    + \left|\eta^{(2)}(z)\right|} .
 \]
 \end{specbox}
 }
@@ -555,8 +554,8 @@ For any $w\in K$, using that $\gamma(\cdot,A)$ is $1$-Lipschitz,
     \left|\gamma(w,A)-\Phi_n(z_K,A)\right|
     &\leq |w-z_K| + \left|\gamma(z_K,A)-\Phi_n(z_K,A)\right| \\
     &\leq h_K
-    + \sqrt{\left|\eta^{(1)}(z_K)\right|}
-    + \sqrt{\left|\eta^{(2)}(z_K)\right|} \\
+    + \sqrt{\left|\eta^{(1)}(z_K)\right|
+    + \left|\eta^{(2)}(z_K)\right|} \\
     &:= R_K .
 \end{aligned}
 \]
