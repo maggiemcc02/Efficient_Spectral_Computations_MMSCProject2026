@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{graphicx}
 
 \newcommand{\uzt}[1]{\textcolor{teal!80!black}{#1}}   % UZ's additions
 \newcommand{\Hb}{\mathcal{H}}
@@ -183,4 +184,32 @@ Notice that in all this cases we have $V\subset\!\subset \mathcal{H}$, and hence
 	T: \mathcal{H}\to \mathcal{H}, \qquad a(Tf,v) = (f,v)_H, \qquad \forall v \in V,
 \end{equation}
 which in turns allow us to make use of the Babu\v{s}ka--Osborn theory as explained in Boffi's Acta Numerica article.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../../../Codes/output/of_neumann_argyris/square.pdf}
+  \caption{Unit square, which is convex, so
+    $\dom(A_N) = H^2(\Omega)\cap\{\partial_\nu u = 0\}$ and the Argyris space is
+    conforming. $\siginf(A_N - z)$ reproduces $\mathrm{dist}(z,\sigma(A_N))$ over
+    $z\in[0,45]$ with maximum error $2.75\cdot10^{-4}$, $5.66\cdot10^{-6}$,
+    $1.54\cdot10^{-7}$ for $N = 6, 10, 16$; the three curves are
+    indistinguishable from the exact sawtooth at this scale.}
+  \label{fig:neumann-square}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../../../Codes/output/of_neumann_argyris/pacman.pdf}
+  \caption{Pizza slice of aperture $\omega = \tfrac32\pi$, where the convexity
+    assumption in case 3 fails. The eigenfunctions
+    $\Phi_{m,n} \sim \rho^{2n/3}\cos(\tfrac23 n\theta)$ with $n=1$ lie in
+    $H^{5/3-\epsilon}$ and \emph{not} in $H^2$, and since
+    $H^2\cap\{\partial_\nu u = 0\}$ is a closed subspace of $\dom(A_N)$ in the
+    graph norm, no $H^2$-conforming space can reach them. The computed curves
+    touch zero at every black marker and walk straight past the two red ones,
+    $\lambda_{m,1} = (j'_{2/3,m})^2 = 1.9634119,\ 23.5286590$; the floor there is
+    unmoved by refinement or by grading toward the re-entrant corner.}
+  \label{fig:neumann-pacman}
+\end{figure}
+
 \end{document}
