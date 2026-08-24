@@ -85,7 +85,8 @@
 
 \begin{itemize}
     \item The advection diffusion example is not sorted out.
-    \item Umberto and I met to discuss this. The issue is that to do the Dirac folding so that we can deal with a first-order operator, we seem to lose the pseudospectrum of the original operator. This was not an issue before because we were dealing with normal operators, so we always expected the pseudospectrum to be a collection of $\epsilon$-balls. 
+    \item Umberto and I met to discuss this. The issue is that to do the Dirac folding so that we can deal with a first-order operator, we seem to lose the exact pseudospectrum of the original operator. This was not an issue before because we were dealing with normal operators, so we always expected the pseudospectrum to be a collection of $\epsilon$-balls. Here, we need more work to figure out what the pseudospectrum should look like. 
+    \item I think there is a relation and that we could maybe derive something. Because I have been trying to finish up the write-up, I sort-of put a pause on this. 
     \item I have run just standard folding on the strong operator Hermite elements. To apply our methodology to this example we would have to extend the DWR localization method and/or devise an alternative approach for folding this operator. 
     \item I tried (and am still) running our methodology on the Dirac folding version of this example. I had those initial mesh issues where one element was being refined alot and the method seemed to become ill-conditioned? This may be because of maximum marking:
 
@@ -237,7 +238,7 @@ Consequently,
     \right\}.}
 \end{equation}
 
-\seubsection{The Pseudospectrum}
+
 
 \subsection{Adjoint operators}
 

@@ -1,0 +1,143 @@
+\documentclass[12pt]{ociamthesis}
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{22.5cm}
+% \setlength{\textwidth}{15cm}
+\renewcommand{\baselinestretch}{1.25}
+\renewcommand{\baselinestretch}{1.25}
+%load any additional packages
+\usepackage{amssymb}
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+\newunicodechar{̄}{\={}}
+\usepackage{multirow}
+\usepackage{xurl}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{todonotes}
+\newcommand{\Maggie}[1]{\todo[inline, color=pink!70]{Maggie: #1}}
+\renewcommand{\H}{\mathcal{H}}
+
+%\usepackage{amssymb,amsmath,epsfig,html}
+
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\AfterEndEnvironment{definition}{\noindent}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Sp}[1]{\operatorname{Sp}\!\left(#1\right)}
+\newcommand{\Spe}[1]{\operatorname{Sp}_{\epsilon}\!\left(#1\right)}
+
+
+\title{Efficient Algorithms for Infinite-Dimensional Spectral Computations}   %note \\[1ex] is a line break in the title
+\author{Margaret McCarthy}             %your name
+\college{Christ Church College}  %your college
+%\renewcommand{\submittedtext}{change the default text here if needed}
+%\degree{M. Sc. in Mathematical Modelling and Scientific Computing}     %the degree
+%\degreedate{Trinity 2026}         %the degree date
+
+%\renewcommand{\submittedtext}{Dissertation submitted in partial fulfilment of the requirements for the degree of}
+\degree{M.Sc.\ in Mathematical Modelling and Scientific Computing}
+\degreedate{Trinity Term 2026}
+
+\renewcommand{\baselinestretch}{1.25}
+\begin{document}
+\include{macpap2}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+
+\maketitle
+\include{ackno}
+\include{abst}
+
+\begin{romanpages}
+\tableofcontents
+\listoffigures
+\listoftables
+\end{romanpages}
+
+\include{intro}
+\include{body}
+\include{concl}
+
+\appendix
+\include{appendix1}
+\include{appendix2}
+\include{appendix3}
+
+\addcontentsline{toc}{chapter}{References}
+\renewcommand{\bibname}{References}
+\bibliography{refs}
+\bibliographystyle{plain}
+
+% \appendix
+% \include{appendix1}
+% \include{appendix2}
+% \include{appendix3}
+
+\end{document}

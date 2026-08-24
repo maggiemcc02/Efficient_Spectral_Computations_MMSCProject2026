@@ -12,9 +12,6 @@ After exploring the abstract formulation of Colbrook's algorithm, we reformulate
 % This approach avoids the common pitfalls of the standard discretize-then-solve approach. To see this, we compared the perfromance of Colbrook's algorithm to the performance of the discretize-then-solve approach when both were applied to the Maxwell eigenproblem. 
 
 These initial experiments revealed that, although the finite element realization of Colbrook's algorithm avoids the pitfalls of the discretize-then-solve approach, its accuracy is limited by the resolution of the underlying auxiliary eigenproblems. 
-
-
-
 To address this limitation, we devised an adaptive mesh refinement technique that uses DWR estimates for the auxiliary eigenvalue error to improve the accuracy of our finite element realization of Colbrook's algorithm. This technique refines the finite element mesh in regions where the error estimate is large. It also uses the DWR estimates to correct Colbrook's pseudospectral computations. By applying this approach to the Maxwell eigenproblem, we showed that these two uses of the DWR method can improve both the accuracy and efficiency of Colbrook's approach.
 
 % methodology for pairing the Dual-Weighted Residual (DWR) method for symmetric eigenproblems with our finite element realization of Colbrook's algorithm. Using DWR eigenvalue error estimates, we formulated an adaptive mesh refinement technique that refines the computational mesh in regions where the auxiliary eigenvalue error is large. We also used these error estimates to correct the error in Colbrook's pseudospectral computations. By applying this approach to the Maxwell eigenproblem, we showed that these two applications of the DWR error estimate can improve both the accuracy and efficiency of Colbrook's approach.

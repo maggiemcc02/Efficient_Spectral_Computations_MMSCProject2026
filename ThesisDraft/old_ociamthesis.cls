@@ -20,40 +20,6 @@
 
 \raggedbottom
 
-%%%%%%%%%%%%BEN
-\def\@makechapterhead#1{%
-  {\parindent \z@ \raggedright \normalfont
-    \ifnum \c@secnumdepth >\m@ne
-        \huge\bfseries \@chapapp\space \thechapter
-        \par\nobreak
-        \vskip -8\p@ %%%Can Tweak
-    \fi
-    \interlinepenalty\@M
-    \Huge \bfseries #1\par\nobreak
-    \vskip 8\p@  %%% Can Tweak
-  }}
-%%%%%%%%%%%%BEN
-
-%%%%%%%%%%%%BEN SECTION SPACING
-
-\renewcommand\section{\@startsection{section}{1}{\z@}%
-    {-0.75ex \@plus -.5ex \@minus -.2ex}%
-    {1.0ex \@plus .2ex}%
-    {\normalfont\Large\bfseries}}
-
-\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
-    {-0.75ex \@plus -.5ex \@minus -.2ex}%
-    {1.0ex \@plus .2ex}%
-    {\normalfont\large\bfseries}}
-
-\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
-    {-0.75ex \@plus -.5ex \@minus -.2ex}%
-    {1.0ex \@plus .2ex}%
-    {\normalfont\normalsize\bfseries}}
-
-%%%%%%%%%%%%BEN
-
-
 %define the default submitted text
 \newcommand{\submittedtext}{{A thesis submitted for the degree of}}
 

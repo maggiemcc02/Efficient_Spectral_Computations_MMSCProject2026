@@ -1,9 +1,9 @@
-\chapter{Speeding Up Compuations for the Maxwell Example}\label{speedup}
+\chapter{Self-Adjoint Speed Ups}\label{speedup}
 
 
 In this appendix, we derive the result used to speed up our implementation of Algorithm \ref{outerloop} in Section \ref{maxwell results}.
 
-Let $A$ be a self-adjoint, closed, and densely defined operator on the Hilbert space $H.$  For Colbrook's algorithm, we consider the folded operator $F(z) \defeq (A-zI)^*(A-zI).$ Since $A^*=A,$ we have
+Let $A$ be a self-adjoint, closed, and densely defined operator on the Hilbert space $\H.$  For Colbrook's algorithm, we consider the folded operator $F(z) \defeq (A-zI)^*(A-zI).$ Since $A^*=A,$ we have
 $F(z) = (A-\overline{z}I)(A-zI).$
 Plugging in $z = x +iy$ and expanding, we obtain
 \begin{align}
@@ -38,28 +38,28 @@ Plugging in $z = x +iy$ and expanding, we obtain
 
 Next we consider the quadratic form 
 \begin{equation}
-    Q_{z, A}(u, v) \defeq ((A-zI)u, (a-zI)v)_H,
+    Q_{z, A}(u, v) \defeq ((A-zI)u, (a-zI)v)_\H,
 \end{equation}
 for all $u, v \in D(A).$
 Substituting in $z = x+iy,$ we have
 \begin{align}
     Q_{z,A}(u,v)
-    &= \bigl((A-xI)u-iyu,\,(A-xI)v-iyv\bigr)_H \\
-    &= \bigl((A-xI)u,(A-xI)v\bigr)_H
-       + iy\bigl((A-xI)u,v\bigr)_H \notag\\
+    &= \bigl((A-xI)u-iyu,\,(A-xI)v-iyv\bigr)_\H \\
+    &= \bigl((A-xI)u,(A-xI)v\bigr)_\H
+       + iy\bigl((A-xI)u,v\bigr)_\H \notag\\
     &\quad
-       - iy\bigl(u,(A-xI)v\bigr)_H
+       - iy\bigl(u,(A-xI)v\bigr)_\H
        + y^2(u,v)_H \\
-    &= \bigl((A-xI)u,(A-xI)v\bigr)_H
+    &= \bigl((A-xI)u,(A-xI)v\bigr)_\H
        + y^2(u,v)_H \\
-    &= Q_{x,A}(u,v)+y^2(u,v)_H.
+    &= Q_{x,A}(u,v)+y^2(u,v)_\H.
 \end{align}
 Taking $v=u,$ we have that
 \begin{align}
     Q_{z,A}(u,u)
-    &= Q_{x,A}(u,u)+y^2\|u\|_H^2.
+    &= Q_{x,A}(u,u)+y^2\|u\|_\H^2.
 \end{align}
-Then, taking infimum over unit vectors, we can write \eqref{gamma} as
+Then, taking the infimum over unit vectors, we can write \eqref{gamma} as
 \begin{equation}
     \gamma(z, A)^2 = \gamma(x, A)^2 + y^2. 
 \end{equation}
