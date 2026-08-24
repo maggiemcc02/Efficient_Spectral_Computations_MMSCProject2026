@@ -1,7 +1,10 @@
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.55\textwidth]
-    {images/new_phi_plot_N=32 (1).pdf}
-    \caption[Applying our Coupling of an Adaptive Mesh Refinement Technique with Colbrook's Algorithm for the Maxwell Eigenproblem]{The results of applying five iterations of our adaptive mesh refinement technique of Section \ref{AMR} to Colbrook's algorithm for the Maxwell operator \eqref{max op}. The blue curve is the computed bound on the distance to the spectrum when no adaptivity is applied. The orange curve is the bound after five iterations of adaptive mesh refinement. The green curve is the bound obtained from the DWR-corrected eigenvalue after the five refinements. The black dashed line indicates the target distance $\operatorname{dist}(z, \Sp{A})$ and the black dots indicate the target eigenvalues.}
+    {images/newer_phi_plot_N=32 (1).pdf}
+    \caption[An Application of our Adaptive Mesh Refinement Technique to the Two-Dimensional Maxwell Eigenproblem]{The results from applying five iterations of our adaptive mesh refinement technique of Section \ref{AMR} to Algorithm \ref{pseudospec} for the Maxwell operator \eqref{max op}. The blue curve shows $\Phi_h(z, A)$ when no adaptivity is applied. The orange curve shows $\Phi_h(z, A)$ after five iterations of adaptive mesh refinement. The green curve shows the corresponding corrected approximation $\Phi_{h,c}(z, A).$  The black dashed curve shows the exact distance $\operatorname{dist}(z, \Sp{A})$ and the black dots indicate the exact eigenvalues.}
     \label{DWRResult}
 \end{figure}
+
+% \caption[Application of Adaptive Mesh Refinement to the Two-Dimensional Maxwell Eigenproblem]
+% {Results obtained by applying five iterations of the adaptive mesh refinement technique of Section \ref{AMR} to Algorithm \ref{pseudospec} for the Maxwell operator \eqref{max op}. The blue curve shows $\Phi_h(z,A)$ without adaptivity, while the orange curve shows $\Phi_h(z,A)$ after five adaptive refinement iterations. The green curve shows the corresponding corrected approximation $\Phi_{h,c}(z,A)$. The black dashed curve shows the exact distance $\operatorname{dist}(z,\Sp{A})$, and the black dots indicate the exact eigenvalues.}

@@ -1,5 +1,70 @@
 \chapter{Conclusions and Future Work}
 
+
+In this dissertation, we developed a methodology for accurate and efficient infinite-dimensional pseudospectral computations. To do so, we first explored Colbrook's algorithm for infinite-dimensional pseudospectral computations. This approach characterizes the pseudospectrum of a closed and densely defined linear operator $A$ using the smallest spectral values of the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ In doing so, it avoids discretizing the operator $A$ directly. Instead, it discretizes the auxiliary eigenproblems that characterize the smallest spectral values of the folded operators. This delayed discretization underpins the success of Colbrook's algorithm, which avoids the common pitfalls of the standard discretize-then-solve approach.
+
+After exploring the abstract formulation of Colbrook's algorithm, we reformulated it for the setting in which the auxiliary eigenproblems are discretized with the finite element method. We then demonstrated the success of this approach by comparing it to the standard discretize-then-solve approach for the Maxwell eigenproblem. 
+
+% by comparing its performance to the performance of the discretize-then-solve approach when applied to the Maxwell eigenproblem.
+
+% by applying both to the Maxwell eigenproblem. 
+
+% This approach avoids the common pitfalls of the standard discretize-then-solve approach. To see this, we compared the perfromance of Colbrook's algorithm to the performance of the discretize-then-solve approach when both were applied to the Maxwell eigenproblem. 
+
+These initial experiments revealed that, although the finite element realization of Colbrook's algorithm avoids the pitfalls of the discretize-then-solve approach, its accuracy is limited by the resolution of the underlying auxiliary eigenproblems. 
+
+
+
+To address this limitation, we devised an adaptive mesh refinement technique that uses DWR estimates for the auxiliary eigenvalue error to improve the accuracy of our finite element realization of Colbrook's algorithm. This technique refines the finite element mesh in regions where the error estimate is large. It also uses the DWR estimates to correct Colbrook's pseudospectral computations. By applying this approach to the Maxwell eigenproblem, we showed that these two uses of the DWR method can improve both the accuracy and efficiency of Colbrook's approach.
+
+% methodology for pairing the Dual-Weighted Residual (DWR) method for symmetric eigenproblems with our finite element realization of Colbrook's algorithm. Using DWR eigenvalue error estimates, we formulated an adaptive mesh refinement technique that refines the computational mesh in regions where the auxiliary eigenvalue error is large. We also used these error estimates to correct the error in Colbrook's pseudospectral computations. By applying this approach to the Maxwell eigenproblem, we showed that these two applications of the DWR error estimate can improve both the accuracy and efficiency of Colbrook's approach.
+
+Motivated by these results, we developed a methodology for coupling adaptive refinement of the auxiliary eigenproblems with adaptive refinement of the test points used in Colbrook's algorithm. To do so, we first used the DWR eigenvalue error estimate to derive an error estimate for Colbrook's pseudospectral computations. This estimate was used to formulate stopping criteria for our adaptive mesh refinement technique based on the desired accuracy of Colbrook's pseudospectral computations.
+
+We then developed a method for adaptively selecting the test points in Colbrook's algorithm. We took these test points to be the barycentres of a triangulation of the complex plane. For each triangle, we formulated criteria for deciding whether the triangle lies inside or outside the desired $\epsilon$-pseudospectrum, or whether the triangle should be further refined. These classification criteria depend on both the diameter of the triangle and the DWR error estimate for Colbrook's pseudospectral computations. We therefore chose the stopping criterion for each adaptive eigensolve based on the diameter of the corresponding triangle. In this way, our methodology avoids solving the auxiliary eigenproblems to a greater accuracy than what is warranted by the current resolution of the complex plane. 
+
+% Accordingly, these criteria gave rise to a natural coupling of the accuracy of the adaptive eigensolves with the adaptive selection of test points in the complex plane. By choosing the stopping criterion for each adaptive eigensolve based on the diameter of the corresponding triangle in the complex plane, we were able to avoid solving the auxiliary eigenproblems to a greater accuracy than what is warranted by the current resolution of the complex plane. 
+
+% Since the classification criteria depend on both the diameter of each triangle and the associated DWR error estimate, we chose the stopping criterion for each adaptive eigensolve based on the diameter of the corresponding triangle. In this way, our methodology avoids solving the auxiliary eigenproblems to a greater accuracy than what is warranted by the current resolution of the complex plane. 
+
+The success of this coupling was demonstrated through its application to a one-dimensional Dirac-type operator and to the Maxwell operator. In both cases, our methodology focused the computational effort near the pseudospectral contour of interest. 
+
+ In future work,  we would like to apply our current methodology to non-normal operators with more complicated pseudospectra. One example is the advection-diffusion operator explored in \cite{Nick}. To further increase the efficiency of our methodology, we would also like to investigate the use of multilevel methods for exploiting the hierarchy of meshes created by our adaptive mesh refinement technique. 
+ 
+ We would also like to relax some of the underlying assumptions of our methodology so that it can be applied to a broader class of operators. In particular, we would like to extend the DWR method to estimate the error in computing general spectral values. We would also like to extend our finite element formulation of Colbrook's algorithm so that it can accommodate a wider range of operators. 
+
+ % to more operators. In particular, we would like to consider
+ 
+ % like to relax some of the assumptions underlying the current methodology so that it can be applied more broadly. To do so, we would like to extend the DWR method to estimate the error in computing general spectral values. We would also like to extend our finite element formulation of Colbrook's algorithm to handle a broader class of operators. ADD MULTILEVEL
+ 
+ % we would like to be able to apply our approach to the standard poisson problem on a nonconvex domain.
+ % WHAT OPERATORS?
+
+ Ultimately, the results of this dissertation demonstrate the potential of pairing adaptivity with Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We hope that the ideas presented here provide a foundation for further work toward accurate and efficient solvers for computing the pseudospectra of a broad class of operators.
+
+% Despite the desire for more analytical and numerical work, the results of this thesis demonstrate the potential of pairing adaptivity with Colbrook's methodology for pseudospectral computations. Going forward, we hope to extend these ideas to further develop accurate and efficient solvers for computing the pseudospectra of a broad class of operators.
+
+
+
+% here can be extended toward an efficient framework for accurately computing the pseudospectra of a broad class of operators.
+
+% look forward to extending the current results to the development of an efficient methodology for accurately computing the pseudospectra of a large class of operators.
+% In this way, we hope that this current work motivates the development of more efficient methods for accurate pseudospectral computations.here can be extended toward an efficient framework for accurately computing the pseudospectra of a broad class of operators.
+
+% we believe that this thesis' development of a novel methodology for accurate and efficient pseudospectral computations lays the foundation for a brand-new app
+
+
+% Using this setup, we formulated criteria that determine if each triangle lies inside or outside of the desired $\epsilon$-pseudospectrum, or if it should be refined. These criteria balanced the diamater of each triangle with the DWR error estimate for Colbrook's pseudospectral approximations. As a result, we chose to set the stopping criteria for the adaptive eignsolves to based on the diameter of the triangles that resolve the complex plane.
+
+
+% Our numerical experiments showed that this adaptive mesh refinement technique can be used to increase the accuracy and efficiency of Colbrook's approach. The corrected approaximations improve the accuracy, while the underlying refinement technique increases focuses the computational effort in the regions of the mesh where the eigenvalue error is largest. 
+
+
+
+
+
+
+
 % Here we summarise the work that has been presented in this dissertation and discuss
 % possible areas for future work.
 

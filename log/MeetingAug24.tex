@@ -1,0 +1,435 @@
+\documentclass[12pt,a4paper]{article}
+
+\setlength{\topmargin}{0.0in}
+\setlength{\oddsidemargin}{0.33in}
+\setlength{\textheight}{9.0in}
+\setlength{\textwidth}{6.0in}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible
+}
+
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\ip}[2]{\left(#1,#2\right)_{L^2}}
+\newcommand{\IP}[2]{\left(#1,#2\right)_{\mathcal H}}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+\title{Meeting Notes August 24}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Meeting with Matt}
+\begin{itemize}
+    \item Seemed to go ok? There are lots of avenues for further work here. 
+\end{itemize}
+
+
+
+
+\section{Writing Updates}
+
+
+\begin{itemize}
+    \item Will send my draft in the next couple of hours. I would just like to do another full read-through. 
+    \item It is missing the repo `LINK'. In the next day or so, I am going to clean up the repo and organize it so that it is easy to navigate for an examiner. 
+    \item The regulations say:\textit{ The dissertation must be typed, and a 12pt font size should be used. The width of the text should be at most 15cm (6 inches) per page, and the height of the text should be at most 22.5cm (9 inches) per page. The spacing of the text should be at least one and a quarter spacing.} I use the inches setting instead of centimetres, but they vary slightly and affect page count and appearance. Is this ok?
+    \item Is Umberto officially a supervisor? 
+    \item What is next? My thoughts are that I will continue to edit the draft using your comments, fix up the repo, start going back over some content I am a bit shaky on still, and maybe run some more results in the background?
+\end{itemize}
+
+\newpage 
+\section{Code/Results Updates}
+
+\begin{itemize}
+    \item The advection diffusion example is not sorted out.
+    \item Umberto and I met to discuss this. The issue is that to do the Dirac folding so that we can deal with a first-order operator, we seem to lose the pseudospectrum of the original operator. This was not an issue before because we were dealing with normal operators, so we always expected the pseudospectrum to be a collection of $\epsilon$-balls. 
+    \item I have run just standard folding on the strong operator Hermite elements. To apply our methodology to this example we would have to extend the DWR localization method and/or devise an alternative approach for folding this operator. 
+    \item I tried (and am still) running our methodology on the Dirac folding version of this example. I had those initial mesh issues where one element was being refined alot and the method seemed to become ill-conditioned? This may be because of maximum marking:
+
+\begin{lstlisting}
+-------------------- [MESH LEVEL 13] ----------------------
+MESH GRADING DEBUG
+cells       = 31
+h_min       = 3.814697e-06
+h_max       = 6.250000e-02
+hmax/hmin   = 1.638400e+04
+marked      = 1
+
+-------------------- [MESH LEVEL 14] ----------------------
+MESH GRADING DEBUG
+cells       = 32
+h_min       = 1.907349e-06
+h_max       = 6.250000e-02
+hmax/hmin   = 3.276800e+04
+marked      = 1
+\end{lstlisting}
+\item To try and fix this, I swapped to LAPACK and made the marking parameter 0.1. Still, we are not computing a pseudospectrum that we can prove should look like the advection-diffusion example. Also, there could still be a bug in the foldng method. As a result, this example needs more work and is not in my report. 
+\end{itemize}
+
+
+
+% \begin{itemize}
+%     \item I will prepare some slides today. What should be in them exactly?
+%     \item What else needs to be prepped? 
+% \end{itemize}
+
+\section{The Advection-Diffusion Example}
+
+\subsection{The Standard Operator}
+
+Consider the one-dimensional advection--diffusion operator
+\begin{equation}
+    Lu=\eta u''+u',
+    \qquad
+    \D(L)=H^2(0,1)\cap H_0^1(0,1).
+    \label{eq:L}
+\end{equation}
+Thus $u(0)=u(1)=0$.
+
+The eigenvalues and eigenfunctions are
+\begin{equation}
+    \lambda_n
+    =-\frac{1}{4\eta}-\eta n^2\pi^2,
+    \qquad
+    u_n(x)=e^{-x/(2\eta)}\sin(n\pi x),
+    \qquad n=1,2,\ldots.
+    \label{eq:Lspec}
+\end{equation}
+Hence
+\begin{equation}
+    \Sp(L)
+    =\left\{-\frac{1}{4\eta}-\eta n^2\pi^2:
+      n=1,2,\ldots\right\}.
+\end{equation}
+
+The important point for the pseudospectral experiment is that $L$ is non-self-adjoint.  Its eigenvalues therefore need not fully describe the initial behaviour of the corresponding advection--diffusion evolution, which motivates studying its pseudospectrum.
+
+\subsection{A related Dirac operator and its spectrum}
+
+Set
+\[
+    \mathcal H=L^2(0,1)\times L^2(0,1)
+\]
+and define
+\begin{equation}
+    D\binom{u}{\sigma}
+    =
+    \binom{-i(\eta\sigma'+\sigma)}{-iu'},
+    \qquad
+    \D(D)=H_0^1(0,1)\times H^1(0,1).
+    \label{eq:D}
+\end{equation}
+We first consider a nonzero eigenvalue $\lambda$.  If
+\[
+    D\binom{u}{\sigma}
+    =\lambda\binom{u}{\sigma},
+\]
+then
+\begin{equation}
+    -i(\eta\sigma'+\sigma)=\lambda u,
+    \qquad
+    -iu'=\lambda\sigma.
+    \label{eq:DiracSystem}
+\end{equation}
+For $\lambda\neq0$, the second equation gives
+\[
+    \sigma=-\frac{i}{\lambda}u',
+    \qquad
+    \sigma'=-\frac{i}{\lambda}u''.
+\]
+Substituting into the first equation gives
+\begin{align*}
+    -i\left(\eta\left(-\frac{i}{\lambda}u''\right)
+       -\frac{i}{\lambda}u'\right)
+       &=\lambda u,\\
+    -\frac{1}{\lambda}(\eta u''+u')
+       &=\lambda u,
+\end{align*}
+and hence
+\begin{equation}
+    -Lu=\lambda^2u.
+    \label{eq:DiracL}
+\end{equation}
+Therefore, using \eqref{eq:Lspec},
+\[
+    \lambda^2
+    =-\lambda_n
+    =\frac{1}{4\eta}+\eta n^2\pi^2,
+\]
+so the nonzero Dirac eigenvalues are
+\begin{equation}
+    \boxed{
+    \lambda_n^{\pm}
+    =\pm\sqrt{\frac{1}{4\eta}+\eta n^2\pi^2},
+    \qquad n=1,2,\ldots.}
+    \label{eq:Dspecnonzero}
+\end{equation}
+
+There is one extra case that must be checked separately because the calculation above divides by $\lambda$.  When $\lambda=0$,
+\[
+    u'=0,
+    \qquad
+    \eta\sigma'+\sigma=0.
+\]
+Since $u\in H_0^1(0,1)$, this gives
+\[
+    u=0,
+    \qquad
+    \sigma(x)=Ce^{-x/\eta}.
+\]
+Thus $0$ is also an eigenvalue and
+\begin{equation}
+    \ker D
+    =\operatorname{span}\left\{
+      \binom{0}{e^{-x/\eta}}
+    \right\}.
+\end{equation}
+Consequently,
+\begin{equation}
+    \boxed{
+    \Sp(D)=\{0\}\cup
+    \left\{
+    \pm\sqrt{\frac{1}{4\eta}+\eta n^2\pi^2}:
+    n=1,2,\ldots
+    \right\}.}
+\end{equation}
+
+\seubsection{The Pseudospectrum}
+
+\subsection{Adjoint operators}
+
+\subsubsection{Adjoint of $L$}
+
+For the second-order operator in \eqref{eq:L}, integration by parts gives
+\begin{equation}
+    L^*v=\eta v''-v',
+    \qquad
+    \D(L^*)=H^2(0,1)\cap H_0^1(0,1).
+    \label{eq:Ladjoint}
+\end{equation}
+
+\subsubsection{Adjoint of the Dirac operator}
+
+Now let
+\[
+    U=\binom{u}{\sigma}\in\D(D),
+    \qquad
+    V=\binom{v}{\tau}.
+\]
+Then
+\begin{align*}
+    \IP{DU}{V}
+    &=\int_0^1
+       -i(\eta\sigma'+\sigma)\overline v
+       -iu'\overline\tau\,dx\\
+    &=-i\eta[\sigma\overline v]_0^1
+      +i\eta\int_0^1\sigma\overline{v'}\,dx
+      -i\int_0^1\sigma\overline v\,dx\\
+    &\qquad
+      -i[u\overline\tau]_0^1
+      +i\int_0^1u\overline{\tau'}\,dx.
+\end{align*}
+Because $\sigma\in H^1(0,1)$ has no prescribed endpoint values, the first boundary term vanishes for every $\sigma$ precisely when
+\[
+    v(0)=v(1)=0.
+\]
+The second boundary term already vanishes because $u\in H_0^1(0,1)$.  Therefore
+\begin{equation}
+    D^*\binom{v}{\tau}
+    =
+    \binom{-i\tau'}{-i(\eta v'-v)},
+    \qquad
+    \D(D^*)=H_0^1(0,1)\times H^1(0,1).
+    \label{eq:Dadjoint}
+\end{equation}
+This is the adjoint formula used in the folding calculation below.
+
+% \section{Folding for Matt's algorithm}
+
+% For a closed operator $A$ and $z\in\mathbb C$, Matt's construction requires the two folded operators
+% \begin{equation}
+%     F_{1,A}(z)
+%     =(A-zI)^*(A-zI)
+%     =(A^*-\overline z I)(A-zI),
+%     \label{eq:fold1general}
+% \end{equation}
+% and
+% \begin{equation}
+%     F_{2,A}(z)
+%     =(A-zI)(A-zI)^*
+%     =(A-zI)(A^*-\overline z I).
+%     \label{eq:fold2general}
+% \end{equation}
+% The associated variational forms are
+% \begin{align}
+%     a_{1,A,z}(u,v)
+%       &=((A-zI)u,(A-zI)v),
+%       \label{eq:a1general}\\
+%     a_{2,A,z}(u,v)
+%       &=((A^*-\overline z I)u,
+%           (A^*-\overline z I)v).
+%       \label{eq:a2general}
+% \end{align}
+% Thus there are two auxiliary eigenproblems for each operator.
+
+% \subsection{Folding the advection--diffusion operator $L$}
+
+% Using \eqref{eq:L} and \eqref{eq:Ladjoint},
+% \begin{align}
+%     F_{1,L}(z)
+%       &=(L^*-\overline z I)(L-zI),\\
+%     F_{2,L}(z)
+%       &=(L-zI)(L^*-\overline z I).
+% \end{align}
+% Their variational forms are simply
+% \begin{align}
+%     a_{1,L,z}(u,v)
+%       &=\ip{Lu-zu}{Lv-zv},
+%       \qquad u,v\in\D(L),
+%       \label{eq:Lfold1form}\\
+%     a_{2,L,z}(u,v)
+%       &=\ip{L^*u-\overline z u}{L^*v-\overline z v},
+%       \qquad u,v\in\D(L^*).
+%       \label{eq:Lfold2form}
+% \end{align}
+% These are the direct folds of the second-order operator.
+
+\subsection{Folding the Dirac operator $D$}
+
+The notes work out these two forms explicitly.  Write
+\[
+    U=\binom{u}{\sigma},
+    \qquad
+    V=\binom{v}{\tau}.
+\]
+
+\subsubsection*{First fold}
+
+Define
+\begin{equation}
+    F_{1}(z)
+    =(D-zI)^*(D-zI)
+    =(D^*-\overline z I)(D-zI).
+\end{equation}
+The corresponding form is
+\begin{equation}
+    a_{1, z}(U,V)
+    =\IP{(D-zI)U}{(D-zI)V}.
+\end{equation}
+Expanding as in the notes,
+\begin{align}
+    a_{1, z}(U,V)
+    &=\IP{DU}{DV}
+      -\overline z\,\IP{DU}{V}
+      -z\,\IP{U}{DV}
+      +|z|^2\IP{U}{V}\\[0.3em]
+    &=\ip{\eta\sigma'+\sigma}{\eta\tau'+\tau}
+      +\ip{u'}{v'}\notag\\
+    &\quad
+      -\overline z\left[
+        \ip{-i(\eta\sigma'+\sigma)}{v}
+        +\ip{-iu'}{\tau}
+      \right]\notag\\
+    &\quad
+      -z\left[
+        \ip{u}{-i(\eta\tau'+\tau)}
+        +\ip{\sigma}{-iv'}
+      \right]\notag\\
+    &\quad
+      +|z|^2\left[
+        \ip{u}{v}+\ip{\sigma}{\tau}
+      \right].
+    \label{eq:diracfold1}
+\end{align}
+
+\subsubsection*{Second fold}
+
+Define
+\begin{equation}
+    F_{2}(z)
+    =(D-zI)(D^*-\overline z I).
+\end{equation}
+Its variational form is
+\begin{equation}
+    a_{2,z}(U,V)
+    =\IP{(D^*-\overline z I)U}
+          {(D^*-\overline z I)V}.
+\end{equation}
+Using \eqref{eq:Dadjoint},
+\[
+    D^*\binom{u}{\sigma}
+    =\binom{-i\sigma'}{-i(\eta u'-u)}.
+\]
+Therefore
+\begin{align}
+    a_{2,z}(U,V)
+    &=\IP{D^*U}{D^*V}
+      -z\,\IP{D^*U}{V}
+      -\overline z\,\IP{U}{D^*V}
+      +|z|^2\IP{U}{V}\\[0.3em]
+    &=\ip{\sigma'}{\tau'}
+      +\ip{\eta u'-u}{\eta v'-v}\notag\\
+    &\quad
+      -z\left[
+        \ip{-i\sigma'}{v}
+        +\ip{-i(\eta u'-u)}{\tau}
+      \right]\notag\\
+    &\quad
+      -\overline z\left[
+        \ip{u}{-i\tau'}
+        +\ip{\sigma}{-i(\eta v'-v)}
+      \right]\notag\\
+    &\quad
+      +|z|^2\left[
+        \ip{u}{v}+\ip{\sigma}{\tau}
+      \right].
+    \label{eq:diracfold2}
+\end{align}
+
+
+\end{document}
+
+

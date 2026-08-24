@@ -1,0 +1,35 @@
+\begin{algorithm}[ht]
+\caption{Finite Element Formulation of Algorithm \ref{old pseudospec}.}
+\label{pseudospec}
+
+\textbf{Input:} $\operatorname{Grid}\subset\mathbb{C}$, $\epsilon>0$, $V_h\subset D(A)$ and
+$W_h\subset D(A^*)$.
+
+\begin{algorithmic}[1]
+    \State For each $z\in\operatorname{Grid}$, compute
+    $\mu_h^{(1)}(z)$ as the smallest eigenvalue of \eqref{aux1}.
+    
+    \State For each $z\in\operatorname{Grid}$, compute
+    $\mu_h^{(2)}(z)$ as the smallest eigenvalue of \eqref{aux2}.
+    
+    \State Set $\Phi_h(z,A)=
+        \sqrt{
+            \min\left\{
+                \mu_h^{(1)}(z),
+                \mu_h^{(2)}(z)
+            \right\}
+        }.$
+    
+    \State Set
+        $\Gamma_h^\epsilon(A)
+        =
+        \left\{
+            z\in\operatorname{Grid}:
+            \Phi_h(z,A)<\epsilon
+        \right\}.$
+\end{algorithmic}
+
+\textbf{Output:} $\Gamma_h^\epsilon(A)$, a finite element approximation of
+$\operatorname{Sp}_\epsilon(A)$.
+
+\end{algorithm}

@@ -1,8 +1,8 @@
 \begin{algorithm}[ht]
-\caption{Coupled Inner and Outer Refinement for Colbrook's Algorithm.}
+\caption{Coupled Inner and Outer Refinement for Computing Pseudospectra}
 \label{outerloop}
 
-\textbf{Input:} Initial triangulation $\mathcal{T}_0$ of $D\subset\mathbb{C}$, initial finite element space $V_h^{(j)}$ for the $j$-th auxiliary eigenproblem ($j \in \{1, 2\})$,
+\textbf{Input:} Initial triangulation $\mathcal{T}_0$ of $\mathcal{D}\subset\mathbb{C}$, initial finite element space $V_h^{(j)}$ for the $j$-th auxiliary eigenproblem ($j \in \{1, 2\})$,
 $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of freedom for the adaptive mesh refinement technique. 
 
 \begin{algorithmic}[1]
@@ -13,8 +13,7 @@ $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of
 
         \For{each unclassified triangle $K\in\mathcal{T}_k$}
 
-            \State Let $z_K$ be the barycentre of $K$ and set
-            $h_K=\operatorname{diam}(K)$.
+            \State Compute the barycentre, $z_K,$ and the diameter, $h_K,$ of $K.$ 
         
             \For{$j\in\{1,2\}$}
                 \State \parbox[t]{0.82\linewidth}{
@@ -28,7 +27,7 @@ $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of
                 \EndFor
     
             \State Compute
-                $ \Phi_n(z_K,A) $ as in \eqref{approx phi}
+                $ \Phi_h(z_K,A) $ as in \eqref{approx phi}.
                 % =
                 % \sqrt{
                 %     \min\left\{
@@ -37,7 +36,7 @@ $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of
                 %     \right\}
                 % }.$
 
-            \State Compute the corrected approximation $\Phi_{n,c}(z_K,A)$ as in \eqref{phi err}.
+            \State Compute the corrected approximation $\Phi_{h,c}(z_K,A)$ as in \eqref{phi err}.
             
             % =\sqrt{
             %         \min\left\{
@@ -48,9 +47,9 @@ $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of
 
             \State Compute $R$ as in \eqref{R}.
 
-            \If{$\Phi_n(z_K,A)+R<\epsilon$}
+            \If{$\Phi_h(z_K,A)+R<\epsilon$}
                 \State Classify $K$ as \textsc{inside}.
-            \ElsIf{$\Phi_n(z_K,A)-R>\epsilon$}
+            \ElsIf{$\Phi_h(z_K,A)-R>\epsilon$}
                 \State Classify $K$ as \textsc{outside}.
             \ElsIf{$h_K<h_{\mathrm{tol}}$}
                 \State Classify $K$ as \textsc{contour}.

@@ -1,43 +1,50 @@
 \chapter{Introduction}
 
 % The importance of spectra cannot be overstated, and the study of spectra has a long and rich history in mathematics.
-
+ % and thus with spectra,
 \section{Motivations and  Project Aims}
 
-With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, and thus with spectra, it is hard to overstate the importance of spectra in applied mathematics \cite{NickEssay}. Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations (PDEs)\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of \cite{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in Figure \ref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg \cite{Nick}. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite{Nick}.
+With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues it is hard to overstate the importance of spectra in applied mathematics \cite{NickEssay}. Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of \cite{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in Figure \ref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg \cite{Nick}. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite{Nick}.
 % spectroscopy figure
 \input{figures/fraunhofer}
 
-Although the importance of spectra is beyond question, their reliable computation is another matter \cite{Forward}. In finite dimensions, we compute the spectrum of a matrix, which is equivalent to the set of its eigenvalues.  In particular, if $B \in \mathbb{C}^{nxn}$ then its spectrum is the following set of points:
+Although the importance of spectra is beyond question, their reliable computation can be challenging \cite{Forward}. In finite dimensions, we compute the spectrum of a matrix, which is equivalent to the set of its eigenvalues.  In particular, if $B \in \mathbb{C}^{n\times n}$ then its spectrum is the following set of points:
 \begin{equation} \label{matrix spec}
     \operatorname{Sp}(B) = \{z \in \mathbb{C}: \det (B-zI) = 0 \} = \{z \in \mathbb{C}: (B-zI)^{-1} \text{ does not exist} \},
 \end{equation}
 where $I$ denotes the identity matrix. 
 % One might be tempted to think that this is a straightforward problem. However, as we will see, even for non-normal matrices, computed eigenvalues may be unreliable. 
-In infinite dimensions, we consider a linear operator $A$ on a Hilbert space $H,$ whose spectrum is defined by the following set:
+In infinite dimensions, we consider a linear operator $A$ on a Hilbert space $\H,$ whose spectrum is defined by the following set:
 \begin{equation} \label{SpA}
-    \operatorname{Sp}(A) = \{z \in \mathbb{C}: (A-zI)^{-1} \text{ does not exist as a bounded operator on } H \},
+    \operatorname{Sp}(A) = \{z \in \mathbb{C}: (A-zI)^{-1} \text{ does not exist as a bounded operator on } \H \},
 \end{equation}
 where $I$ denotes the identity operator. The spectrum of a linear operator includes the set of eigenvalues of $A,$ but is generally much richer. This follows from the fact that in infinite dimensions there are more ways for $A-zI$ to fail to have a bounded inverse \cite{Matt}. As a result, new phenomena are present in the spectra of linear operators that make them much harder to reliably compute. To see this, consider the right-shift operator, 
 \begin{equation}\label{right shift}
     A(x_1, x_2, \dots) = (0, x_1, x_2, \dots),
 \end{equation}
 that acts on square-summable sequences\footnote{Claiming that a sequence is `square-summable' is claiming that the sequence is an element of 
-    $l^2(\mathbb{N}) = \{z = \{x_n\}_{n \in \mathbb{N{}}}: \sum_{n=1}^{\infty} |x_n|^2 < \infty\}.$}.This operator's spectrum is equal to the unit disc, but it has no eigenvalues\footnote{For more information on this example, see Appendix \ref{Shift Appendix}.}.
+    $\ell^2(\mathbb{N}) = \{z = \{x_n\}_{n \in \mathbb{N}}: \sum_{n=1}^{\infty} |x_n|^2 < \infty\}.$}. This operator's spectrum is the unit disc, but it has no eigenvalues\footnote{For more information on this example, see Appendix \ref{Shift Appendix}.}.
 
-The standard approach for computing the spectrum of an infinite-dimensional operator is often referred to as the \textit{discretize-then-solve} approach \cite{Matt}. This approach consists of discretizing the operator with a finite-dimensional matrix, computing the spectrum of the discretized operator, and hoping that the spectrum of the discretized operator approaches the spectrum of the infinite-dimensional operator as the size of the discretization increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretized very carefully, \textit{spectral pollution} can occur, where the discretized operator has eigenvalues that converge to something not in the spectrum of the infinite-dimensional operator. Furthermore, the approach can suffer from \textit{spectral invisibility}, where discretizing the operator causes us to miss parts of the spectrum, even as the size of the discretization increases. Even if our discretization manages to avoid both spectral pollution and spectral invisibility, there remains a far more catastrophic limitation of the discretize-then-solve approach. In particular, since the spectra of infinite-dimensional operators may include more than just eigenvalues of finite multiplicity, there may be parts of the spectrum that we can never capture with the finite, discrete set of eigenvalues that results from discretization \cite{Matt}. 
+The standard approach for computing the spectrum of an infinite-dimensional operator is often referred to as the \textit{discretize-then-solve} approach \cite{Matt}. This approach consists of discretizing the operator with a finite-dimensional matrix, computing the spectrum of the discretized operator, and hoping that the spectrum of the discretized operator approaches the spectrum of the infinite-dimensional operator as the size of the discretization increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretized very carefully, \textit{spectral pollution} can occur, where the discretized operator has eigenvalues that converge to something not in the spectrum of the infinite-dimensional operator.Furthermore, the approach can suffer from \textit{spectral invisibility}. This occurs when discretizing the operator causes us to miss parts of the spectrum, even as the size of the discretization increases. Even if our discretization manages to avoid both spectral pollution and spectral invisibility, there remains a far more catastrophic limitation of the discretize-then-solve approach. In particular, since the spectra of infinite-dimensional operators may include more than just eigenvalues of finite multiplicity, there may be parts of the spectrum that we can never capture with the finite, discrete set of eigenvalues that results from discretization \cite{Matt}. 
 
 These drawbacks of the discretize-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. This challenge has been taken up in the recent work of Matthew Colbrook at Cambridge University \cite{Matt}. His work is based on the idea that infinite-dimensional problems should not be reduced too quickly and uncritically to finite-dimensional problems. Although discretization is unavoidable in the end, Colbrook shows that when and how it is introduced is crucial to the successful computation of spectra \cite{Forward}. 
 
 
 % Rather than discretizing the operator at the outset and then computing the eigenvalues of the resulting matrix, 
-Colbrook's algorithm considers a sequence of complex numbers $z$ drawn from a grid of points in the complex plane and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ As we will see, these bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
+% Colbrook's algorithm considers a sequence of complex numbers $z$ drawn from a grid of points in the complex plane and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ As we will see, these bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
+% The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretize-than-solve approach \cite{Matt}. 
+% The main computational component of Colbrook's approach for computing spectra is his algorithm for computing pseudospectra. 
+% Once the pseudospectra of an operator have been computed, the spectrum can be recovered through by taking one additional limit. 
+
+% His algorithm co The pseudospectra of an operator are characterized by a parameter $\epsilon > 0$ and contain the spectrum of the operator. To obtain the spectrum from the pseudospectra, one just needs to take $\epsilon \rightarrow 0$. 
+
+ Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra. This algorithm considers a sequence of complex numbers $z$ drawn from a grid of points in the complex plane and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ As we will see, these bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
 The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretize-than-solve approach \cite{Matt}. 
 
 Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost, since it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
 
 
-In this thesis, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the spectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{Dual-Weighted Residual} (DWR) method to estimate the error in the quantities used to bound the distance to the spectrum. These estimates are used to both improve the computed bounds and to drive adaptive refinement of the auxiliary eigenproblems. 
+In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the spectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{Dual-Weighted Residual} (DWR) method to estimate the error in the quantities used to bound the distance to the spectrum. These estimates are used to both improve the computed bounds and to drive adaptive refinement of the auxiliary eigenproblems. 
 
 In an effort to reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This ``outer-adaptivity" balances the DWR error estimate with the desired spatial resolution of a pseudospectral computation. 
 
@@ -80,37 +87,57 @@ To investigate the effectiveness of our methodology, we apply it to numerical ex
 
 
 \section{Main Contributions}
-% The examiners have suggested that a ``main contributions'' section in the introduction is really useful, so please ensure you have such a section! You can use this to explain what you believe are the main results of your work. If any of what you have done is novel, it can be helpful to highlight that here. If you have worked on an industrial project you could state how and why your results are useful to your industrial partner.
 
-Not written yet - this is a running list of what I may want to include.
-
-
-In this report, our main contributions, all of which are novel, can be summarized as follows:
+The main contributions of this work can be summarized as follows:
 
 \begin{itemize}
-    \item We derive the proper functional analytic setting for Colbrook's algorithm. 
-    \item We develop the functionality needed for DWR to approximate the error for eigenvalues with multiplicity greater than one.
-    \item We extend the existing code for DWR for eigenproblems to handle mixed function spaces. 
-    \item We derive, discuss, and check the assumptions needed for DWR to be applied to Colbrook's algorithm. 
-    \item We apply DWR to the auxiliary eigenproblems in Colbrook's algorithm. In doing so, we are able to compute bounds on the distance to the spectrum both accurately and efficiently. This success is shown via an application to the Maxwell eigenproblem.
-    \item We develop a strategy for adapting the complex plane in Colbrook's algorithm. This methodology aims to balance the refinement of the auxiliary eigenproblems with the refinement of the complex plane for pseudospectral computations.
-    \item We apply our methodology to the Poisson eigenproblem in one dimension and Maxwell eigenproblem in two dimensions. 
+    \item We specialize Colbrook's algorithm for computing pseudospectra to the finite element setting. 
+    \item We develop an adaptive mesh refinement technique that applies the Dual-Weighted Residual (DWR) method for symmetric eigenproblems to the auxiliary eigenproblems that arise in Colbrook's algorithm. To do so, we extend the current DWR eigenvalue error estimate to eigenvalues of multiplicity greater than one.  We also use the DWR eigenvalue error estimate to derive an error estimate for Colbrook's approximate bounds on the distance to the spectrum.
+    % Using the DWR error estimate, we develop and implement an adaptive mesh refinement technique for the auxiliary eigenproblems in Colbrook's algorithm. 
+    % This implementation builds upon a pre-existing implementation of the DWR method so that it can be applied to Colbrook's algorithm.
+    \item We develop a methodology for adaptively selecting test points for Colbrook's algorithm. To do so, we triangulate a region of the complex plane and use our DWR error estimates to derive criteria for deciding whether a given triangle lies inside or outside of the desired pseudospectrum, or whether it should be further refined.
+    \item We couple an adaptive mesh refinement technique for the auxiliary eigenproblems with our adaptive selection of test points. This coupling focuses the computational effort of Colbrook's algorithm near a pseudospectral contour of interest. 
+    \item We apply the resulting methodology to a one-dimensional Dirac-type operator and to the Maxwell eigenproblem. 
 \end{itemize}
 
+
+% The examiners have suggested that a ``main contributions'' section in the introduction is really useful, so please ensure you have such a section! You can use this to explain what you believe are the main results of your work. If any of what you have done is novel, it can be helpful to highlight that here. If you have worked on an industrial project you could state how and why your results are useful to your industrial partner.
+
+% Not written yet - this is a running list of what I may want to include.
+
+
+% In this report, our main contributions, all of which are novel, can be summarized as follows:
+
+% \begin{itemize}
+%     \item We derive the proper functional analytic setting for Colbrook's algorithm. 
+%     \item We develop the functionality needed for DWR to approximate the error for eigenvalues with multiplicity greater than one.
+%     \item We extend the existing code for DWR for eigenproblems to handle mixed function spaces. 
+%     \item We derive, discuss, and check the assumptions needed for DWR to be applied to Colbrook's algorithm. 
+%     \item We apply DWR to the auxiliary eigenproblems in Colbrook's algorithm. In doing so, we are able to compute bounds on the distance to the spectrum both accurately and efficiently. This success is shown via an application to the Maxwell eigenproblem.
+%     \item We develop a strategy for adapting the complex plane in Colbrook's algorithm. This methodology aims to balance the refinement of the auxiliary eigenproblems with the refinement of the complex plane for pseudospectral computations.
+%     \item We apply our methodology to the Poisson eigenproblem in one dimension and Maxwell eigenproblem in two dimensions. 
+% \end{itemize}
+
 \section{Code Availability}
+
+All relevant code is implemented in the complex version of Firedrake \cite{Firedrake}.
+Our implementation of an adaptive mesh refinement technique for Colbrook's algorithm builds upon an existing Firedrake branch that provides a general implementation of DWR-based adaptivity for nonlinear variational problems \cite{pablo}. To this branch, we reintroduced and updated the DWR-based adaptive eigensolver created by Joseph Flood for his Master's thesis \cite{joe}. We then extended both implementations so that they can be applied to the auxiliary eigenproblems in Colbrook's algorithm.
+
+The code used to produce each numerical example presented below can be found at LINK. The filenames indicate the relevant figure numbers.
+
+% \Maggie{I am planning on organizing the repo so that it is easy to access and understand by the examiners. When that is done, I will replace LINK with the actual repo link.}
+
+
 % Here you may have a link to your GitHub repository (recommended but not mandatory). You can also make clear whether you have written code from scratch, or based it on other code, or had help from ChatGPT.
 
 \section{Structure of the Dissertation}
 % It is common, although not compulsory, to end the introduction with a brief section explaining the structure of the dissertation. Often this goes along the lines of:
 % The remainder of the dissertation is structured as follows. In Chapter 2 we discuss blah blah. In Chapter 3 we blah blah. Finally in Chapter 4 we summarise the work we have done and suggest some areas for future research.
 
+The remainder of the dissertation is structured as follows. 
+In Chapter 2, we present all relevant background material for our methodology. We begin with an overview of the spectra and pseudospectra of infinite-dimensional operators. We then introduce the standard discretize-then-solve approach and discuss its common pitfalls. As an example, we demonstrate the presence of spectral pollution when a na\"ve finite element discretization is applied to the Maxwell eigenproblem. This motivates Colbrook's algorithm, which we first describe in its abstract formulation and then in the finite element setting. By applying the finite element realization of Colbrook's algorithm to the Maxwell eigenproblem, we show that, although the algorithm avoids the pitfalls the discretize-then-solve approach, its accuracy depends on the quality of the underlying discretization. As a result, we introduce the Dual-Weighted Residual (DWR) method and explore its application to our finite element realization of Colbrook's algorithm. 
 
-\section{Unresolved Questions (Delete Later)}
+In Chapter 3, we develop our adaptive methodology. We first construct an adaptive mesh refinement technique for the auxiliary eigenproblems arising in Colbrook's algorithm. We then develop an approach for adaptively selecting test points for Colbrook's algorithm. Chapter 3 ends with our main algorithm, which couples these two levels of adaptivity. 
 
-\begin{itemize}
-    \item How to write Matt's algorithm with the right functional analysis.
-    \item What operators are we considering? Bounded? Or closed and densely defined?
-    \item What assumptions on the spaces and operators are needed in the DWR section? Do we need some special embedding of $V$ into $H?$ What spaces and adjoint?
-    \item Double-check that DWR results carry over to the antidual setting. It doesn't matter too much because we use the symmetric result.
-\end{itemize}
+In Chapter 4, we apply this algorithm to a one-dimensional Dirac-type operator and to the Maxwell eigenproblem. In Chapter 5, we summarize our work and discuss some potential directions for future research.
 

@@ -1,1 +1,146 @@
-\chapter{The Spectrum of the Folded Maxwell Operator}\label{Garding}
+\chapter{Speeding Up Compuations for the Maxwell Example}\label{speedup}
+
+
+In this appendix, we derive the result used to speed up our implementation of Algorithm \ref{outerloop} in Section \ref{maxwell results}.
+
+Let $A$ be a self-adjoint, closed, and densely defined operator on the Hilbert space $H.$  For Colbrook's algorithm, we consider the folded operator $F(z) \defeq (A-zI)^*(A-zI).$ Since $A^*=A,$ we have
+$F(z) = (A-\overline{z}I)(A-zI).$
+Plugging in $z = x +iy$ and expanding, we obtain
+\begin{align}
+    F(z) &= (A-xI + iyI)(A-xI-iyI)\\
+    &=(A-xI)^2 + y^2 I.
+\end{align}
+% Furthermore, for the injection modulus \eqref{inject}, we have
+% \begin{align}
+%     \|(A-zI) u \|_H^2 &= \| (A-zI) u - iyu \|_H^2 \\
+%     &= \| (A-xI)u \|_H^2 + y^2 \|u\|_H^2 + 2 \operatorname{Re}\{ (A-xI)u, -iyu )_H \} \\
+%     &= \| (A-xI)u \|_H^2 + y^2 \|u\|_H^2.
+% \end{align}
+% Taking the infimum over unit vectors, we can write \eqref{gamma} as
+% \begin{equation}
+%     \gamma(z, A)^2 = \gamma(x, A)^2 + y^2. 
+% \end{equation}
+
+
+% Next, we consider our variational folded operator of Section \ref{Fix matt}, written as $B(z) \defeq (L-zM)'M^{-1}(L-zM) = (L-\overline{z}M)M^{-1}(L-zM).$ Expanding, we have 
+% \begin{align}
+%     B(z) &= LM^{-1}L - (z + \overline z) L + |z|^2 M \\
+%     &= LM^{-1} L - 2xL + (x^2 + y^2) M.
+% \end{align}
+% Notice that 
+% \begin{equation}
+%     B(x) = (L-xM)M^{-1}(L-xM) = LM^{-1}L - 2xL + x^2 M.
+% \end{equation}
+% Thus, 
+% \begin{equation}
+%     B(z) = B(x) + y^2 M.
+% \end{equation}
+
+Next we consider the quadratic form 
+\begin{equation}
+    Q_{z, A}(u, v) \defeq ((A-zI)u, (a-zI)v)_H,
+\end{equation}
+for all $u, v \in D(A).$
+Substituting in $z = x+iy,$ we have
+\begin{align}
+    Q_{z,A}(u,v)
+    &= \bigl((A-xI)u-iyu,\,(A-xI)v-iyv\bigr)_H \\
+    &= \bigl((A-xI)u,(A-xI)v\bigr)_H
+       + iy\bigl((A-xI)u,v\bigr)_H \notag\\
+    &\quad
+       - iy\bigl(u,(A-xI)v\bigr)_H
+       + y^2(u,v)_H \\
+    &= \bigl((A-xI)u,(A-xI)v\bigr)_H
+       + y^2(u,v)_H \\
+    &= Q_{x,A}(u,v)+y^2(u,v)_H.
+\end{align}
+Taking $v=u,$ we have that
+\begin{align}
+    Q_{z,A}(u,u)
+    &= Q_{x,A}(u,u)+y^2\|u\|_H^2.
+\end{align}
+Then, taking infimum over unit vectors, we can write \eqref{gamma} as
+\begin{equation}
+    \gamma(z, A)^2 = \gamma(x, A)^2 + y^2. 
+\end{equation}
+
+
+Considering an appropriate finite element space $V_h,$ we have that
+\begin{align}
+    Q_{z, A}(u_h, v_h) &= Q_{x, A}(u_h, v_h) + y^2 m(u_h, v_h).
+\end{align}
+Thus, to seek $\lambda_h(z)$ and nonzero $u_h(z) \in V_h$ to satisfy
+\begin{equation} \label{zval}
+    Q_{z, A}(u_h(z), v_h) = \lambda_h(z) m(u_h(z), v_h), 
+\end{equation}
+for all $v_h \in V_h,$
+we can instead seek $\lambda_h(x)$ and nonzero $u_h(x) \in V_h$ to satisfy
+\begin{align} \label{xval}
+    Q_{x, A}(u_h(x), v_h) &= (\lambda_h(x) - y^2) m(u_h(z), v_h) = \lambda_h(x) m(u_h(x), v_h), 
+\end{align}
+for all $v_h \in V_h.$
+In other words, for each distinct $x,$ we can solve $Q_{x, A}(u_h(x), v_h) = \lambda_h(x) m(u_h(x), v_h)$ and find $\lambda_h(z)$ by adding $y^2.$ The eigenfunctions carry over as well. That is, $E_h(z) = E_h(x),$ where $E_h(\cdot)$ denotes the eigenspace for $\lambda_h(\cdot).$
+
+
+% Considering an appropriate finite element space $V_h,$ we define the sesquilinear forms  $Q_{z, A}(u_h, v_h) \defeq \langle B(z) u_h, v_h \rangle$ and $m(u_h, v_h) \defeq \langle M u_h, v_h \rangle.$ Notice that 
+% \begin{align}
+%     Q_{z, A}(u_h, v_h) &\defeq \langle B(z) u_h, v_h \rangle \\
+%     &= \langle B(x)  u_h, v_h \rangle + y^2 \langle M u_h, v_h \rangle  \\
+%     &= Q_{x, A}(u_h, v_h) + y^2 m(u_h, v_h).
+% \end{align}
+% Thus, to seek $\lambda_h(z)$ and nonzero $u_h(z) \in V_h$ to satisfy
+% \begin{equation}
+%     Q_{z, A}(u_h(z), v_h) = \lambda_h(z) m(u_h(z), v_h), \qquad \forall v_h \in V_h,
+% \end{equation}
+% we can instead seek $\lambda_h(z)$ and nonzero $u_h(x) \in V_h$ to satisfy
+% \begin{equation}
+%     Q_{x, A}(u_h(x), v_h) = (\lambda_h(x) - y^2) m(u_h(z), v_h) = \lambda_h(x) m(u_h(x), v_h), \qquad \forall v_h \in V_h.
+% \end{equation}
+% In other words, for each distinct $x,$ we can solve $Q_{x, A}(u_h(x), v_h) = \lambda_h(x) m(u_h(x), v_h)$ and find $\lambda_h(z)$ by adding $y^2.$ The eigenfunctions carry over as well. That is, $E_h(z) = E_h(x),$ where $E_h(\cdot)$ denotes the eigenspace for $\lambda_h(\cdot).$
+
+With this, we can conclude that for $z$ values that share the same real part, Colbrook's bound on the distance to the spectrum depends only on a shift by the square of the imaginary part:
+\begin{equation} \label{shift}
+    \Phi_h(z, A) = \sqrt{\mu_h(z)} = \sqrt{\mu_h(x) + y^2},
+\end{equation}
+where $\mu_h(z)$ and $\mu_h(x)$ denote the smallest eigenvalues of \eqref{zval} and \eqref{xval}, respectively.
+
+This result carries over to the DWR error estimate \eqref{DWR} as well. In particular,
+notice that the primal residual \eqref{resid} can be written as
+\begin{align}
+    \rho(u_h, \lambda_h(z))(v) &\defeq Q_{z, A}(u_h , v) - \lambda_h(z) m(u_h, v) \\
+    &= Q_{x, A}(u_h, v) + y^2 m(u_h, v) - \lambda_h(z) m(u_h, v) \\
+    &= Q_{x, A}(u_h, v) - (\lambda_h(z) - y^2) m(u_h, v) \\
+    &= Q_{x, A}(u_h, v) - \lambda_h(x) m(u_h, v) \\
+    &= \rho(u_h, \lambda_h(x))(v).  
+\end{align}
+Since the primal residual depends only on $x,$ as well as both the primal and enriched eigenspaces, the DWR error estimate \eqref{DWR} depends only on $x.$ Thus,
+\begin{align}
+    \lambda(z) - \lambda_h(z) &\approx \frac{\rho(u_h(z), \lambda_h(z))(u_h^+(z) - u_h(z))}{1 - 1/2 \| u_h^+- u_h \|_m^2 }\\
+    &= \frac{\rho(u_h(x), \lambda_h(x))(u_h^+(x) - u_h(x))}{1 - 1/2 \| u_h^+(x) - u_h(x) \|_m^2 }.
+\end{align}
+
+These results allow us to drastically speed up our implementation of Algorithm \ref{outerloop}. For each distinct $x,$ we perform one expensive adaptive eigensolve at one barycentre $z_K$ that satisfies $\operatorname{Re}(z_K) = x.$ We then use \eqref{shift} to compute $\Phi_h(z_K, A)$ for every other barycentre with the same real part. The DWR error estimate computed at the representative $z_K$ is also carried over to every other barycentre with the same real part. 
+
+% barycentre $z_K$ that shares the same real part, we perform one expensive adaptive eigensolve. Then, for each `column' (every $z_K$ that shares the same real part) in the complex plane, we compute the needed $\Phi_n(z_K, A)$ using \eqref{shift}. The error estimate computed at the chosen $z_K$ for each column carries over to every other point in that column.
+
+
+% \subsection{DWR Error Estimate}
+
+% Notice that the imaginary part of $z$ does not affect the primal residual:
+% \begin{align}
+%     \rho_z(v) &\defeq a_z(u_h, v) - \lambda_h(z) m(u_h, v) \\
+%     &= a_x(u_h, v) + y^2 m(u_h, v) - \lambda_h(z) m(u_h, v) \\
+%     &= a_x(u_h, v) - (\lambda_h(z) - y^2) m(u_h, v) \\
+%     &= a_x(u_h, v) - \lambda_h(x) m(u_h, v) \\
+%     &= \rho_x(v).  
+% \end{align}
+% Since the residual only depends on $x,$ and the eigenfunctions only depend on $x,$ the DWR error estimate depends only on $x$:
+% \begin{align}
+%     \lambda(z) - \lambda_h(z) &\approx \frac{\rho_z(u_h^+(z) - u_h(z))}{1 - 1/2 \| u_h^+(z) - u_h(z) \|_m^2 }\\
+%     &= \frac{\rho_z(u_h^+(x) - u_h(x))}{1 - 1/2 \| u_h^+(x) - u_h(x) \|_m^2 }.
+% \end{align}
+
+
+% \subsection{What does this mean?}
+
+% If correct, this means we can drastically speed up our computations. For each $x,$ we do the expensive adaptive eigensolves. Then, for each `column' (every $z$ that shares $x$) in the complex plane, we compute the needed $\Phi_n(z, A)$ using the shift by $y^2.$ The error estimate computed at $x$ carries over to every other point in that column.

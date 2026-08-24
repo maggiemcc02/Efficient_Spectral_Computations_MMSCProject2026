@@ -3,6 +3,11 @@
 \setlength{\oddsidemargin}{0.33in}
 \setlength{\textheight}{9.0in}
 \setlength{\textwidth}{6.0in}
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{22.5cm}
+% \setlength{\textwidth}{15cm}
+\renewcommand{\baselinestretch}{1.25}
 \renewcommand{\baselinestretch}{1.25}
 %load any additional packages
 \usepackage{amssymb}
@@ -36,6 +41,9 @@
 \usepackage{etoolbox}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{todonotes}
+\newcommand{\Maggie}[1]{\todo[inline, color=pink!70]{Maggie: #1}}
+\renewcommand{\H}{\mathcal{H}}
 
 %\usepackage{amssymb,amsmath,epsfig,html}
 
@@ -102,6 +110,7 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{2}
 
+
 \maketitle
 \include{ackno}
 \include{abst}
@@ -118,12 +127,17 @@
 
 \appendix
 \include{appendix1}
-\include{appendix3}
 \include{appendix2}
+\include{appendix3}
 
 \addcontentsline{toc}{chapter}{References}
 \renewcommand{\bibname}{References}
 \bibliography{refs}
 \bibliographystyle{plain}
+
+% \appendix
+% \include{appendix1}
+% \include{appendix2}
+% \include{appendix3}
 
 \end{document}
