@@ -330,7 +330,7 @@ With this example in mind, it is clear that the pitfalls of the discretize-then-
 % Furthermore, we use $\mathbf{t}$ to denote the unit tangent of $\partial U,$ $H(\textbf{rot}; U)$ the denote the space of functions in $L^2(u)$ with $\textbf{rot}$ in $L^2(U)^2,$ and $\mathbf{H}_0(\text{rot} ; U)$ to denote the space of functions in $L^2(U)^2$ with $\text{rot}$ in $L^2(U).$ 
 
 
-\section{Colbrook's Algorithm for Computing Pseudospectra}
+\section{Colbrook's Algorithm for Pseudospectra}
 
 
 
@@ -971,9 +971,15 @@ In this chapter, we develop our methodology for pairing our adaptive mesh refine
 
 \section{ An Adaptive Refinement Technique for Colbrook's Algorithm}
 
-As discussed, Algorithm \ref{pseudospec} computes bounds on the distance to the spectrum and does not suffer from the pitfalls of the discretize-then-solve approach. To obtain these bounds, we compute the smallest eigenvalues of auxiliary eigenproblems for the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ However, as shown in Section \ref{Matt Max}, if the discretization of these eigenproblems is too coarse, the bounds obtained from Algorithm \ref{pseudospec} may be poor. 
 
-To improve these bounds, we apply the DWR method to Algorithm \ref{pseudospec}.  To do so, we recall that for a fixed $z$ in Algorithm \ref{pseudospec}, we compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. By identifying $a(\cdot, \cdot)$ in Section \ref{DWR sect} with the sesquilinear formulations of $Q_{z, A}^{(1)}(\cdot, \cdot)$ and $Q_{z, A}^{(2)}(\cdot, \cdot)$ in Algorithm \ref{pseudospec}, we can apply the discussion of Section \ref{DWR sect} to the auxiliary eigenproblems in Algorithm \ref{pseudospec}. In doing so, we can compute DWR error estimates for $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z)$.
+As discussed, Algorithm \ref{pseudospec} approximates the pseudospectra of an operator without suffering from the pitfalls of the discretize-then-solve approach. To obtain these approximations, we compute the smallest eigenvalues of auxiliary eigenproblems for the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ However, as shown in Section \ref{Matt Max}, if the discretization of these eigenproblems is too coarse, the approximations obtained from Algorithm \ref{pseudospec} may be poor. 
+
+
+% As discussed, Algorithm \ref{pseudospec} computes bounds on the distance to the spectrum and does not suffer from the pitfalls of the discretize-then-solve approach. To obtain these bounds, we compute the smallest eigenvalues of auxiliary eigenproblems for the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ However, as shown in Section \ref{Matt Max}, if the discretization of these eigenproblems is too coarse, the bounds obtained from Algorithm \ref{pseudospec} may be poor. 
+
+To improve these approximations, we apply the DWR method to Algorithm \ref{pseudospec}.  To do so, we recall that for a fixed $z$ in Algorithm \ref{pseudospec}, we compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. By identifying $a(\cdot, \cdot)$ in Section \ref{DWR sect} with the sesquilinear formulations of $Q_{z, A}^{(1)}(\cdot, \cdot)$ and $Q_{z, A}^{(2)}(\cdot, \cdot)$ in Algorithm \ref{pseudospec}, we can apply the discussion of Section \ref{DWR sect} to the auxiliary eigenproblems in Algorithm \ref{pseudospec}. In doing so, we can compute DWR error estimates for $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z)$.
+
+% To improve these bounds, we apply the DWR method to Algorithm \ref{pseudospec}.  To do so, we recall that for a fixed $z$ in Algorithm \ref{pseudospec}, we compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. By identifying $a(\cdot, \cdot)$ in Section \ref{DWR sect} with the sesquilinear formulations of $Q_{z, A}^{(1)}(\cdot, \cdot)$ and $Q_{z, A}^{(2)}(\cdot, \cdot)$ in Algorithm \ref{pseudospec}, we can apply the discussion of Section \ref{DWR sect} to the auxiliary eigenproblems in Algorithm \ref{pseudospec}. In doing so, we can compute DWR error estimates for $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z)$.
 
 % hese eigenproblems are of the same form as the eigenproblems considered in Section \ref{DWR sect}. Thus, by identifying $a(\cdot, \cdot)$ in Section \ref{DWR sect} with the sesquilinear formulations of $Q_{z, A}^{(1)}(\cdot, \cdot)$ and $Q_{z, A}^{(2)}(\cdot, \cdot)$ in Algorithm \ref{pseudospec}, we can compute DWR error estimates for $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z)$.
 
@@ -1144,7 +1150,9 @@ This process is repeated for each $z \in \operatorname{Grid}$ until a user-defin
 
 \section{Coupling Inner and Outer Adaptivity for Colbrook's Algorithm}
 
-With the adaptive mesh refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Algorithm \ref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane so that the computational effort of Algorithm \ref{pseudospec} is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given test point $z,$ to what accuracy should we solve the corresponding auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, for a far-away $z,$ there is little benefit in computing an accurate bound on the distance to the spectrum.
+With the adaptive mesh refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Algorithm \ref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane so that the computational effort of Algorithm \ref{pseudospec} is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given test point $z,$ to what accuracy should we solve the corresponding auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, for a far-away $z,$ there is little benefit in computing an accurate approximation of $\gamma(z, A).$
+
+% accurate bound on the distance to the spectrum.
 
 % Finally, if we decide to apply the refinement technique to an auxiliary eigenproblem, what stopping criterion should we enforce? 
 
@@ -1162,13 +1170,13 @@ respectively. In our adaptive mesh refinement technique, we use \eqref{eta ests}
     \mu_{h,c} ^{(1)}(z) \defeq  \eta^{(1)}(z) + \mu_h^{(1)}(z), \text{ and } \mu_{h,c} ^{(2)}(z) \defeq  \eta^{(2)}(z) + \mu_h^{(2)}(z).
 \end{equation}
 
-This technique makes use of error estimates for the computed eigenvalues of the auxiliary eigenproblems. However, the quantity of interest in Algorithm \ref{pseudospec} is the approximate bound on the distance to the spectrum, i.e., $\Phi_h(z, A)$ in \eqref{approx phi}. As a result, we want to use \eqref{eta ests} to approximate the error in $\Phi_h(z, A),$ that is,
+This technique makes use of error estimates for the computed eigenvalues of the auxiliary eigenproblems. However, the quantity of interest in Algorithm \ref{pseudospec} is $\Phi_h(z, A)$ in \eqref{approx phi}. As a result, we want to use \eqref{eta ests} to approximate the error in $\Phi_h(z, A),$ that is,
 \begin{equation} \label{phi err}
     | \gamma(z, A) - \Phi_h(z, A)| = \left| \sqrt{ \min \{ \mu^{(1)}(z), \mu^{(2)}(z) \}}  - \sqrt{ \min \{ \mu_h^{(1)}(z), \mu_h^{(2)}(z) \}} \right|.
 \end{equation}
 Furthermore, we want to use the error in $\Phi_h(z, A)$ to drive the adaptive mesh refinement technique of Section \ref{AMR}.
 
-To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a. b, c \in \mathbb{R},$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound bound for
+To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a. b, c \in \mathbb{R},$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound for
 \begin{equation} \label{square bound}
     | \gamma^2(z, A) - \Phi_h^2(z, A)| = \left| \min \{ \mu^{(1)}(z), \mu^{(2)}(z)\}  - \min \{ \mu_h^{(1)}(z), \mu_h^{(2)}(z)\} \right|.
 \end{equation}

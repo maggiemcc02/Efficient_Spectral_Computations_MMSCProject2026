@@ -36,13 +36,19 @@ These drawbacks of the discretize-then-solve approach motivate the development o
 % The main computational component of Colbrook's approach for computing spectra is his algorithm for computing pseudospectra. 
 % Once the pseudospectra of an operator have been computed, the spectrum can be recovered through by taking one additional limit. 
 
-% His algorithm co The pseudospectra of an operator are characterized by a parameter $\epsilon > 0$ and contain the spectrum of the operator. To obtain the spectrum from the pseudospectra, one just needs to take $\epsilon \rightarrow 0$. 
+% His algorithm co The pseudospectra of an operator are characterized by a parameter $\epsilon > 0$ and contain the spectrum of the operator. To obtain the spectrum from the pseudospectra, one just needs to take $\epsilon \rightarrow 0$.
 
- Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra. This algorithm considers a sequence of complex numbers $z$ drawn from a grid of points in the complex plane and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
+% drawn from a grid of points in the complex plane
+
+ Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra. This algorithm considers a sequence of complex numbers $z,$ and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ Discretization enters Colbrook's algorithm at this auxiliary stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretizations. The benefit of discretizing the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
 The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretize-than-solve approach \cite{Matt}. 
 
-Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost because it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
+Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost because it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor approximations of the bound on the distance to the spectrum. 
+As a result, further refinement, and thus more expensive computations, may be needed to obtain meaningful approximations.
 
+
+% thereby increasing the cost required to for meaningful estimates.
+% requiring further refinement and thereby
 
 % Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor bounds on the distance to the spectrum. As a result, further refinement may be required, thereby increasing the cost of meaningful estimates. 
 
@@ -51,7 +57,7 @@ Under certain conditions on the operator, Colbrook's algorithm yields a converge
 % Furthermore, as we shall see, coarse discretizations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
 
 
-In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the spectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{Dual-Weighted Residual} (DWR) method to estimate the error in the quantities used to bound the distance to the spectrum. These estimates are used to both improve the computed bounds and to drive adaptive refinement of the auxiliary eigenproblems. 
+In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the spectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{Dual-Weighted Residual} (DWR) method to estimate the error in the quantities used to compute the spectrum. These estimates are used to both improve the computed approximations and to drive adaptive refinement of the auxiliary eigenproblems. 
 
 In an effort to reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This ``outer-adaptivity" balances the DWR error estimate with the desired spatial resolution of a pseudospectral computation. 
 
