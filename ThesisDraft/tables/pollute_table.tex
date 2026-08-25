@@ -2,16 +2,16 @@
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{|c|ccccc|}
+\begin{tabular}{c|ccccc}
 % \hline
 % Exact $\omega^2$
 % &
 % \multicolumn{5}{c|}{Computed $\omega^2$}
 % \\
-\hline
+\toprule
 \multirow{2}{*}{Exact $\omega^2$}
 &
-\multicolumn{5}{c|}{Computed $\omega_h^2$}
+\multicolumn{5}{c}{Computed $\omega_h^2$}
 \\
 &
 $N=4$
@@ -24,7 +24,7 @@ $N=32$
 &
 $N=64$
 \\
-\hline
+\midrule
 $1$
 &
 $1.0170$
@@ -157,7 +157,7 @@ $9.0217$
 &
 $9.0054$
 \\
-\hline
+\midrule
 DOF
 &
 $62$
@@ -170,7 +170,7 @@ $4094$
 &
 $16382$
 \\
-\hline
+\bottomrule
 \end{tabular}
 \caption[Spectral Pollution and the Maxwell Eigenproblem]{Computed nonzero eigenvalues for the Maxwell eigenproblem on a sequence of criss-cross meshes. The red row indicates a sequence of spurious eigenvalues converging to $\omega^2=6,$ which is not a valid eigenvalue of \eqref{Max}.}
 \label{spect pollute}
