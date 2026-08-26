@@ -1262,13 +1262,13 @@ There are many strategies for approximating $e$ and $e_h$, each of which is disc
     \item \textbf{Local Higher-Order Approximation.}
     An alternative approach is to use patch-wise extrapolation to approximate $u_h^+$ using $u_h,$ without having to re-solve \eqref{gal eig}. Rognes and Logg describe a least-squares implementation of this approach in \cite{logg}. 
 \end{enumerate}
-Following Flood, Farrell, and Brubeck, we choose the first of the two approaches because of its straightforward implementation in Firedrake \cite{joe, pablo}. The patch-wise extrapolation required for the second choice is not yet readily available in Firedrake and could thus be a topic of future work. 
+Following Flood, Farrell, and Brubeck, we choose the first of the two approaches because of its straightforward implementation in Firedrake \cite{joe, pablo}. The patch-wise extrapolation required for the second choice generally gives poorer estimates and is not yet readily available in Firedrake.
 
 With the choices $\varphi_h = u_h$ and $u \approx u_h^+,$ we obtain the following computable DWR eigenvalue error estimate for the eigenvalue error in \eqref{DWR}:
 \begin{equation} \label{new DWR}
   \eta \defeq \frac{\rho(u_h, \lambda_h)(u_h^+ - u_h)}{1 - \frac{1}{2} m(u_h^+ - u_h, u_h^+ - u_h)}.
 \end{equation}
-We use \eqref{new DWR} and its localization to drive an adaptive mesh refinement technique. We develop this technique next. 
+We use \eqref{new DWR} and its localization to drive an adaptive mesh refinement technique. We develop this technique in the next chapter. 
 
 
 
@@ -1281,7 +1281,9 @@ We use \eqref{new DWR} and its localization to drive an adaptive mesh refinement
 
 \chapter{Methodology}
 
-In this chapter, we develop our methodology for pairing our adaptive mesh refinement technique of Section \ref{AMR} with an outer refinement technique for selecting the test points used in Algorithm \ref{pseudospec}. In the first section, we couple Algorithm \ref{pseudospec} with our adaptive mesh refinement technique. In the second section, we combine this methodology with an outer refinement procedure. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
+In this chapter, we develop our methodology for pairing our adaptive mesh refinement technique (Section \ref{AMR}) with an outer refinement technique for selecting the test points used in Algorithm \ref{pseudospec}. In the first section, we couple Algorithm \ref{pseudospec} with our adaptive mesh refinement technique. In the second section, we combine this methodology with an outer refinement procedure. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
+
+\pef{I find the section references here a bit confusing. Maybe just say what Section 3.1 and Section 3.2 and ... do.}
 
 \section{ An Adaptive Refinement Technique for Colbrook's Algorithm}
 
@@ -1309,9 +1311,9 @@ In this section, we outline the details of our application of the DWR method to 
 
 The DWR error estimate in \eqref{DWR} is formulated for infinite-dimensional eigenproblems as opposed to infinite-dimensional spectral computations. In particular, \eqref{DWR} is derived under the assumption that the desired eigenvalue, $\lambda,$ has an associated eigenfunction $u.$ As a result, the error estimate requires an approximation of the eigenvalue, $\lambda_h,$ and an approximation of the corresponding discrete eigenfunction, $u_h$. 
 
-In Algorithm \ref{pseudospec}, the approximate bounds on the distance to the spectrum, $\Phi_h(z, A),$ are obtained by approximating the bottom of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ There is no requirement that these spectral bottoms be eigenvalues of finite multiplicity with associated eigenfunctions. For example, there can be values of $z$ in the essential spectrum of an operator $A$ for which $\|(A-zI)x_n\|_{\H} \rightarrow 0,$ $\|x_n\|_{\H} = 1,$ and $\{x_n\}_{n\in \mathbb{N}} \subset D(A)$ converges weakly to zero\footnote{This phenomenon is called a \textit{Weyl sequence} and can be used to characterise the essential spectrum of an operator. For more information, see Chapter 8 of \cite{Matt}.} \cite{Matt}. 
+In Algorithm \ref{pseudospec}, the approximate bounds on the distance to the spectrum, $\Phi_h(z, A),$ are obtained by approximating the bottom of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ There is no requirement that these spectral bottoms be eigenvalues of finite multiplicity with associated eigenfunctions. For example, there can be values of $z$ in the essential spectrum of an operator $A$ for which $\|(A-zI)x_n\|_{\H} \rightarrow 0,$ $\|x_n\|_{\H} = 1,$ and $\{x_n\}_{n\in \mathbb{N}} \subset D(A)$ converges weakly to zero\footnote{This phenomenon is called a \textit{Weyl sequence} and can be used to characterise the essential spectrum of an operator. For more information, see \cite[Ch.\ 8]{Matt}.} \cite{Matt}. 
 
-With this in mind, it is not clear how to apply the DWR error estimate for eigenvalues when the computed eigenfunction $u_h$ does not reflect a genuine eigenfunction $u.$ We therefore restrict our attention to operators for which the bottom of the spectrum of each corresponding folded operator is an isolated eigenvalue with finite multiplicity. The precise conditions on the operator $A$ for which this is the case are beyond the scope of the present work, and are left as a task for future work. Furthermore, in future work, we aim to extend the current DWR framework to account for folded operators whose spectral bottom is an element of the essential spectrum.
+With this in mind, in this Master's thesis we restrict our attention to operators for which the bottom of the spectrum of each corresponding folded operator is an isolated eigenvalue with finite multiplicity. The precise conditions on the operator $A$ for which this is the case are beyond the scope of the present work, and are left as future work. Furthermore, in future work, we aim to extend the DWR framework to account for folded operators whose spectral bottom is an element of the essential spectrum.
 % \footnote{A precise proof requires a compact embedding of the folded operator's domain in the Hilbert space, a proof that a Gårding inquality holds. When these conditions hold,  the folded operator is a Fredholm operator of index zero .}
 
 
@@ -1327,15 +1329,15 @@ The folded operator for a given $z \in \mathbb{R}$ is  $(A-zI)^*(A-zI) = (A-zI)(
 % For example, consider the Maxwell eigenproblem \eqref{Max} and $z\in \mathbb{R}.$ Furthermore, consider the eigenvalue $\omega^2 = 1$ with multiplicity two. For all values of $z\in \mathbb{R}$ that are closer to $\omega^2 = 1$ than to any other value of $\omega^2,$ the smallest eigenvalue of the corresponding folded operator is $(1-z)^2$ with multiplicity two.
 
 
-Let $\lambda$ be the smallest eigenvalue of an infinite-dimensional eigenproblem. If $\lambda$ has a multiplicity $m > 1,$ then a finite element discretisation yields $m$ eigenvalues, $\lambda_{h, i}$ for $i = 1, 2, \dots, m,$ that approximate $\lambda,$ each with a corresponding discrete eigenfunction, $u_{h, i}$ \cite{Boffi, slep}. Since the eigenspace associated with $\lambda$ is $m$-dimensional, each $u_{h, i}$ may approximate any linear combination of eigenfunctions that belong to the target eigenspace. 
+Let $\lambda$ be the smallest eigenvalue of an infinite-dimensional eigenproblem. If $\lambda$ has a multiplicity $m > 1,$ then a finite element discretisation yields $m$ (possibly different) eigenvalues, $\lambda_{h, i}$ for $i = 1, 2, \dots, m,$ that approximate $\lambda,$ each with a corresponding discrete eigenfunction, $u_{h, i}$ \cite{Boffi, slep}. Since the eigenspace associated with $\lambda$ is $m$-dimensional, each $u_{h, i}$ may approximate any linear combination of eigenfunctions that belong to the target eigenspace. 
 
 
 % smallest 
 
-To use DWR to estimate the error in the computed eigenvalue, we require an enriched approximation $u_h^+$ that corresponds to the chosen discrete eigenfunction $u_h.$ When $\lambda$ is an eigenvalue with multiplicity one, this matching is simple: we compute $u_h$ and $u_h^+,$ normalize them, and align their phases. When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, it is more challenging to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
+To use DWR to estimate the error in the computed eigenvalue, we require an enriched approximation $u_h^+$ that corresponds to the chosen discrete eigenfunction $u_h.$ When $\lambda$ is an eigenvalue with multiplicity one, this matching is simple: we compute $u_h$ and $u_h^+,$ normalize them, and align their phases. \pef{What does `align their phases' mean?} When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, it is more challenging to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
 
 
-To overcome this challenge, we propose a least squares approach to matching $u_h$ with an enriched approximation $u_h^+.$ In particular,  given the computed enriched basis $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ we take $u_h^+$ to be the solution of the following problem:
+To overcome this challenge, we propose a novel least squares approach to matching $u_h$ with an enriched approximation $u_h^+.$ In particular,  given the computed enriched basis $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ we take $u_h^+$ to be the solution of the following problem:
 \begin{equation}\label{least}
     \underset{v\in \operatorname{span}(E_h^+)}{\arg\min} \|u_h-v\|_{\H},
 \end{equation}
@@ -1429,7 +1431,7 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a set $z\in \op
     Unless otherwise stated, we take $\theta = 1/2.$
 
     
-    \item \textbf{Refine:} Refine the marked cells, thereby defining a new finite element function space for the $j$-th auxiliary eigenproblem. To refine our marked cells, we employ Netgen's refinement technique, as implemented by Flood, Farrell, and Brubeck \cite{NGSolve, Schoberl1997, pablo}.
+    \item \textbf{Refine:} Refine the marked cells, thereby defining a new finite element function space for the $j$-th auxiliary eigenproblem. To refine our marked cells, we employ Netgen's refinement technique, as implemented by Umberto Zerbinati \cite{NGSolve, Schoberl1997, pablo}.
 
 \end{enumerate}
 To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a user-defined stopping criterion has been satisfied. In the next subsection, we demonstrate the success of this methodology by applying it to the Maxwell eigenproblem. 
@@ -1448,13 +1450,13 @@ To do so, we take the starting mesh to be an unstructured triangular mesh genera
 \begin{equation} \label{2grid}
     \operatorname{Grid} = \{2 + jh : j = 0, \dots, 100\}, \qquad h = 0.02.
 \end{equation}
-Notice that, as opposed to the choice of $\operatorname{Grid}$ in Section \ref{Matt Max}, i.e., \eqref{1grid}, we no longer consider test points near $z=0.$ Recall from Section \ref{ASSUMPSect} that our adaptive mesh refinement technique can only be applied when the bottom of the spectrum of the folded operator is an eigenvalue with finite multiplicity. For the Maxwell operator \eqref{max op}, the choice of $\operatorname{Grid}$ in \eqref{2grid} avoids the case in which this smallest eigenvalue has infinite multiplicity. Further details on this choice are given in Appendix \ref{AppendMax}.
+Notice that, as opposed to the choice of $\operatorname{Grid}$ in Section \ref{Matt Max}, i.e., \eqref{1grid}, we no longer consider test points near $z=0.$ Recall from Section \ref{ASSUMPSect} that our adaptive mesh refinement technique can only be applied when the bottom of the spectrum of the folded operator is an eigenvalue with finite multiplicity. For the Maxwell operator \eqref{max op}, the choice of $\operatorname{Grid}$ in \eqref{2grid} avoids the case in which this smallest eigenvalue has infinite multiplicity (associated with the infinite-dimensional kernel of curl). Further details on this choice are given in Appendix \ref{AppendMax}.
 
 % As discussed in Section \ref{Maxwell Sect}, the Maxwell problem \eqref{2D var max} has zero eigenvalue with an infinite-dimensional eigenspace. Thus, for test points $z$ near zero, the smallest eigenvalue of the folded operator may have infinite multiplicity. However, to apply the adaptive mesh refinement technique of Section \ref{AMR}, we require the smallest eigenvalue of the folded operator to have a finite multiplicity. We therefore restrict our test points to a portion of the real line that avoids the infinite-multiplicity eigenvalue of the folded operator. This choice is discussed further in Appendix \ref{AppendMax}.
 
 
 
-To couple Algorithm \ref{pseudospec} with the adaptive mesh refinement technique of Section \ref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem, \eqref{max aux}, posed on $V_h$ and $V_h^+,$ respectively. To do so, we write \eqref{max aux} in UFL and ask Firedrake to solve the resulting generalized eigenproblem using SLEPc’s Krylov-Schur method with a shift-and-invert spectral transformation \cite{Firedrake, slep}.
+To couple Algorithm \ref{pseudospec} with the adaptive mesh refinement technique of Section \ref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem, \eqref{max aux}, posed on $V_h$ and $V_h^+,$ respectively. We solve the resulting generalised eigenproblem with the same Krylov--Schur method with a shift-and-invert spectral transformation as before.
 We then solve the least squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with the enriched $u_h^+ \in V_h^+.$ 
 
 Using $u_h$ and $u_h^+$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
@@ -1463,14 +1465,14 @@ Using the localization procedure of Rognes and Logg, we compute a local error in
 %%%%% Therefore, we --> Then we. and enriched eigenfucntion ---> the enriched
 
 
-This process is repeated for each $z \in \operatorname{Grid}$ until a user-defined stopping criterion has been satisfied. In the next chapter, we develop a specific stopping criterion that couples the accuracy required for the auxiliary eigenproblems with the desired resolution of the $\epsilon$-pseudospectrum. In the present setting, whose aim is to demonstrate the benefit of pairing Algorithm \ref{pseudospec} with adaptive refinement of the auxiliary eigenproblems, we perform five steps of the adaptive mesh refinement technique at each $z \in \operatorname{Grid}.$ The results of this experiment are displayed in Figure \ref{DWRResult}. Notice that the DWR-corrected bound is substantially more accurate than the bound obtained on a uniform mesh. This result further motivates the coupling of Colbrook's algorithm with the adaptive mesh refinement technique of Section \eqref{AMR}.
+This process is repeated for each $z \in \operatorname{Grid}$ until a user-defined stopping criterion has been satisfied. In the next chapter, we develop a specific stopping criterion that couples the accuracy required for the auxiliary eigenproblems with the desired resolution of the $\epsilon$-pseudospectrum. In the present setting, whose aim is to demonstrate the benefit of pairing Algorithm \ref{pseudospec} with adaptive refinement of the auxiliary eigenproblems, we perform five steps of the adaptive mesh refinement technique at each $z \in \operatorname{Grid}.$ The results of this experiment are displayed in Figure \ref{DWRResult}. Notice that the DWR-corrected bound is substantially more accurate than the bound obtained on a uniform mesh. This result further motivates the coupling of Colbrook's algorithm with DWR-driven adaptive mesh refinement.
 
 \input{figures/MattDWRPlot}
 
 
 \section{Coupling Inner and Outer Adaptivity for Colbrook's Algorithm}
 
-With the adaptive mesh refinement technique of Section \ref{AMR} at hand, we can efficiently solve the auxiliary eigenproblems that arise in Algorithm \ref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane so that the computational effort of Algorithm \ref{pseudospec} is concentrated near the desired $\epsilon$-pseudospectrum? Second, for a given test point $z,$ to what accuracy should we solve the corresponding auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane. Furthermore, for a far-away $z,$ there is little benefit in computing an accurate approximation of $\gamma(z, A).$
+With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in Algorithm \ref{pseudospec}. However, two questions remain. First, how should we pick the (outer) test points in the complex plane so that the computational effort of Algorithm \ref{pseudospec} is concentrated near the desired part of the pseudospectrum? We consider this question in the context of accurately computing a given contour of the pseudospectrum, with value $\epsilon$. Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane, or in computing an excessively-accurate approximation of $\gamma(z, A).$
 
 % accurate bound on the distance to the spectrum.
 
