@@ -1107,7 +1107,7 @@ Since the finite element methodology provides an approximation to the solution o
 This idea gives rise to adaptive finite-element methods (AFEMs), which are techniques for choosing a finite-dimensional space, $V_h,$ that aims to be optimal with respect to computational complexity and accuracy \cite{Scott}. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to adaptive mesh refinement techniques (AMRs) \cite{Scott}. \pef{No need to repeatedly cite the same general reference on consecutive sentences}
 These adaptive mesh refinement techniques are particularly useful when the error is domained by certain regions of the domain, such as when the solution exhibits singularities. In this case, choosing a fine uniform mesh may be a waste of computational effort. In contrast, adaptive mesh techniques aim to refine the mesh only where necessary.
 
-When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived quantity of interest, rather than in the solution field over the whole domain \cite{joe}. For example, when solving a problem in fluid dynamics, we may be interested in the vorticity of an eddy, rather than the velocity field \cite{Scott}. In the case of Algorithm \ref{pseudospec}, our quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem rather than its eigenfunction.
+When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived quantity of interest, rather than in the solution field over the whole domain \cite{joe}. \pef{Cite Mike's papers here, Becker \& Rannacher \dots Joe's thesis is not the canonical reference for this claim} For example, when solving a problem in fluid dynamics, we may be interested in the vorticity of an eddy, rather than the velocity field \cite{Scott}. In the case of Algorithm \ref{pseudospec}, our quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem.
 % we are interested in the error in the computed eigenvalues of the auxiliary eigenproblems, rather than in the computed eigenfunctions. 
 
 Following this line of thinking, it may be more beneficial to compute and control error estimates in a prescribed quantity of interest rather than in the solution field itself. This idea gives rise to the Dual-Weighted Residual (DWR) method, which provides \textit{a posteriori} error estimates for prescribed quantities of interest.
@@ -1143,6 +1143,7 @@ To estimate this error, the DWR method embeds the given problem into the framewo
 
 
 We now specialize the DWR framework to eigenproblems, taking the eigenvalue itself as the chosen quantity of interest.
+\pef{This was first proposed by Heuveline \& Rannacher \dots}
 To do so, we consider a subspace $V$ of a Hilbert space $\H,$ where the embedding $V  \hookrightarrow \H$ is compact\footnote{
 Let $X$ and $Y$ be normed spaces. The linear operator $T$ is compact if and only if it maps every bounded sequence $\{x_n\}_{n \in \mathbb{N}}$ in $X$ onto a sequence  $\{Tx_n\}_{n \in \mathbb{N}}$ in $Y$ that has a convergent subsequence. The embedding $V  \hookrightarrow \H$ is compact when the embedding map from $V$ to $\H$ is compact.}. Let $\mathcal{A}$ and $\mathcal{M}$ be linear operators on $V.$
  We seek a  $\lambda \in \mathbb{C}$ and nonzero $u \in V$ such that 
@@ -1158,7 +1159,7 @@ where $\mathcal{M}$ is assumed to be self-adjoint and positive semidefinite  \ci
 % \end{equation}
 % where $M$ is assumed to be self-adjoint with respect to the anti-dual adjoint (EQN!!) and positive semidefinite  \cite{Bangerth}. 
 
-As per usual, we prefer the variational formulation
+As usual, we prefer the variational formulation
 \begin{equation} \label{var eig}
     a(u, v) = \lambda m(u, v) \qquad \Forall v \in V,
 \end{equation}
@@ -1176,7 +1177,7 @@ To discretise this eigenproblem, we introduce the finite-dimensional subspace $V
     a(u_h, v_h) = \lambda_h m(u_h, v_h) \qquad \Forall v_h \in V_h,
 \end{equation}
 where it is assumed that $m(u_h, u_h) = 1.$
-With this, our goal is to control the error in $\lambda_h$. In other words, the quantity of interest is $J(u_h) = \lambda_h.$
+With this, our goal is to control the error in $\lambda_h$. In other words, the quantity of interest is $J\left((u_h, \lambda_h)\right) = \lambda_h.$
 
 
 As previously discussed, the DWR method introduces a dual problem whose solution is used to describe the sensitivity of the quantity of interest to errors in the primal solution. For a general eigenvalue problem, the dual problem takes the form of the adjoint eigenproblem:
