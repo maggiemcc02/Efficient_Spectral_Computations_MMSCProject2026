@@ -580,7 +580,7 @@ Notice that \Cref{spect pollute} contains a sequence of eigenvalues converging t
 \input{tables/pollute_table}
 
 % \pef{I've changed the formatting of the table slightly. I don't like outer vertical lines if we can help it. Instead of using hline, use toprule, midrule, bottomrule from the booktabs package.}
-\pef{Another formatting tip: I find the pure red, green, blue ugly. I like to use the seaborn palette. I suggest changing red to seabornred. Ask me on slack and I'll dig out the latex code for the palette, it's not defined by default.}
+% \pef{Another formatting tip: I find the pure red, green, blue ugly. I like to use the seaborn palette. I suggest changing red to seabornred. Ask me on slack and I'll dig out the latex code for the palette, it's not defined by default.}
 
 
 
@@ -588,9 +588,9 @@ Notice that \Cref{spect pollute} contains a sequence of eigenvalues converging t
 
 In general, for the Maxwell eigenproblem, whether spectral pollution occurs depends on the choice of mesh and finite elements. For example, spectral pollution can be avoided if we employ Nédélec elements as opposed to our current discretisation \cite{Nedelec1980}. 
 % \pef{Citation for Nedelec. Call them Nedelec elements rather than edge elements, they're only edge elements at lowest order.} 
-The success of Nédélec elements for the Maxwell eigenproblem can be understood through finite element exterior calculus (FEEC) \cite{bookArnold}. 
+The success of Nédélec elements for the Maxwell eigenproblem can be understood through finite element exterior calculus (FEEC).
 % \pef{I would say Arnold's book is a much more natural choice of citation here.} 
-FEEC captures the essential geometric, topological, and algebraic structures of a problem at the discrete level. This linking of the continuous and discrete formulation of a problem enables the construction of stable and convergent finite element discretisations \cite{Arnold}. For the Maxwell eigenproblem, the success of Nédélec elements can be explained by the fact that they fit within the framework of FEEC, while our current discretisation does not \cite{Arnold, Boffi}.  In particular, Nédélec elements ...
+FEEC captures the essential geometric, topological, and algebraic structures of a problem at the discrete level. This linking of the continuous and discrete formulation of a problem enables the construction of stable and convergent finite element discretisations. For the Maxwell eigenproblem, the success of Nédélec elements can be explained by the fact that they fit within the framework of FEEC, while our current discretisation does not \cite[Chapter~1]{bookArnold}.  In particular, Nédélec elements ...
 \pef{It might be nice to have one sentence summarising why they work and Lagrange elements don't, at a technical level.}
 \Maggie{I am struggling here. Do I go the discrete compactness route or the de Rham complex route?}
 
@@ -638,18 +638,20 @@ With this example in mind, it is clear that the pitfalls of the discretise-then-
 %The pitfalls of the discretise-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. In recent work, Matthew Colbrook has proposed an approach that avoids these pitfalls by working with the infinite-dimensional operator as far as possible, thereby delaying discretisation \cite{Matt}. In this way, Colbrook shows that when and how discretisation is introduced is crucial to the reliable computation of spectra. 
 
 
-We now introduce Colbrook's algorithm for computing pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for three main reasons. First, it applies to a much broader class of operators than his algorithm for spectra. Second, it forms the main computational component of his algorithm for computing spectra. Finally, as discussed in Section \ref{pseudo sec}, the pseudospectra of an operator are often more informative than the spectrum alone.
+We now introduce Colbrook's algorithm for computing pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for three main reasons. First, it applies to a much broader class of operators than his algorithm for spectra. Second, it forms the main computational component of his algorithm for computing spectra. Finally, as discussed in \Cref{pseudo sec}, the pseudospectra of an operator are often more informative than the spectrum alone.
 
 In the first subsection, we introduce the fundamental tool for computing pseudospectra, the {injection modulus} of an operator. In the second subsection, we use this tool to construct Colbrook's algorithm for pseudospectra. Then, in the third subsection, we specialize the algorithm to the finite element setting. Finally, in the last subsection, we demonstrate the success of Colbrook's algorithm by applying it to the Maxwell eigenproblem. 
 
 
-\subsection{Characterizing the Spectrum with Injection Moduli}
+\subsection{Characterising the Spectrum with Injection Moduli}
 Let $A: D(A) \subset \H \rightarrow \H$ be a closed and densely defined linear operator on the Hilbert space $\H$. The first ingredient for Colbrook's algorithm is the \textit{injection modulus} of $A,$ which is defined as
 \begin{equation} \label{inject}
     \sigma_{\inf}(A) = \inf\{ \|Ax\|_\H : x \in D(A), \|x\|_\H = 1\}.
 \end{equation}
-The injection modulus is a quantitative measure of `how injective' an operator is \cite{Matt}. In this way, it can be viewed as a generalization of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors, $\{x_n\}_{n \in \mathbb{N}}$, such that $\|A x_n \|_\H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_\H=0.$ 
-\pef{So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
+% The injection modulus is a quantitative measure of `how injective' an operator is \cite{Matt}. In this way, it
+The injection modulus of an operator is often viewed as a generalization of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors, $\{x_n\}_{n \in \mathbb{N}}$, such that $\|A x_n \|_\H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_\H=0.$ 
+\Maggie{Edited based on: So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
+% \pef{So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
 
 One of the main tools in Colbrook's algorithm is the following function of $z 
 \in \mathbb{C},$
@@ -657,8 +659,10 @@ One of the main tools in Colbrook's algorithm is the following function of $z
     \gamma(z, A) = \min \left\{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \right\}.
 \end{equation}
 \pef{Does this function get a name?}
-With this, Colbrook characterises the resolvent norm $\|(A-zI)^{-1}\|_\H$ in the following way.\pef{End sentences before lemmas/theorems/etc.}
-\begin{lemma}[Injection Moduli and Resolvent Norms \cite{Matt}] \label{gamma and norm}
+\Maggie{Not in Matt's text. It becomes the inverse resolvent norm below.}
+With this, Colbrook characterises the resolvent norm $\|(A-zI)^{-1}\|_\H$ in the following way.
+% \pef{End sentences before lemmas/theorems/etc.}
+\begin{lemma}[Injection Moduli and Resolvent Norms {\cite[Lemma~1.2.5]{Matt}}] \label[lemma]{gamma and norm}
    Let $A$ be a closed and densely defined operator on a Hilbert space $\H.$ We have that
    \begin{equation} \label{gamma}
        \gamma(z, A) = \|(A-zI)^{-1}\|_\H^{-1},
@@ -666,9 +670,10 @@ With this, Colbrook characterises the resolvent norm $\|(A-zI)^{-1}\|_\H$ in the
    where we adopt the convention that $\|(A-zI)^{-1}\|_\H^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
 \end{lemma}
 
-In finite dimensions, we have that $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I)$ for every $z \in \mathbb{C}.$ However, in infinite dimensions, it is possible to have $z \in \Sp{A}$ and $\sigma_{\inf}(A-zI) \ne \sigma_{\inf}(A^*-\overline{z}I).$ To see this, consider the right-shift operator as defined in \eqref{right shift}, i.e., the operator $A:\ell^2(\mathbb{N}) \rightarrow \ell^2(\mathbb{N})$ defined by $A(x_1, x_2, \dots) = (0, x_1, x_2, \dots).$ This operator satisfies $\|Ax\|_{\ell^2(\mathbb{N})} = \|x\|_{\ell^2(\mathbb{N})}.$ Thus, $\sigma_{\inf}(A) = 1.$ Now consider its Hilbert adjoint $A^*,$ which is the left-shift operator $A^*(x_1, x_2, \dots) = (x_2, x_3, \dots).$ Notice that $A^*(1, 0, \dots) = (0, 0, \dots).$ Hence, $1 = \sigma_{\inf}(A) \ne \sigma_{\inf}(A^*) = 0.$
+In finite dimensions, we have that $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I)$ for every $z \in \mathbb{C}.$ However, in infinite dimensions, it is possible to have $z \in \Sp{A}$ and $\sigma_{\inf}(A-zI) \ne \sigma_{\inf}(A^*-\overline{z}I).$ To see this, consider the right-shift operator as defined in \eqref{right shift}, i.e., the operator $R:\ell^2(\mathbb{N}) \rightarrow \ell^2(\mathbb{N})$ defined by $R(x_1, x_2, \dots) = (0, x_1, x_2, \dots).$ This operator satisfies $\|Rx\|_{\ell^2(\mathbb{N})} = \|x\|_{\ell^2(\mathbb{N})}.$ Thus, $\sigma_{\inf}(R) = 1.$ Now consider its Hilbert adjoint $R^*,$ which is the left-shift operator $R^*(x_1, x_2, \dots) = (x_2, x_3, \dots).$ Notice that $R^*(1, 0, \dots) = (0, 0, \dots).$ Hence, $1 = \sigma_{\inf}(R) \ne \sigma_{\inf}(R^*) = 0.$
 
-With Lemma \ref{gamma and norm} in mind, we can define the spectrum of $A$ as follows: \pef{Again, use cleveref}
+With \Cref{gamma and norm} in mind, we can define the spectrum of $A$ as follows: 
+% \pef{Again, use cleveref}
 \begin{equation}\label{gamma Sp}
     \Sp{A} = \{ z \in \mathbb{C} : \gamma(z, A) = 0\}.
 \end{equation}
@@ -682,7 +687,7 @@ Thus, to approximate $\Sp{A}$ and $\Spe{A},$ we can approximate $\gamma(z, A).$ 
 \subsection{Computing Pseudospectra with Operator Folding} \label{Fold sect}
 
 Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies on the characterization of $\Spe{A}$ using $\gamma(z,A)$ in \eqref{gamma eps Sp}. The key idea is to approximate $\gamma(z, A)$ at chosen test points $z \in \mathbb{C}$ and retain all points for which $\gamma(z, A) < \epsilon.$ To construct this methodology, Colbrook makes the following assumption:
-\begin{assumption}[Required Convergence of $\boldsymbol{\Phi_n(z, A)}$ \cite{Matt}]\label{assump}
+\begin{assumption}[Required Convergence of $\boldsymbol{\Phi_n(z, A)}$ {\cite[Assumption~3.2.1]{Matt}}]\label[assumption]{assump}
     To compute $\Spe{A},$ assume that we can compute functions $\Phi_n(z, A)$ such that 
     \begin{equation}
         \lim_{n \rightarrow \infty} \sup_{z \in \mathcal{C}} | \Phi_n(z, A) - \gamma(z, A) | = 0 \qquad \Forall \text{ compact } \mathcal{C} \subset \mathbb{C}, 
@@ -692,7 +697,12 @@ Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies o
     % (depending on $A$ but not on $z$).
 \end{assumption}
 
-To satisfy this assumption, we introduce \textit{operator folding}. Suppose that $A$ is a closed and densely defined operator on a separable Hilbert space $\H,$ i.e., a Hilbert space that contains a countable orthonormal basis \cite{Matt}. \pef{Clarify that the new assumption here is separability (if I understand correctly).} Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$ \cite{Matt}. \pef{You don't need to cite Matt's book on consecutive sentences. Just cite the section on operator folding at the start of the section.} The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
+\Maggie{Below is edited based on: Clarify that the new assumption here is separability (if I understand correctly).}
+% \pef{Clarify that the new assumption here is separability (if I understand correctly).}
+
+To satisfy this assumption, we introduce \textit{operator folding} \cite[Section 3.4]{Matt}. Suppose that $A$ is a closed and densely defined operator on a Hilbert space $\H.$ In addition, assume that $\H$ is separable, i.e., that it contains a countable orthonormal basis. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$. 
+% \pef{You don't need to cite Matt's book on consecutive sentences. Just cite the section on operator folding at the start of the section.} 
+The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
 \begin{equation}
     \sigma_{\inf}((A-zI)\mathcal{P}_n^*) =  \sqrt{\sigma_{\inf}(\mathcal{P}_n(A-zI)^*(A-zI)\mathcal{P}_n^*)}.
 \end{equation}
@@ -700,7 +710,7 @@ That is, we approximate $\gamma(z, A)$ with
 \begin{equation} \label{phi Pn}
     \Phi_n(z, A) = \min \left\{\sigma_{\inf}((A-zI) \mathcal{P}_n^*), \sigma_{\inf}((A-zI)^*\mathcal{P}_n^*) \right\},
 \end{equation}
-which satisfies Assumption \ref{assump} under suitable conditions on $D(A)$ and $D(A^*)$ \cite{Matt, kato}. 
+which satisfies \Cref{assump} under suitable conditions on $D(A)$ and $D(A^*)$ \cite[Chapter~3]{kato}. 
 
 To compute $\Phi_n(z, A)$ in \eqref{phi Pn}, we consider the following quadratic forms:
 \begin{align}
@@ -749,12 +759,12 @@ $\Phi_n(z, A),$ and approximate $\Spe{A}$ by the following set of points:
 \begin{equation}
     \Gamma_n^{\epsilon}( A)  = \{ z \in \operatorname{Grid} : \Phi_n(z, A) < \epsilon\}.
 \end{equation}
-This method is outlined in Algorithm \ref{pseudospec}. 
-Under Assumption \ref{assump}, we have that
+This method is outlined in \Cref{pseudospec}. 
+Under \Cref{assump}, we have that
 \begin{equation}
     \Gamma_n^{\epsilon}(A) \subset \{z \in \mathbb{C} : \gamma(z, A) < \epsilon\} \subset \Spe{A}.
 \end{equation}
-Furthermore, Colbrook shows that the output of Algorithm \ref{old pseudospec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as the chosen $\operatorname{Grid}$ is extended to approximate all of $\mathbb{C}$ and as  $n \rightarrow \infty$ \cite{Matt}. 
+Furthermore, Colbrook shows that the output of \Cref{old pseudospec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as the chosen $\operatorname{Grid}$ is extended to approximate all of $\mathbb{C}$ and as  $n \rightarrow \infty$ \cite[Theorem~3.2.3]{Matt}. 
 \input{algorithms/pseudospec}
 
 % \begin{algorithm}[ht]

@@ -11,7 +11,6 @@
 \renewcommand{\baselinestretch}{1.25}
 %load any additional packages
 \usepackage{amssymb}
-\usepackage{hyperref}
 % \usepackage[utf8]{inputenc}
 % \usepackage[T1]{fontenc}
 \usepackage{float}
@@ -36,13 +35,19 @@
 \usepackage{caption}
 \captionsetup[figure]{font=small} 
 % \captionsetup[table]{font=small}
-\usepackage[capitalize,nameinlink]{cleveref}
+% \usepackage[capitalize,nameinlink]{cleveref}
 \usepackage{mathtools}
 \usepackage{etoolbox}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{booktabs}
 \usepackage{todonotes}
+
+
+\usepackage{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+
 \newcommand{\Maggie}[1]{\todo[inline, color=pink!70]{Maggie: #1}}
 \newcommand{\pef}[1]{\todo[inline, color=blue!20]{Patrick: #1}}
 \renewcommand{\H}{\mathcal{H}}
@@ -140,7 +145,7 @@
 \end{romanpages}
 
 % \include{intro}
-\include{body}
+\input{body}
 % \include{concl}
 
 \appendix
