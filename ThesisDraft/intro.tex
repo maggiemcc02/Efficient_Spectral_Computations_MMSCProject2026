@@ -34,7 +34,7 @@ R(x_1, x_2, \dots) = (0, x_1, x_2, \dots),
 that acts on square-summable sequences\footnote{The set of square-summable sequences is
     $\ell^2(\mathbb{N}) = \{z = \{x_n\}_{n \in \mathbb{N}}: \sum_{n=1}^{\infty} |x_n|^2 < \infty\}.$}. This operator's spectrum is the unit disc, but it has no eigenvalues\footnote{For more information on this example, see Appendix \ref{Shift Appendix}.}.
 
-The standard approach for computing the spectrum of an infinite-dimensional operaitor is often referred to as the \textit{discretise-then-solve} approach \cite[Chapter~1]{Matt}. 
+The standard approach for computing the spectrum of an infinite-dimensional operator is often referred to as the \textit{discretise-then-solve} approach \cite[Chapter~1]{Matt}. 
 % \pef{Big Book Principle} 
 % \cite[Chapter~1]{Matt}
 This approach consists of discretising the operator with a finite-dimensional matrix, computing the spectrum of the discretised operator, and hoping that the spectrum of the discretised operator approaches the spectrum of the infinite-dimensional operator as the size of the discretisation increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretised very carefully, \textit{spectral pollution} can occur, where a sequence of discretised operators $,A_n,$ has a corresponding sequence of eigenvalues, $\lambda_n \in \Sp{A_n},$ such that $ \lambda_n \rightarrow \lambda \notin \Sp{A}$ as $n \rightarrow \infty.$
@@ -94,6 +94,8 @@ In this dissertation, we explore methods for increasing the efficiency of Colbro
 \textbullet\ Add something like: This employs the adjoint or dual eigenproblem to estimate the discretisation error in the computation of goal functionals; in this case the goal functional is the lowest eigenvalue of the folded operator \dots and then cite Giles \& S\"uli, Giles \& Pierce, Becker \& Rannacher \dots
 
 \textbullet\ Say: We refer to this adaptivity, changing the mesh employed at every point tested in the complex plane, as ``inner-adaptivity''.
+
+
 NOTE: I will add the Giles citations once I have read the relevant papers.
 }
 
@@ -162,7 +164,7 @@ The main contributions of this work can be summarised as follows:
     % \pef{What does `current' mean? Make it clear you have improved the formulae published in the literature.}
     % Using the DWR error estimate, we develop and implement an adaptive mesh refinement technique for the auxiliary eigenproblems in Colbrook's algorithm. 
     % This implementation builds upon a pre-existing implementation of the DWR method so that it can be applied to Colbrook's algorithm.
-    \item We develop a methodology for adaptively selecting test points for the application of Colbrook's algorithm to the computation of a specified pseudospectral contour. To do so, we triangulate a region of the complex plane and use our DWR error estimates to derive criteria for guaranteeing whether a given triangle lies inside or outside of the desired pseudospectral contour, or whether it should be further refined.
+    \item We develop a methodology for adaptively selecting test points when using Colbrook's algorithm to approximate a specified pseudospectral contour. To do so, we triangulate a region of the complex plane and use our DWR error estimates to derive criteria for guaranteeing whether a given triangle lies inside or outside of the desired pseudospectral contour, or whether it should be further refined.
     \Maggie{Edited based on comment:to compute a specified pseudospectral contour? It's stated later but seems more natural here.}
        % \pef{to compute a specified pseudospectral contour? It's stated later but seems more natural here}.
     \item We couple an adaptive mesh refinement technique for the auxiliary eigenproblems with our adaptive selection of test points. This coupling focuses the computational effort of Colbrook's algorithm near the pseudospectral contour of interest. 
@@ -211,7 +213,9 @@ The code used to produce each numerical example presented below is available at 
 % The remainder of the dissertation is structured as follows. In Chapter 2 we discuss blah blah. In Chapter 3 we blah blah. Finally in Chapter 4 we summarise the work we have done and suggest some areas for future research.
 
 The remainder of the dissertation is structured as follows. 
-In Chapter 2, we present all relevant background material for our methodology. We begin with an overview of the spectra and pseudospectra of infinite-dimensional operators. We then introduce the standard discretise-then-solve approach and discuss its common pitfalls. As an example, we demonstrate spectral pollution when a nai\"ve finite element discretisation is applied to the Maxwell eigenproblem. This motivates Colbrook's algorithm for computing pseudospectra, which we first describe in its abstract formulation and then in the finite element setting. By applying the finite element realisation of Colbrook's algorithm to the Maxwell eigenproblem, we show that, although the algorithm avoids the pitfalls the discretise-then-solve approach, its accuracy critically depends on the quality of the underlying discretisation. As a result, we introduce the Dual-Weighted Residual (DWR) method \pef{Stop defining the acronym over and over, you've defined it already, just use it} and explore its application to our finite element realisation of Colbrook's algorithm. 
+In Chapter 2, we present all relevant background material for our methodology. We begin with an overview of the spectra and pseudospectra of infinite-dimensional operators. We then introduce the standard discretise-then-solve approach and discuss its common pitfalls. As an example, we demonstrate spectral pollution when a nai\"ve finite element discretisation is applied to the Maxwell eigenproblem. This motivates Colbrook's algorithm for computing pseudospectra, which we first describe in its abstract formulation and then in the finite element setting. By applying the finite element realisation of Colbrook's algorithm to the Maxwell eigenproblem, we show that, although the algorithm avoids the pitfalls the discretise-then-solve approach, its accuracy critically depends on the quality of the underlying discretisation. As a result, we introduce the DWR method 
+% \pef{Stop defining the acronym over and over, you've defined it already, just use it} 
+and explore its application to our finite element realisation of Colbrook's algorithm. 
 
 In Chapter 3, we develop our adaptive methodology. We first construct an adaptive mesh refinement technique for the auxiliary eigenproblems arising in Colbrook's algorithm. We then develop an approach for adaptively selecting test points within it. Chapter 3 ends with our main new algorithm, which couples these two levels of adaptivity. 
 
