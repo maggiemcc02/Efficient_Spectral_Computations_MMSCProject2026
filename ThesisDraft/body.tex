@@ -412,7 +412,7 @@ Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies o
     % (depending on $A$ but not on $z$).
 \end{assumption}
 
-To satisfy this assumption, we introduce \textit{operator folding}. Suppose that $A$ is a closed and densely defined operator on a separable Hilbert space $\H,$ i.e., a Hilbert space that contains a countable orthonormal basis \cite{Matt}. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$ \cite{Matt}. The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
+To satisfy this assumption, we introduce \textit{operator folding}. Suppose that $A$ is a closed and densely defined operator on a separable Hilbert space $\H,$ i.e., a Hilbert space that contains a countable orthonormal basis \cite{Matt}. \pef{Clarify that the new assumption here is separability (if I understand correctly).} Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$ \cite{Matt}. \pef{You don't need to cite Matt's book on consecutive sentences. Just cite the section on operator folding at the start of the section.} The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
 \begin{equation}
     \sigma_{\inf}((A-zI)\mathcal{P}_n^*) =  \sqrt{\sigma_{\inf}(\mathcal{P}_n(A-zI)^*(A-zI)\mathcal{P}_n^*)}.
 \end{equation}
@@ -422,7 +422,7 @@ That is, we approximate $\gamma(z, A)$ with
 \end{equation}
 which satisfies Assumption \ref{assump} under suitable conditions on $D(A)$ and $D(A^*)$ \cite{Matt, kato}. 
 
-To compute $\Phi_n(z, A)$ in \eqref{phi Pn}, we discretize variational problems for $\gamma(z, A)$. In particular, we consider the following quadratic forms:
+To compute $\Phi_n(z, A)$ in \eqref{phi Pn}, we consider the following quadratic forms:
 \begin{align}
     Q_{z, A}^{(1)}(u, v)&= ((A-zI)u, (A-zI)v)_{\H}, &\quad u, v &\in D(A),\label{Q1}\\
     Q_{z, A}^{(2)}(u, v) &= ((A-zI)^*u, (A-zI)^*v)_{\H}, &\qquad u, v &\in D(A^*),\label{Q2}
@@ -518,13 +518,15 @@ The computation of $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ needed for Algorithm \r
 
 % \end{algorithm}
 
-\subsection{Operator Folding with the Finite Element Method} \label{Fix matt}
+\subsection{Operator Folding for Variational Problems} \label{Fix matt}
 
-Colbrook's formulation of $\gamma(z, A)$ in \eqref{var gamma} considers a closed and densely defined operator $A : D(A) \subset \H \rightarrow 
-\H.$ To approximate $\gamma(z, A)$ by $\Phi_n(z, A)$ in \eqref{old approx phi}, we discretize the minimization problems in \eqref{var gamma}. To do so, we employ the finite element method. 
+\pef{I've rephrased all of this from 'finite element method' to 'variational problems'. The issue lies at the continuous level and is independent of finite element discretisation. It would apply just as well with a spectral Galerkin method, for example.}
+
+Recall that Colbrook's formulation begins from a closed and densely defined operator $A : D(A) \subset \H \rightarrow 
+\H.$ However, this is not the natural setting for variational problems, which are typically formulated for operators of the form $L : V \rightarrow V^*,$ where $V^*$ is the dual (or anti-dual in complex arithmetic) of $V.$
 
 % The finite element method is often formulated in a variational setting that considers operators of the form $L : V \rightarrow V^*$.
-The finite element method is often formulated for operators of the form $L : V \rightarrow V^*,$ where $V^*$ is the dual, or anti-dual, of $V.$ This differs from the setting of Colbrook's algorithm, which is formulated for densely defined operators. 
+%The finite element method is often formulated for operators of the form $L : V \rightarrow V^*,$ where $V^*$ is the dual, or anti-dual, of $V.$ This differs from the setting of Colbrook's algorithm, which is formulated for densely defined operators. 
 % This operator $L$ is different from the operators that Colbrook works with in Algorithm \ref{pseudospec}.
 % The finite element method is often formulated in a variational setting involving an operator $L : V \rightarrow V^*,$ where, in the real case, $V^*$ denotes the dual of $V,$ while the complex case, $V^*$ denotes the anti-dual of $V.$ This operator $L$ is different from the operators that Colbrook works with in Algorithm \ref{pseudospec}.
 % footnote{In the real case, $V^*$ denotes the dual of $V,$ while the complex case, $V^*$ denotes the anti-dual of $V.$}
@@ -538,14 +540,17 @@ To see this discrepancy, consider the Dirichlet Laplacian on $\H = L^2(\Omega),$
 % \end{equation}
 This operator fits into the setting of Colbrook's algorithm because it maps its domain,  which is dense in the Hilbert space $\H,$ into $\H.$ 
  % Furthermorw, on sufficiently regular domains, $D(A)$ can be taken to be $D(A) = \text{H}_0^1(\Omega) \cap H^2(\Omega).$
-When employing the finite element method, we consider the `weak' Laplacian $L : V \rightarrow V^*,$ where $V \defeq \text{H}_0^1(\Omega).$ This operator is defined as follows:
+When employing a variational formulation, we naturally consider the `weak' Laplacian $L : V \rightarrow V^*,$ where $V \defeq \text{H}_0^1(\Omega).$ This operator is defined as follows:
 \begin{equation}
     \langle Lu, v \rangle_{V^*, V} \defeq (\nabla u, \nabla v)_{L^2(\Omega)}, \qquad \forall u, v \in V,
 \end{equation}
 where $\langle \cdot, \cdot \rangle_{V^*, V}$ denotes the action of an element of $V^*$ on an element of $V.$ Unlike the operator $A,$ the operator $L$ is not a densely defined operator on $\H.$ Thus, $L$ does not directly fit the setting of Colbrook's algorithm. 
 
+\pef{I think it's odd here that we don't state the variational formulation of the same eigenproblem with operators, which would require introducing $M: V \to V^*$ as the mass operator also.}
+
 % Furthermore, considering only $L : V \rightarrow V^*,$ `hides' the choice of Hilbert space $H$ whose metric is used to compute $\gamma(z, A).$ 
 
+\pef{From here on the text deviates substantially from how I expected it would go, which I was envisaging to be much closer to the note we shared with Matt. You write `We begin with Colbrook's densely defined operator \dots' but the central point is that we are trying to construct the right $A$ from the problem data we have. I thought we would introduce $M$ first, then note that we can set $A = M^{-1} L$ in the Dirichlet Laplacian case, but that it doesn't work in general. We can then continue with Umberto's argument for the equivalent reformulation.}
 
 Motivated by this discrepancy, we develop a finite element formulation of Colbrook's algorithm. We begin with Colbrook's densely defined operator $A$  and its Hilbert adjoint $A^*.$ Furthermore, we define $V \defeq D(A)$  and $W \defeq D(A^*).$
 % whiccontinuously embedded\footnote{That is, the embedding map $i : V \rightarrow H$ is continuous.} in $H.$ Furthermore, we define  $W \defeq D(A^*)$ to be the domain the Hilbert adjoint $A^*$ of $A$ and assume that it is continusouly embedded in $H.$
@@ -705,7 +710,7 @@ Thus, $\mu_h^{(2)}(z)$ can be obtained from the smallest eigenvalue of the follo
 \end{equation}
 
 The advantage of formulating our approximations in this way is that the sesquilinear representations of 
-$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, v_h),$ and $m(u_h, v_h)$ can be assembled directly in Firedrake. As a result, we can employ Firedrake's solvers to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
+$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, v_h),$ and $m(u_h, v_h)$ can be assembled directly in Firedrake. As a result, we can employ Firedrake and SLEPc to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
 \begin{equation} \label{approx phi}
     \Phi_h(z, A) = \sqrt{ \min \left\{ \mu_h^{(1)}(z), \mu_h^{(2)}(z) \right\} }.
 \end{equation}
@@ -714,7 +719,9 @@ Following this line of thinking, Algorithm \ref{pseudospec} reformulates Colbroo
 
 \input{algorithms/new_pseudospec}
 
-Before moving on, we emphasize that our finite element formulation of Colbrook's algorithm applies to operators, $L : V \rightarrow \H^*$ and $S: W \rightarrow \H^*,$ rather than to the more general operators, $L:V \rightarrow V^*$ and $S:W\rightarrow W^*.$ This restriction allows us to work with the Riesz map $M : \H \rightarrow \H^*$ and its inverse $M^{-1}:\H^* \rightarrow \H.$  As a result, our formulation of Colbrook's algorithm is limited to densely defined operators on $\H$ whose variational realizations map into $\H^*.$ All of the operators considered in this work satisfy this requirement. However, many standard operators do not. For example, the `weak' Laplacian in \eqref{weak L} does not satisfy this requirement because it maps into $(\text{H}_0^1(\Omega))^*,$ whose elements need not belong to $(L^2(\Omega))^*$. Extending our current formulation of Colbrook's algorithm so that it can be applied to a broader class of operators is a topic of future work.
+Before moving on, we emphasize that our finite element formulation of Colbrook's algorithm applies to operators, $L : V \rightarrow \H^*$ and $S: W \rightarrow \H^*,$ rather than to the more general operators, $L:V \rightarrow V^*$ and $S:W\rightarrow W^*.$ This restriction allows us to work with the Riesz map $M : \H \rightarrow \H^*$ and its inverse $M^{-1}:\H^* \rightarrow \H.$  As a result, our formulation of Colbrook's algorithm is limited to densely defined operators on $\H$ whose variational realizations map into $\H^*.$ All of the operators considered in this work satisfy this requirement. However, many standard operators do not. For example, the `weak' Laplacian in \eqref{weak L} does not satisfy this requirement because it maps into $(\text{H}_0^1(\Omega))^*,$ whose elements need not belong to $(L^2(\Omega))^*$.
+
+We believe this limitation ultimately arises from Colbrook's starting abstraction, and that extending his framework to the broader setting of operators mapping to dual spaces is an important topic of future work.
 
 
 
@@ -796,29 +803,29 @@ To demonstrate the success of this approach, we consider structured triangular m
 \begin{equation} \label{1grid}
     \operatorname{Grid} = \{0.01j : j = 1, 2, \dots, 400 \}.
 \end{equation}
-For each $z \in \operatorname{Grid},$ we assemble \eqref{max aux} in Firedrake and compute the smallest eigenvalue using SLEPc's Krylov-Schur method with a shift-and-invert spectral transformation \cite{Firedrake, slep}. In doing so, we compute $\Phi_h(z, A)$ as in \eqref{max phi}. The results are displayed in Figure \ref{FirstMatt}. 
+For each $z \in \operatorname{Grid},$ we assemble \eqref{max aux} in Firedrake and compute the smallest eigenvalue using SLEPc's Krylov--Schur method with a shift-and-invert spectral transformation \cite{Firedrake, slep}. In doing so, we compute $\Phi_h(z, A)$ as in \eqref{max phi}. The results are displayed in Figure \ref{FirstMatt}, which plots both the exact distance to the spectrum and the approximation realised by our computations.
 
 % \input{figures/mesh32}
 \input{figures/Matt_Maxwell}
 
 
-Figure \ref{FirstMatt} shows that Algorithm \ref{pseudospec} does not approximate the spurious spectral value $\sqrt{6} \approx 2.45.$ Thus, despite our choice of linear Lagrange elements, 
-Algorithm \ref{pseudospec} avoids the spectral pollution exhibited by the discretize-then-solve approach in Section \ref{Maxwell Sect}. However, notice that for coarse discretizations, the computed bound on the distance to the spectrum is poor. As a result,  in Figure \ref{FirstMatt}, we employ uniform mesh refinement to increase the accuracy of the bound. 
+Figure \ref{FirstMatt} shows that Algorithm \ref{pseudospec} does not approximate the spurious spectral value $\sqrt{6} \approx 2.45.$ Thus, despite the same choice of linear Lagrange elements, 
+Algorithm \ref{pseudospec} avoids the spectral pollution exhibited by the discretize-then-solve approach in Section \ref{Maxwell Sect}. However, notice that for coarse discretizations, the computed bound on the distance to the spectrum is poor, and refinement is required to increase the accuracy of the bound. 
 
-However, extensive uniform refinement at each $z \in \operatorname{Grid}$ can make Algorithm \ref{pseudospec} computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling Algorithm \ref{pseudospec} with an adaptive mesh refinement technique driven by the Dual-Weighted Residual (DWR) method for symmetric eigenproblems. We discuss this methodology next.
+However, extensive uniform refinement at each $z \in \operatorname{Grid}$ can make Algorithm \ref{pseudospec} computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling Algorithm \ref{pseudospec} with an adaptive mesh refinement technique driven by the Dual-Weighted Residual (DWR) method \pef{Again, stop repeatedly defining the acronym} for symmetric eigenproblems. We discuss this next.
 % that focuses the computational effort of solving the auxiliary eigenproblems in regions of the domain where the approximation of $\mu_h(z)$ is poor. 
 
 
-\section{The Dual-Weighted Residual (DWR) Method for Symmetric Eigenproblems} \label{DWR sect}
+\section{The DWR Method for Symmetric Eigenproblems} \label{DWR sect}
 
 In this section, we provide an overview of the Dual-Weighted Residual (DWR) method that we apply to the auxiliary eigenproblems in Algorithm \ref{pseudospec}. In the first subsection, we discuss the role of \textit{a posteriori} error estimates in constructing adaptive finite element methods. In the subsections that follow, we introduce the DWR error estimate for symmetric eigenproblems and discuss its localization for adaptive mesh refinement.
 
 \subsection{Adaptive Finite Element Methods}
 
-Since the finite element methodology provides an approximation to the solution of an underlying infinite-dimensional variational problem, we may want to measure, control, and effectively minimize the approximation error \cite{Oden}. To do so, we turn to \textit{a posteriori} error estimates. Given a computed solution, \textit{a posteriori} error estimates provide an estimate of the error in that particular approximation \cite{Scott}. As a result, \textit{a posteriori} error estimates are used to determine which parts of the current discretization should be modified to reduce the error in the current approximation \cite{Scott}. 
+Since the finite element methodology provides an approximation to the solution of an underlying infinite-dimensional variational problem, we may want to measure, control, and effectively minimize the approximation error \cite{Oden}. To do so, we turn to \textit{a posteriori} error estimates. Given a computed solution, \textit{a posteriori} error estimates provide an estimate of the error in that particular approximation \cite{Scott}. \pef{Big Book Principle for Scott but not Oden} These \textit{a posteriori} error estimates can be used adaptively to determine how the current discretization should be modified to reduce the error in the approximation.
 
-This idea gives rise to adaptive finite-element methods (AFEMs), which are techniques for choosing a finite-dimensional space, $V_h,$ that is optimal with respect to computational complexity and accuracy \cite{Scott}. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to adaptive mesh refinement techniques (AMRs) \cite{Scott}. 
-These adaptive mesh refinement techniques are particularly useful when the error estimate is large only in certain regions of the domain. In this case, choosing a fine uniform mesh may be a waste of computational effort. In contrast, adaptive mesh techniques refine the mesh only in regions where the estimated error is large. For this reason, AFEMs, that take the form of AMRs, are useful tools for improving the efficiency and accuracy of finite element approximations.
+This idea gives rise to adaptive finite-element methods (AFEMs), which are techniques for choosing a finite-dimensional space, $V_h,$ that aims to be optimal with respect to computational complexity and accuracy \cite{Scott}. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to adaptive mesh refinement techniques (AMRs) \cite{Scott}. \pef{No need to repeatedly cite the same general reference on consecutive sentences}
+These adaptive mesh refinement techniques are particularly useful when the error is domained by certain regions of the domain, such as when the solution exhibits singularities. In this case, choosing a fine uniform mesh may be a waste of computational effort. In contrast, adaptive mesh techniques aim to refine the mesh only where necessary.
 
 When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived quantity of interest, rather than in the solution field over the whole domain \cite{joe}. For example, when solving a problem in fluid dynamics, we may be interested in the vorticity of an eddy, rather than the velocity field \cite{Scott}. In the case of Algorithm \ref{pseudospec}, our quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem rather than its eigenfunction.
 % we are interested in the error in the computed eigenvalues of the auxiliary eigenproblems, rather than in the computed eigenfunctions. 
