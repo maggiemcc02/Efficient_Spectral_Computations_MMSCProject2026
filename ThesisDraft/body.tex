@@ -2080,6 +2080,7 @@ This coupling of our outer and inner refinement techniques is summarised in \Cre
 \input{algorithms/Outer}
 
 \pef{It's not clear to me what $\Phi_{h,c}$ is computed for. It doesn't appear to be used later in the algorithm?}
+\Maggie {It's really only used for output. The idea being that if you want $\Phi_h(z, A),$ the best available is the corrected version. How can I make this clearer? Or should I take it out?}
 
 % begin with a triangulation $\mathcal{T}_0$ and form $\operatorname{Grid} \subset \mathbb{C}$ from the barycentres $z_K$ for each $K \in \mathcal{T}_0.$ Iterating over each barycentre $z_K \in \operatorname{Grid}$, we solve the auxiliary eigenproblems (EQNS) using the adaptive mesh refinement technique outlined in Section \ref{AMR}. In particular, we adapt the mesh that defines the finite element discretisation until the error in the computed smallest eigenvalues satisfies
 % \begin{equation}
@@ -2101,13 +2102,13 @@ introduced in \Cref{Maxwell Sect}.
 
 
 \section{A Dirac-Type Poisson Problem}
-
+\Maggie{Is Dirac-Type confusing? What else could I call this?}
 For our first example, we consider the following self-adjoint, one-dimensional
 Dirac-type operator posed on $\Omega=(0,\pi)$:
 \begin{equation} \label{dirac pois}
     A(u, \sigma) = (-i\sigma', -i u'), 
 \end{equation}
-where  $D(A) = \text{H}_0^1(\Omega) \times \text{H}^1(\Omega)$ is dense in $\H = L^2(\Omega) \times L^2(\Omega)$ \cite{dirac}.
+where  $D(A) = \text{H}_0^1(\Omega) \times \text{H}^1(\Omega)$ is dense in $\H = L^2(\Omega) \times L^2(\Omega)$ \cite{dirac}. 
 
 The spectrum of this operator can be characterised using its relation to the Poisson eigenproblem. To see this, consider the eigenproblem $AU = \lambda U,$ where $U = (u, \sigma)^T\!.$ This yields the following two equations:
 \begin{align}
