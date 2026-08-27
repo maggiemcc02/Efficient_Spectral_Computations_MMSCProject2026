@@ -1427,8 +1427,6 @@ To estimate this error, the DWR method embeds the given problem into the framewo
 
 
 
-\Maggie{Edited based on: This was first proposed by Heuveline \& Rannacher \dots}
-
 We now specialise the DWR framework to eigenproblems, taking the eigenvalue itself as the chosen quantity of interest. 
 This application of DWR was first proposed by Vincent Heuveline and Rolf Rannacher in \cite{Heuveline}. 
 % \pef{This was first proposed by Heuveline \& Rannacher \dots}
@@ -1569,10 +1567,9 @@ We use \eqref{new DWR} and its localisation to drive an adaptive mesh refinement
 
 \chapter{Methodology}
 
-In this chapter, we develop our methodology for pairing our adaptive mesh refinement technique (\Cref{AMR}) with an outer refinement technique for selecting the test points used in \Cref{pseudospec}. In \Cref{Sect31}, we couple \Cref{pseudospec} with our adaptive mesh refinement technique. In \Cref{Sect32}, we combine this methodology with an outer refinement procedure. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
+In this chapter, we develop our methodology for combining an inner adaptive mesh refinement technique with an outer refinement technique for selecting the test points used in \Cref{pseudospec}. In \Cref{Sect31}, we couple \Cref{pseudospec} with our adaptive mesh refinement technique. In \Cref{Sect32}, we combine this methodology with an outer refinement procedure. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
 
 % \pef{I find the section references here a bit confusing. Maybe just say what Section 3.1 and Section 3.2 and ... do.}
-\Maggie{Edited based on: I find the section references here a bit confusing. Maybe just say what Section 3.1 and Section 3.2 and ... do.}
 
 \section{ An Adaptive Refinement Technique for Colbrook's Algorithm} \label{Sect31}
 
@@ -1633,7 +1630,6 @@ Let $\lambda$ be the smallest eigenvalue of an infinite-dimensional eigenproblem
 
 % When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, it is more challenging to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
 
-\Maggie{The text below is edited based on: What does `align their phases' mean?. In response, I took out the $m=1$ comment. Our approach handles it anyway.}
 
 To use DWR to estimate the error in the computed eigenvalue, we require an enriched approximation $u_h^+$ that corresponds to the chosen discrete eigenfunction $u_h.$ 
 When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approximate different bases for the same $m$-dimensional eigenspace. As a result, we need a way to choose a $u_h^+$ that behaves as an enriched approximation of the chosen $u_h.$ 
@@ -1923,7 +1919,7 @@ Consider a triangle $K \in \mathcal{T}_k$ with barycentre $z_K,$ as illustrated 
 
 
 
-    \begin{lemma}[$\boldsymbol{\gamma(\cdot,A)}$ is 1-Lipschitz\footnote{his result is stated as part of \cite[Exercise~1.8]{Matt}. We developed the proof using arguments similar to the proof of \cite[Lemma~3.4]{proofpaper}.}] \label[lemma]{lemma}
+    \begin{lemma}[$\boldsymbol{\gamma(\cdot,A)}$ is 1-Lipschitz\footnote{This result is stated as part of \cite[Exercise~1.8]{Matt}. We developed the proof using arguments similar to the proof of \cite[Lemma~3.4]{proofpaper}.}] \label[lemma]{lemma}
     Let $\gamma(\cdot,A)$ be defined as in \eqref{var gamma}. Then $\gamma(\,\cdot\,,A)$ is $1$-Lipschitz, that is,
     \begin{equation}
         |\gamma(z,A)-\gamma(w,A)| \leq |z-w|,
@@ -2173,12 +2169,6 @@ array of $20 \times 8$ squares and subdivide each square into two triangles (see
  %  in UFL and ask Firedrake to solve the resulting generalised eigenproblem using SLEPc’s Krylov-Schur method with a shift-and-invert spectral transformation \cite{Firedrake, slep}.
  % We then compute the DWR error estimate $\eta(z_K),$ whose localisation drives the adaptive mesh refinement technique described in \Cref{AMR}.
 
- \Maggie{The above is edited based on:
- Patrick: At each barycentre $z_K$ of a triangle $K \in \mathcal{T}_k,$ we compute the smallest eigenvalues, 
-  $\mu_h(z_K)$ and $\mu_h^+(z_K),$ of the auxiliary eigenproblem \eqref{dirac eig} posed in $V_h$ and $V_h^+,$ respectively, again with the same shift-and-invert Krylov--Schur method.
-  And, Patrick:
-  I don't like the phrasing you had about `asking Firedrake to do something'. It's anthopomorphising a tool.}
-
 %  \pef{At each barycentre $z_K$ of a triangle $K \in \mathcal{T}_k,$ we compute the smallest eigenvalues, 
 %   $\mu_h(z_K)$ and $\mu_h^+(z_K),$ of the auxiliary eigenproblem \eqref{dirac eig} posed in $V_h$ and $V_h^+,$ respectively, again with the same shift-and-invert Krylov--Schur method.}
 
@@ -2274,11 +2264,6 @@ As expected, the triangles in the complex plane are refined as we approach the d
 
 In this dissertation, we have developed a method for accurate and efficient infinite-dimensional pseudospectral computations. To do so, we built on Colbrook's algorithm for computing pseudospectra. This algorithm characterises the pseudospectrum of a closed and densely defined linear operator $A$ using the smallest spectral values of the folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ In doing so, it avoids discretising the operator $A$ directly. Instead, it discretises the auxiliary eigenproblems that characterise the smallest spectral values of the folded operators. This delayed discretisation underpins the success of Colbrook's algorithm, which avoids the common pitfalls of the standard discretise-then-solve approach.
 
-
-\Maggie{The sentence you wrote (below) does not seem to fit too well in that first paragraph. Is what I put in ok?}
-
-\pef{ 
-In this dissertation we have developed a method for accurate and efficient infinite-dimensional pseudospectral computations, building on Colbrook's algorithm for infinite-dimensional pseudospectral computations.}
 
 After exploring the abstract formulation of Colbrook's algorithm, we reformulated it for a variational setting in which the auxiliary eigenproblems are discretised with the finite element method. We then demonstrated the success of this approach by comparing it to the standard discretise-then-solve approach for the Maxwell eigenproblem. 
 
