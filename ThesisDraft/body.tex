@@ -647,8 +647,6 @@ In general, for the Maxwell eigenproblem, whether spectral pollution occurs depe
 The success of Nédélec elements for the Maxwell eigenproblem can be understood through finite element exterior calculus (FEEC).
 % \pef{I would say Arnold's book is a much more natural choice of citation here.} 
 FEEC captures the essential geometric, topological, and algebraic structures of a problem at the discrete level. This linking of the continuous and discrete formulation of a problem enables the construction of stable and convergent finite element discretisations. For the Maxwell eigenproblem, the success of Nédélec elements can be explained by the fact that they fit within the framework of FEEC, while our current discretisation does not \cite[Chapter~1]{bookArnold}.  In particular, Nédélec elements preserve the de Rham complex at the discrete level, while linear Lagrange elements do not. Furthermore, Nédélec elements satisfy a discrete compactness property that ensures the convergence of the corresponding finite element discretization without spectral pollution \cite{Boffi}.
-\pef{It might be nice to have one sentence summarising why they work and Lagrange elements don't, at a technical level.}
-\Maggie{I am struggling here. Do I go the discrete compactness route or the de Rham complex route? Or both? What do you think?}
 
 % More precisely, edge elements preserve the de Rham complex and satisfy the discrete compactness property, which provides the compactness required for spectral convergence of the Maxwell eigenproblem and prevents the appearance of spurious eigenvalues; standard nodal Lagrange elements do not, in general, satisfy this property
 
@@ -879,7 +877,7 @@ To see this discrepancy, consider the \textit{Dirichlet Laplacian} on $\H = L^2(
 \end{equation}
 This is a closed and densely defined operator on $\H.$ Thus, it fits within the framework of Colbrook's algorithm. 
 
-Often, we work with the variational formulation of the Dirichlet Laplacian. 
+However, it is preferable to work with a variational formulation, because $D(A)$ is very difficult to discretise.
 Let $\Omega \subset \mathbb{R}^d$ be a bounded domain, $V = \text{H}_0^1(\Omega),$ and $\H = L^2(\Omega).$ The \textit{weak Dirichlet Laplacian} is defined as the operator $L : V \rightarrow V^*$ that satisfies
 \begin{equation} \label{weak L}
     \langle Lu, v \rangle_{V^*, V} \defeq (\nabla u, \nabla v)_{L^2(\Omega)}, \qquad \Forall u, v \in V,
@@ -892,14 +890,15 @@ With this, the standard variational eigenproblem seeks $\lambda \in \mathbb{C}$ 
 \begin{equation}
     Lu = \lambda M u, \qquad \text{in } V^*.
 \end{equation}
-Notice that this formulation considers operators $L : V \rightarrow V^*$ and $M : L^2(\Omega) \rightarrow V^*$, whereas Colbrook's algorithm is formulated for a closed and densely defined operator $A : D(A) \subset \H \rightarrow \H.$ As a result, we seek to connect these two fomulations so that Colbrook's algorithm can be applied in the variational setting. To do so, we ask how the operator $A$ required by Colbrook's algorithm can be recovered from $L$ and $M.$
+Notice that this formulation considers operators $L : V \rightarrow V^*$ and $M : L^2(\Omega) \rightarrow V^*$, whereas Colbrook's algorithm is formulated for a closed and densely defined operator $A : D(A) \subset \H \rightarrow \H.$ As a result, we seek to connect these two formulations so that Colbrook's algorithm can be applied in the variational setting. To do so, we ask how the operator $A$ required by Colbrook's algorithm can be recovered from $L$ and $M.$
 
 In the case of the Dirichlet Laplacian,  to strong operator $A$ in \eqref{strong L} can be recovered from $L$ in \eqref{weak L} 
-through $M^{-1}L.$ Since $M^{-1}$ is only defined on $R(M),$ we can only write $A = M^{-1}L$ for the $u \in V$ such that $Lu \in R(M).$ Fortunately, for the Dirichlet Laplacian this subspace is precisely $D(A)$ \eqref{strong L}. Thus, we can write $A = M^{-1}L$ on $D(A).$
+through $M^{-1}L.$ Since $M^{-1}$ is only defined on $R(M),$ we can only write $A = M^{-1}L$ for the $u \in V$ such that $Lu \in R(M).$ In fact, for the Dirichlet Laplacian this subspace is precisely $D(A)$ \eqref{strong L}. Thus, we can write $A = M^{-1}L$ on $D(A).$
 
 % However, this is not always possible because $M^{-1}$ is only defined on the range of $M,$ while $L$ maps into $V^*.$ Thus, we can only take $A = M^{-1}L$ on the subspace of $V$ for which $Lu \in R(M).$ Fortunately, this subspace is precisely $D(A)$ in \eqref{strong L}. Thus, we can write $A = M^{-1} L$ on $D(A).$
 
-However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not be invertible\footnote{For example, consider the mixed formulation of the Dirichlet Laplace eigenproblem in \cite[Section 4.5]{Boffi}}.
+However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not always be invertible\footnote{For example, consider the mixed formulation of the Dirichlet Laplace eigenproblem in \cite[Section 4.5]{Boffi}.}.
+\pef{Hmm, above we fix it my demanding that $Lu \in R(M)$. Is this not a general solution? You can always \emph{force} a linear operator to be invertible by restricting its domain to the orthogonal complement of its kernel, and restricting its range?}
 As a result, we restrict ourselves to the setting in which $V \defeq D(A)$ and $L : V \rightarrow \H^*,$ rather than $L : V \rightarrow V^*.$ In this restricted setting, we take $M$ to be the Riesz map $M : \H \rightarrow \H^*,$ defined by
 \begin{equation} \label{M form}
     \langle Mu, v\rangle_{\H^*, \H} = (u, v)_{\H} \qquad \Forall u, v \in \H.
