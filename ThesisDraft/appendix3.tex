@@ -1,7 +1,7 @@
 \chapter{Self-Adjoint Speed Ups}\label{speedup}
 
 
-In this appendix, we derive the result used to speed up our implementation of Algorithm \ref{outerloop} in Section \ref{maxwell results}.
+In this appendix, we derive the result used to speed up our implementation of \Cref{outerloop} in Section \Cref{maxwell results}.
 
 Let $A$ be a self-adjoint, closed, and densely defined operator on the Hilbert space $\H.$  For Colbrook's algorithm, we consider the folded operator $F(z) \defeq (A-zI)^*(A-zI).$ Since $A^*=A,$ we have
 $F(z) = (A-\overline{z}I)(A-zI).$
@@ -38,7 +38,7 @@ Plugging in $z = x +iy$ and expanding, we obtain
 
 Next we consider the quadratic form 
 \begin{equation}
-    Q_{z, A}(u, v) \defeq ((A-zI)u, (a-zI)v)_\H,
+    Q_{z, A}(u, v) \defeq ((A-zI)u, (A-zI)v)_\H,
 \end{equation}
 for all $u, v \in D(A).$
 Substituting in $z = x+iy,$ we have
@@ -49,9 +49,9 @@ Substituting in $z = x+iy,$ we have
        + iy\bigl((A-xI)u,v\bigr)_\H \notag\\
     &\quad
        - iy\bigl(u,(A-xI)v\bigr)_\H
-       + y^2(u,v)_H \\
+       + y^2(u,v)_\H \\
     &= \bigl((A-xI)u,(A-xI)v\bigr)_\H
-       + y^2(u,v)_H \\
+       + y^2(u,v)_\H \\
     &= Q_{x,A}(u,v)+y^2(u,v)_\H.
 \end{align}
 Taking $v=u,$ we have that
@@ -59,7 +59,7 @@ Taking $v=u,$ we have that
     Q_{z,A}(u,u)
     &= Q_{x,A}(u,u)+y^2\|u\|_\H^2.
 \end{align}
-Then, taking the infimum over unit vectors, we can write \eqref{gamma} as
+Then, taking the infimum over unit vectors, we can write \eqref{var gamma} as
 \begin{equation}
     \gamma(z, A)^2 = \gamma(x, A)^2 + y^2. 
 \end{equation}
@@ -76,7 +76,7 @@ Thus, to seek $\lambda_h(z)$ and nonzero $u_h(z) \in V_h$ to satisfy
 for all $v_h \in V_h,$
 we can instead seek $\lambda_h(x)$ and nonzero $u_h(x) \in V_h$ to satisfy
 \begin{align} \label{xval}
-    Q_{x, A}(u_h(x), v_h) &= (\lambda_h(x) - y^2) m(u_h(z), v_h) = \lambda_h(x) m(u_h(x), v_h), 
+    Q_{x, A}(u_h(x), v_h) &= (\lambda_h(z) - y^2) m(u_h(z), v_h) = \lambda_h(x) m(u_h(x), v_h), 
 \end{align}
 for all $v_h \in V_h.$
 In other words, for each distinct $x,$ we can solve $Q_{x, A}(u_h(x), v_h) = \lambda_h(x) m(u_h(x), v_h)$ and find $\lambda_h(z)$ by adding $y^2.$ The eigenfunctions carry over as well. That is, $E_h(z) = E_h(x),$ where $E_h(\cdot)$ denotes the eigenspace for $\lambda_h(\cdot).$
@@ -113,13 +113,14 @@ notice that the primal residual \eqref{resid} can be written as
     &= Q_{x, A}(u_h, v) - \lambda_h(x) m(u_h, v) \\
     &= \rho(u_h, \lambda_h(x))(v).  
 \end{align}
-Since the primal residual depends only on $x,$ as well as both the primal and enriched eigenspaces, the DWR error estimate \eqref{DWR} depends only on $x.$ Thus,
+Since the primal residual, as we as both the primal and enriched eigenspaces, depends only on $x,$ the DWR error estimate \eqref{DWR} depends only on $x.$ Thus,
+% depends only on $x,$ as well as both the primal and enriched eigenspaces, the DWR error estimate \eqref{DWR} depends only on $x.$ Thus,
 \begin{align}
-    \lambda(z) - \lambda_h(z) &\approx \frac{\rho(u_h(z), \lambda_h(z))(u_h^+(z) - u_h(z))}{1 - 1/2 \| u_h^+- u_h \|_m^2 }\\
-    &= \frac{\rho(u_h(x), \lambda_h(x))(u_h^+(x) - u_h(x))}{1 - 1/2 \| u_h^+(x) - u_h(x) \|_m^2 }.
+    \lambda(z) - \lambda_h(z) &\approx \frac{\rho(u_h(z), \lambda_h(z))(u_h^+(z) - u_h(z))}{1 - \frac{1}{2} m( u_h^+(z) - u_h(z), u_h^+(z)- u_h(z)) }\\
+    &= \frac{\rho(u_h(x), \lambda_h(x))(u_h^+(x) - u_h(x))}{1 - \frac{1}{2} m( u_h^+(x) - u_h(x), u_h^+(x)- u_h(x)) }.
 \end{align}
 
-These results allow us to drastically speed up our implementation of Algorithm \ref{outerloop}. For each distinct $x,$ we perform one expensive adaptive eigensolve at one barycentre $z_K$ that satisfies $\operatorname{Re}(z_K) = x.$ We then use \eqref{shift} to compute $\Phi_h(z_K, A)$ for every other barycentre with the same real part. The DWR error estimate computed at the representative $z_K$ is also carried over to every other barycentre with the same real part. 
+These results allow us to drastically speed up our implementation of \Cref{outerloop}. For each distinct $x,$ we perform one expensive adaptive eigensolve at one barycentre $z_K$ that satisfies $\operatorname{Re}(z_K) = x.$ We then use \eqref{shift} to compute $\Phi_h(z_K, A)$ for every other barycentre with the same real part. The DWR error estimate computed at the representative $z_K$ is also carried over to every other barycentre with the same real part. 
 
 % barycentre $z_K$ that shares the same real part, we perform one expensive adaptive eigensolve. Then, for each `column' (every $z_K$ that shares the same real part) in the complex plane, we compute the needed $\Phi_n(z_K, A)$ using \eqref{shift}. The error estimate computed at the chosen $z_K$ for each column carries over to every other point in that column.
 
