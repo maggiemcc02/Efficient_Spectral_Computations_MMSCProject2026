@@ -21,10 +21,13 @@ In infinite dimensions, we consider a linear operator $A$ on a Hilbert space $\H
 \end{equation}
 where $I$ denotes the identity operator. 
 
-A point $z \in \mathbb{C}$ is an eigenvalue of $A$ if there exists a nonzero $u$ such that $Au=z u.$ Equivalently, $z$ is an eigenvalue of $A$ when $A-z I$ is not injective. In contrast to finite dimensions, $A -zI$ can fail to be boundedly invertible for values of $z$ that are not eigenvalues of $A.$ For example, $A-zI$ may be injective but not surjective. Thus, the
-spectrum of a linear operator includes the set of eigenvalues of $A,$ but is generally much richer. 
+A point $z \in \mathbb{C}$ is an eigenvalue of $A$ if there exists a nonzero $u$ such that
+\begin{equation}
+Au=z u.
+\end{equation} 
+Equivalently, $z$ is an eigenvalue of $A$ when $A-z I$ is not injective. In finite dimensions, the eigenvalues and the spectrum coincide, but in infinite dimensions the eigenvalues are in general only a subset of the spectrum. For example, $A-zI$ may be injective but not surjective. Thus, the
+spectrum of a linear operator includes the set of eigenvalues of $A,$ but can be much richer. 
 
-\Maggie{Edited based on this comment: You should define eigenvalues here, give the formula. Not everyone understands sharply the distinction between spectra and eigenvalues.}
 % The spectrum of a linear operator includes the set of eigenvalues of $A,$ but is generally much richer. \pef{You should define eigenvalues here, give the formula. Not everyone understands sharply the distinction between spectra and eigenvalues.} This follows from the fact that in infinite dimensions there are more ways for $A-zI$ to fail to have a bounded inverse \cite{Matt}. \pef{The Big Book Principle: when citing a specific result in a big book, don't ever just cite the whole book. Tell your readers where to find what you're talking about, like in Chapter 1, or Theorem 2.5, or whatever.} 
 
 As a result, new phenomena are present in the spectra of linear operators that make them much harder to reliably compute. To see this, consider the right-shift operator, 
@@ -40,8 +43,7 @@ The standard approach for computing the spectrum of an infinite-dimensional oper
 This approach consists of discretising the operator with a finite-dimensional matrix, computing the spectrum of the discretised operator, and hoping that the spectrum of the discretised operator approaches the spectrum of the infinite-dimensional operator as the size of the discretisation increases. Despite being a successful approach for many problems, it is fraught with difficulties. If the problem is not discretised very carefully, \textit{spectral pollution} can occur, where a sequence of discretised operators $A_n$ has a corresponding sequence of eigenvalues, $\lambda_n \in \Sp{A_n},$ such that $ \lambda_n \rightarrow \lambda \notin \Sp{A}$ as $n \rightarrow \infty.$
 % the discretised operator has eigenvalues that converge to something not in the spectrum of the infinite-dimensional operator. \pef{Need to be more precise here: it is a sequence of operators that has a sequence of eigenvalues that converges} 
 The approach can also suffer from \textit{spectral invisibility}, where 
-there exists a $\lambda \in \Sp{A}$ for which no $\lambda_n \in \Sp{A_n}$ converges to $\lambda$ as $n \rightarrow \infty.$
-\Maggie{Edited based on this comment Need to be more precise here: it is a sequence of operators that has a sequence of eigenvalues that converges. QUESTION: The reason I am not too precise here is that I give specific definitions in the background. Does this now make things repetitive?}
+there exists a $\lambda \in \Sp{A}$ for which no sequence $\lambda_n \in \Sp{A_n}$ converges to $\lambda$ as $n \rightarrow \infty.$
 % discretising the operator causes us to miss parts of the spectrum, even as the size of the discretisation increases. 
 
 Even if the discretisation manages to avoid both spectral pollution and spectral invisibility, there remains a far more catastrophic limitation of the discretise-then-solve approach. In particular, since the spectra of infinite-dimensional operators may include more than just eigenvalues of finite multiplicity, there may be parts of the spectrum that we can never capture with the finite set of eigenvalues that results from discretisation \cite{Matt}. 
@@ -63,11 +65,10 @@ His work is based on the idea of deferring discretisation to the last opportunit
 
 % drawn from a grid of points in the complex plane
 
- Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra, so we consider this first. Let $A$ be a linear operator defined on the Hilbert space $\H.$ Colbrook's algorithm considers a sequence of complex numbers $z$ and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ 
+ Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra, so we consider this first. Let $A: \H \to \H$ be a linear operator defined on a Hilbert space $\H.$ Colbrook's algorithm considers a set of complex numbers $z$ and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ 
  % \pef{$A$ is still fixed in notation to be the right-shift operator. You need to redefine $A$ to be an endomorphism on a Hilbert space.} 
  Discretisation enters Colbrook's algorithm at this stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretisations. The benefit of discretising the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
 The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretise-then-solve approach \cite{Matt}. 
-\Maggie{ Edited based on this comment: $A$ is still fixed in notation to be the right-shift operator. You need to redefine $A$ to be an endomorphism on a Hilbert space.}
 
 
 Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost because it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we shall see, coarse discretisations of the folded operators can produce poor approximations of the bound on the distance to the spectrum. 
@@ -84,19 +85,10 @@ As a result, further refinement, and thus more expensive computations, may be ne
 % Furthermore, as we shall see, coarse discretisations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
 
 
-In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{dual-weighted residual} (DWR) method to estimate the error in the quantities used to compute the spectrum. This method uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Bangerth, Heuveline, Becker}. In our setting, the quantity of interest is the eigenvalue rather than the corresponding eigenfunction. The resulting eigenvalue error estimates are used both to improve the computed approximations and to drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
+In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{dual-weighted residual} (DWR) method to estimate the error in the quantities used to compute the spectrum. This method uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Bangerth, Heuveline, Becker}. In our setting, the quantity of interest is the lowest eigenvalue of the folded operator. The resulting eigenvalue error estimates are used both to improve the computed approximations and to drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
  We refer to this process, in which we adapt the mesh used at each test point in the complex plane, as ``inner adaptivity''.
 
-\Maggie{Edited based on the following comments:
-
-\textbullet\  Really we compute pseudospectra?
-
-\textbullet\ Add something like: This employs the adjoint or dual eigenproblem to estimate the discretisation error in the computation of goal functionals; in this case the goal functional is the lowest eigenvalue of the folded operator \dots and then cite Giles \& S\"uli, Giles \& Pierce, Becker \& Rannacher \dots
-
-\textbullet\ Say: We refer to this adaptivity, changing the mesh employed at every point tested in the complex plane, as ``inner-adaptivity''.
-
-
-NOTE: I will add the Giles citations once I have read the relevant papers.
+\Maggie{I will add the Giles citations once I have read the relevant papers.
 }
 
 % \Maggie{Edited based on the following comments:
@@ -113,7 +105,7 @@ NOTE: I will add the Giles citations once I have read the relevant papers.
 % \Maggie{Edited based on this comment: Really we compute pseudospectra?}
 % \pef{Say: We refer to this adaptivity, changing the mesh employed at every point tested in the complex plane, as ``inner-adaptivity''.}
 
-In an effort to reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This ``outer-adaptivity'' balances the DWR error estimate with the desired spatial resolution of a pseudospectral computation. 
+In an effort to reduce the number of eigenproblems that must be solved, we also develop a method for adaptively selecting grid points in the complex plane. This ``outer adaptivity'' balances the DWR error estimate with the desired spatial resolution of a pseudospectral computation. 
 
 To investigate the effectiveness of our methodology, we apply it to numerical examples implemented using the finite element method. In doing so, we aim to show that pairing Colbrook's algorithm with an adaptive methodology enables more efficient and reliable computations of the pseudospectra of infinite-dimensional operators.
 
@@ -158,18 +150,15 @@ To investigate the effectiveness of our methodology, we apply it to numerical ex
 The main contributions of this work can be summarised as follows:
 
 \begin{itemize}
-    \item We specialise Colbrook's algorithm for computing pseudospectra to the finite element setting. 
+    \item We specialise Colbrook's algorithm for computing pseudospectra to the variational setting.
     \item We develop an adaptive mesh refinement technique that applies the DWR method for symmetric eigenproblems to the auxiliary eigenproblems that arise in Colbrook's algorithm. To do so, we extend the  DWR eigenvalue error estimate in \cite{Bangerth, Heuveline} to eigenvalues of multiplicity greater than one.  We also use our DWR eigenvalue error estimate to derive an error estimate for Colbrook's approximate bounds on the distance to the spectrum.
-    \Maggie{Edited based on this comment: What does `current' mean? Make it clear you have improved the formulae published in the literature.}
     % \pef{What does `current' mean? Make it clear you have improved the formulae published in the literature.}
     % Using the DWR error estimate, we develop and implement an adaptive mesh refinement technique for the auxiliary eigenproblems in Colbrook's algorithm. 
     % This implementation builds upon a pre-existing implementation of the DWR method so that it can be applied to Colbrook's algorithm.
-    \item We develop a methodology for adaptively selecting test points when using Colbrook's algorithm to approximate a specified pseudospectral contour. To do so, we triangulate a region of the complex plane and use our DWR error estimates to derive criteria for guaranteeing whether a given triangle lies inside or outside of the desired pseudospectral contour, or whether it should be further refined.
-    \Maggie{Edited based on comment:to compute a specified pseudospectral contour? It's stated later but seems more natural here.}
+    \item We develop a methodology for adaptively selecting test points when using Colbrook's algorithm to approximate a specified pseudospectral contour. To do so, we triangulate a region of the complex plane and use our DWR error estimates to derive criteria for guaranteeing whether a given triangle lies inside or outside of a specified pseudospectral contour, or whether it should be further refined.
        % \pef{to compute a specified pseudospectral contour? It's stated later but seems more natural here}.
     \item We couple an adaptive mesh refinement technique for the auxiliary eigenproblems with our adaptive selection of test points. This coupling focuses the computational effort of Colbrook's algorithm near the pseudospectral contour of interest. 
-    \item We apply the resulting methodology to a first-order system that is closely related to the one-dimensional Laplacian, and to the Maxwell eigenproblem.
-    \Maggie{Edited based on this comment: I for one wouldn't know what a `Dirac' operator is, maybe explain}
+    \item We apply the resulting methodology to a Dirac system that is closely related to the one-dimensional Laplacian, and to the Maxwell eigenproblem.
     % one-dimensional Dirac-type operator and to the Maxwell eigenproblem. 
     % \pef{I for one wouldn't know what a `Dirac' operator is, maybe explain}
 \end{itemize}
@@ -200,8 +189,6 @@ All code is implemented using the complex version of Firedrake \cite{Firedrake}.
 Our implementation of an adaptive mesh refinement technique for Colbrook's algorithm builds upon an existing Firedrake branch that provides a general implementation of DWR-based adaptivity for nonlinear variational problems \cite{pablo}. To this branch, we added the DWR-based adaptive eigensolver developed by Joseph Flood for his MMSC thesis last year \cite{joe}. We then extended both implementations so that they can be applied to the auxiliary eigenproblems in Colbrook's algorithm.
 
 The code used to produce each numerical example presented below is available at LINK. The filenames indicate the relevant figure numbers.
-
-\Maggie{Changed citation based on this comment: This citation should credit Pablo Brubeck}
 
 % \Maggie{I am planning on organizing the repo so that it is easy to access and understand by the examiners. When that is done, I will replace LINK with the actual repo link.}
 
@@ -238,8 +225,6 @@ In Chapter 4, we apply our adaptive algorithm to a one-dimensional Dirac-type op
 
 \chapter{Background}
 
-% \pef{I, for one, prefer putting the entire document in one .tex file. I always end up having to look in the main.tex to find what files are included in what order (i.e.\ to find the mapping 1 $\mapsto$ intro.tex, 2 $\mapsto$ body.tex, \dots, and then I forget what edit I wanted to make in the first place.}
-\Maggie{Responding to comment about document seperation: I put into, body, conclusion in body.tex to help with this for now!}
 
 We present all necessary background material in this chapter. We begin with an overview of the relevant definitions and results from spectral theory. We then describe the common pitfalls of the discretise-then-solve approach. To illustrate one of these pitfalls we consider the famous Maxwell eigenproblem, which exhibits spurious eigenvalues as  the mesh is refined when discretised with standard linear Lagrange finite elements. 
 % piecewise-linear Lagrange finite elements.
@@ -261,9 +246,10 @@ We provide an overview of the spectral theory required for this project. In the 
 
 
 Let $\H$ be a Hilbert space with inner product $(\cdot, \cdot)_{\H}$ and norm $\|\cdot \|_{\H}.$
-We consider a linear operator $A : D(A) \rightarrow \H$ defined on a subspace $D(A) \subset \H.$ We use $D(A)$ and $R(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$   
+We consider a linear operator $A : D(A) \rightarrow \H$ defined on a subspace $D(A) \subset \H.$ We use $D(A)$ and $R(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$
 
-We say that $A$ is \textit{bounded} on $\H$, denoted $A \in \mathcal{B}(\H),$ if there exists a constant $c>0$ such that $\|Ax\|_{\H} \le c \|x\|_{\H}$ for all $x \in D(A).$ When a bounded linear operator's range lies on the real line or in the complex plane, it is called a \textit{bounded linear functional} \cite{krey}. 
+We say that $A$ is \textit{bounded} on $\H$, denoted $A \in \mathcal{B}(\H),$ if there exists a constant $c>0$ such that $\|Ax\|_{\H} \le c \|x\|_{\H}$ for all $x \in D(A).$ A \emph{bounded linear functional} is a bounded operator with range on the real line or in the complex plane \cite{krey}. 
+\pef{It feels odd to introduce bounded linear functionals here: everything before and after is about endomorphisms on Hilbert spaces, but a bounded linear functional is not an endomorphism.}
 Furthermore, we say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:\H \rightarrow D(A)$ such that $AB=I$ and $BA = I,$ where $I$ denotes the identity operator. In this case, $B$ is called the \textit{inverse} of $A$ \cite[Appendix~A.3]{Matt}.  For example, consider the operator $A = 2I,$ where $I$ is the identity operator on $\H.$ This operator is boundedly invertible with inverse $A^{-1} = \frac{1}{2} I.$ 
 
 
@@ -298,9 +284,8 @@ If $A$ is not a closed linear operator, then $\Sp{A} = \mathbb{C}.$ Thus, going 
 % \pef{Big Book Principle}
 % Thus, going forward, we will consider the case in which $A$
 
-As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the \textit{eigenspace} of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \Sp{A}$ but that there may exist $z \in \Sp{A}\setminus \Gamma(A).$ For example, $A-zI$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $\H,$ even when $z$ is not an eigenvalue of $A.$ This cannot occur in finite dimensions, where the rank-nullity theorem tells us that injectivity is equivalent to surjectivity.
+As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue} of $A$ if $A-zI$ is not injective, i.e., if $N(A-zI) \ne \{0\}.$ We use $\Gamma(A)$ to denote the set of the eigenvalues of $A.$ For each $z \in \Gamma(A),$ the corresponding nullspace of $A-zI$ is the \textit{eigenspace} of $A$ corresponding to $z.$ Notice that $\Gamma(A) \subset \Sp{A}$ but that there may exist $z \in \Sp{A}\setminus \Gamma(A).$ For example, $A-zI$ may fail to be boundedly invertible because $R(A-zI)$ is not all of $\H,$ even when $z$ is not an eigenvalue of $A.$ This cannot occur in finite dimensions, where the rank-nullity theorem tells us that injectivity is equivalent to surjectivity for linear operators.
 
-\Maggie{Edited based on this comment: These two failure modes coincide in finite dimensions because of the rank-nullity theorem.}
 % \pef{These two failure modes coincide in finite dimensions because of the rank-nullity theorem.}
 
 If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugate of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI)^{-1}.$  
@@ -335,6 +320,7 @@ Hence, when $A$ is a normal operator, the norm of the resolvent can be used to c
 
 \Maggie{Edited based on comments: Should the norm be the operator norm? The thing being measured is an endomorphism on a Hilbert space, not an element of the Hilbert space. 
 NOTE: Is what I have done ok? Or should I denote the oeprator norm differently?}
+\pef{I think it's really jarring to use $\| \cdot \|_\H$ for the operator norm, that notation is naturally for the norm on the Hilbert space. Use maybe $\| \cdot \|_{\mathcal{B}(\H)}$?}
 
 
 % We begin with an overview of the spectral theory that is relevant to the project.
@@ -463,7 +449,6 @@ Spectral invisibility occurs when the discretisation of the infinite-dimensional
 Even when the discretise-then-solve approach avoids both spectral pollution and spectral invisibility, there is a fundamental issue that arises when an infinite-dimensional operator is replaced by a finite-dimensional discretisation. For general operators, the \textit{essential spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in an `infinite-dimensional' way\footnote{We omit a formal definition of the essential spectrum because there are at least five technical definitions for non-normal operators. The curious reader can consult \cite[Ch. 8]{Matt}.}. The \textit{discrete spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in a `finite-dimensional' way. 
 % Thus, the discrete spectrum can be thought of as the subset of $\Sp{A}$ that contains the eigenvalues of $A$ with finite multiplicity. 
 Immediately discretising $A$ with a finite matrix results in a finite, discrete set of eigenvalues. As a result, the discretise-then-solve approach may struggle to capture the essential spectrum of an operator, and to distinguish it from the discrete spectrum.  
-\Maggie{Edited based on: What has this got to do with doing things `too quickly'? Even if I discretise slowly the same phenomenon would happen? }
 % \pef{What has this got to do with doing things `too quickly'? Even if I discretise slowly the same phenomenon would happen?}
 
 \subsection{The Maxwell Eigenproblem and Spectral Pollution}\label{Maxwell Sect}
@@ -505,6 +490,7 @@ Notice that for nonzero values of $\omega$, the eigenfunctions of \eqref{3D var 
 % \footnote{The zero eigenspace may also contain the space of non-vanishing vector fields $\mathbf{u}$  with $\bcurl \, \mathbf{u} = \mathbf{0}, $  $\operatorname{div} \mathbf{u} = 0 \in \Omega,$ and $\mathbf{u} \times \mathbf{n} = 0$ \cite{Boffi}.}
 
 \Maggie{Added a footnote based on: If I saw this I would ask is the eigenspace at zero $\textbf{grad}(\mathbf{H}_0^1(\Omega))$ or is it different. }
+\pef{You should know (you may or may not) that the other functions in the kernel depend on the topology of the domain. For simply connected domains the kernel of curl is the range of grad. You would get one extra element of the nullspace for every tunnel through the domain.}
 % \pef{If I saw this I would ask is the eigenspace at zero $\textbf{grad}(\mathbf{H}_0^1(\Omega))$ or is it different.}
 
 % To compute a Galerkin discretisation of \eqref{3D var max}, we consider a sequence of finite-dimensional subspaces $V_h \subset \mathbf{H}_0(\bcurl; \Omega).$ Then, we seek $\omega_h \in \mathbb{R}$ and nonzero $\mathbf{u}_h \in V_h$ such that
@@ -551,7 +537,6 @@ Given a basis $V_h = \operatorname{span}\{\boldsymbol{\phi}_1,\ldots,\boldsymbol
     A_h \, \mathbf{x} = \omega_h^2 M_h \mathbf{x},
 \end{equation}
 where $\mathbf{x}$ is the vector of coefficients for $\mathbf{u}_h,$ $A_h$ is the stiffness matrix with entries $(A_h)_{ij} = (\rot \, \boldsymbol{\phi}_j, \rot \, \boldsymbol{\phi}_i)_{L^2(\Omega)},$ and $M_h$ is the mass matrix with entries $(M_h)_{ij} = (\boldsymbol{\phi}_j, \boldsymbol{\phi}_i)_{L^2(\Omega)}.$ Thus, from the perspective of linear algebra, the finite element discretisation of an infinite-dimensional eigenvalue problem results in a generalised eigenproblem, where the mass matrix enforces the correct inner product \cite{PatrickNote}. 
-\Maggie{Edited based on: This latter equation uses the same symbol for a function (on the left) and its vector of coefficients in some basis (on the right). Maybe best just to skip it. They'll know what the mass matrix does. }
 
 % In the current setting, $M_h$ enforces the $L^2(\Omega)$ inner product, i.e., $(\mathbf{x}, \mathbf{y})_{L^2(\Omega)} = \mathbf{x}^* M_h \mathbf{y}$. \pef{This latter equation uses the same symbol for a function (on the left) and its vector of coefficients in some basis (on the right). Maybe best just to skip it. They'll know what the mass matrix does.}
 
@@ -563,7 +548,6 @@ To compute solutions of eigenproblems such as \eqref{Max}, we employ Firedrake, 
 To compute solutions of \eqref{Max}, we discretise $\Omega = (0, \pi)^2$ using the sequence of criss-cross meshes displayed in \Cref{crisscross}. We denote each mesh in this sequence by $\mathcal{T}_h,$ where $h = \max_{T \in \mathcal{T}_h} \operatorname{diam}(T)$ is the mesh size, and $\operatorname{diam}(T)$ denotes the diameter of a cell $T \in \mathcal{T}_h.$
 On each mesh, we take $V_h$ to be the space of linear Lagrange elements satisfying the zero tangential trace boundary condition. We configure SLEPc to solve the discrete generalised eigenproblem using the Krylov--Schur  method with a shift-and-invert spectral transformation \cite{krylov, slep}. The results are displayed in \Cref{spect pollute}. 
 
-\Maggie{Edited based on: Specify what you mean by $h$ (DID I DO THIS RIGHT?), hyphens joining names like this are two hyphens, so Krylov--Schur, and the original Stewart reference for Krylov--Schur}
 % \pef{hyphens joining names like this are two hyphens, so Krylov--Schur}
 % \pef{Cite the original Stewart reference for Krylov--Schur} The results are displayed in Table \ref{spect pollute}. \pef{Use cleveref for all non-equation references}
 
@@ -650,7 +634,6 @@ Let $A: D(A) \subset \H \rightarrow \H$ be a closed and densely defined linear o
 \end{equation}
 % The injection modulus is a quantitative measure of `how injective' an operator is \cite{Matt}. In this way, it
 The injection modulus of an operator is often viewed as a generalisation of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors, $\{x_n\}_{n \in \mathbb{N}}$, such that $\|A x_n \|_\H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_\H=0.$ 
-\Maggie{Edited based on: So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
 % \pef{So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
 
 One of the main tools in Colbrook's algorithm is the following function of $z 
@@ -658,9 +641,7 @@ One of the main tools in Colbrook's algorithm is the following function of $z
 \begin{equation}
     \gamma(z, A) = \min \left\{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \right\}.
 \end{equation}
-\pef{Does this function get a name?}
-\Maggie{Not in Matt's text. It becomes the inverse resolvent norm below.}
-With this, Colbrook characterises the resolvent norm $\|(A-zI)^{-1}\|_\H$ in the following way.
+The following lemma explains why we refer to $\gamma$ as the inverse resolvent norm.
 % \pef{End sentences before lemmas/theorems/etc.}
 \begin{lemma}[Injection Moduli and Resolvent Norms {\cite[Lemma~1.2.5]{Matt}}] \label[lemma]{gamma and norm}
    Let $A$ be a closed and densely defined operator on a Hilbert space $\H.$ We have that
@@ -697,10 +678,9 @@ Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies o
     % (depending on $A$ but not on $z$).
 \end{assumption}
 
-\Maggie{Below is edited based on: Clarify that the new assumption here is separability (if I understand correctly).}
 % \pef{Clarify that the new assumption here is separability (if I understand correctly).}
 
-To satisfy this assumption, we introduce \textit{operator folding} \cite[Section 3.4]{Matt}. Suppose that $A$ is a closed and densely defined operator on a Hilbert space $\H.$ In addition, assume that $\H$ is separable, i.e., that it contains a countable orthonormal basis. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$. 
+To satisfy this assumption, we introduce \textit{operator folding} \cite[Section 3.4]{Matt}. Suppose that $A$ is a closed and densely defined operator on a Hilbert space $\H.$ In addition, we now assume that $\H$ is separable, i.e., that it contains a countable orthonormal basis. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$. 
 % \pef{You don't need to cite Matt's book on consecutive sentences. Just cite the section on operator folding at the start of the section.} 
 The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
 \begin{equation}
