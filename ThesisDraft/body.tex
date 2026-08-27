@@ -273,7 +273,7 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
 % unique
  To introduce the \textit{Hilbert adjoint} of $A,$ we assume that $A$ is \textit{densely defined}, i.e., that $D(A)$ is dense in $\H.$ Furthermore, we define
 \begin{equation}\label{D(A*)}
-    D(A^*) = \{ w \in \H : v \mapsto ( Av, w )_{\H} \text{ is a bounded linear functional on D(A)}\}.
+    D(A^*) = \{ w \in \H : v \mapsto ( Av, w )_{\H} \text{ is a bounded linear functional on on } D(A)\}.
  \end{equation}
  Consider $w \in D(A^*).$ Since $D(A)$ is dense in $\H$, there exists a unique $u \in \H$ such that 
  \begin{equation}
@@ -1516,7 +1516,7 @@ The DWR error estimate in \eqref{DWR} is formulated for infinite-dimensional eig
 
 In \Cref{pseudospec}, the approximate bounds on the distance to the spectrum, $\Phi_h(z, A),$ are obtained by approximating the bottom of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ There is no requirement that these spectral bottoms be eigenvalues of finite multiplicity with associated eigenfunctions. For example, there can be values of $z$ in the essential spectrum of an operator $A$ for which $\|(A-zI)x_n\|_{\H} \rightarrow 0,$ $\|x_n\|_{\H} = 1,$ and $\{x_n\}_{n\in \mathbb{N}} \subset D(A)$ converges weakly to zero\footnote{Such a sequence is called a \textit{Weyl sequence} and can be used to characterise the essential spectrum of an operator. For more information, see \cite[Ch.\ 8]{Matt}.} \cite{Matt}. 
 
-With this in mind, in this dissertation, we restrict our attention to operators for which the bottom of the spectrum of each corresponding folded operator is an isolated eigenvalue with finite multiplicity. The precise conditions on the operator $A$ for which this is the case are beyond the scope of the present work, and are left as future work. Furthermore, in future work, we aim to extend the DWR framework to account for folded operators whose spectral bottom is an element of the essential spectrum.
+With this in mind, in this dissertation we restrict our attention to operators for which the bottom of the spectrum of each corresponding folded operator is an isolated eigenvalue with finite multiplicity. The precise conditions on the operator $A$ for which this is the case are beyond the scope of the present work, and are left as future work. Furthermore, in future work, we aim to extend the DWR framework to account for folded operators whose spectral bottom is an element of the essential spectrum.
 % \footnote{A precise proof requires a compact embedding of the folded operator's domain in the Hilbert space, a proof that a Gårding inquality holds. When these conditions hold,  the folded operator is a Fredholm operator of index zero .}
 
 
@@ -1629,7 +1629,7 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a fixed $z\in \
     \item \textbf{Mark:}\footnote{This marking scheme was obtained from \cite{Pslides} where it is said to be simpler than the famous Dörfler marking routine, but performs similarly in practice \cite{Dorf, Pslides}.} 
     Mark the cells that have a local error that is considered too large. For our implementation, we mark the cells whose local error estimate satisfies
     \begin{equation} \label{mark}
-        \eta_T^{(j)}(z) \ge \theta \max_{K \in \mathcal{T}_h^{(j)}} \eta_k^{(j)}(z), \, \text{ for a fixed } \, \theta \in [0,1].
+        \eta_T^{(j)}(z) \ge \theta \max_{K \in \mathcal{T}_h^{(j)}} \eta_K^{(j)}(z), \, \text{ for a fixed } \, \theta \in [0,1].
     \end{equation}
     Unless otherwise stated, we take $\theta = 1/2.$
 
@@ -1661,7 +1661,7 @@ Notice that, as opposed to the choice of $\operatorname{Grid}$ in \Cref{Matt Max
 
 
 To couple \Cref{pseudospec} with the adaptive mesh refinement technique of \Cref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem, \eqref{max aux}, posed on $V_h$ and $V_h^+,$ respectively. We solve the resulting generalised eigenproblem with the same Krylov--Schur method with a shift-and-invert spectral transformation as before.
-We then solve the least squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with the enriched $u_h^+ \in V_h^+.$ 
+We then solve the least-squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with the enriched $u_h^+ \in V_h^+.$
 
 Using $u_h$ and $u_h^+$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
 
@@ -1676,7 +1676,7 @@ This process is repeated for each $z \in \operatorname{Grid}$ until a user-defin
 
 \section{Coupling Inner and Outer Adaptivity for Colbrook's Algorithm}
 
-With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in \Cref{pseudospec}. However, two questions remain. First, how should we pick the (outer) test points in the complex plane so that the computational effort of \Cref{pseudospec} is concentrated near the desired part of the pseudospectrum? We consider this question in the context of accurately computing a given contour of the pseudospectrum, with value $\epsilon$. Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane, or in computing an excessively-accurate approximation of $\gamma(z, A).$
+With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in \Cref{pseudospec}. However, two questions remain. First, how should we pick the (outer) test points in the complex plane so that the computational effort of \Cref{pseudospec} is concentrated near the desired part of the pseudospectrum? We consider this question in the context of accurately computing a given contour of the pseudospectrum, with value $\epsilon$. Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane, or in computing an excessively accurate approximation of $\gamma(z, A).$
 
 % accurate bound on the distance to the spectrum.
 
@@ -1702,7 +1702,7 @@ This technique makes use of error estimates for the computed eigenvalues of the 
 \end{equation}
 Furthermore, we want to use the error in $\Phi_h(z, A)$ to drive the adaptive mesh refinement technique of \Cref{AMR}.
 
-To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a, b, c \in \mathbb{R},$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound for
+To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a, b, c \in \mathbb{R}$ with $a, b \ge 0,$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound for
 \begin{equation} \label{square bound}
     | \gamma^2(z, A) - \Phi_h^2(z, A)| = \left| \min \{ \mu^{(1)}(z), \mu^{(2)}(z)\}  - \min \{ \mu_h^{(1)}(z), \mu_h^{(2)}(z)\} \right|.
 \end{equation}
@@ -2013,7 +2013,7 @@ Dirac-type operator posed on $\Omega=(0,\pi)$:
 \end{equation}
 where  $D(A) = \text{H}_0^1(\Omega) \times \text{H}^1(\Omega)$ is dense in $\H = L^2(\Omega) \times L^2(\Omega)$ \cite{dirac}.
 
-The spectrum of this operator be characterised using its relation to the Poisson eigenproblem. To see this, consider the eigenproblem $AU = \lambda U,$ where $U = (u, \sigma)^T\!.$ This yields the following two equations:
+The spectrum of this operator can be characterised using its relation to the Poisson eigenproblem. To see this, consider the eigenproblem $AU = \lambda U,$ where $U = (u, \sigma)^T\!.$ This yields the following two equations:
 \begin{align}
 -i \sigma' &= \lambda u, \label{eq1}\\
 -i u' &= \lambda \sigma. \label{eq2}
@@ -2108,7 +2108,7 @@ array of $20 \times 8$ squares and subdivide each square into two triangles (see
 
 \section{The Maxwell Eigenproblem} \label{maxwell results}
 
-We now return to the Maxwell eigenproblem introduced in \Cref{Maxwell Sect}.  Recall that \eqref{max op} is normal. Thus, its $\epsilon$-pseudospectrum is the union of $\epsilon$-balls centred at each spectral value of the operator. 
+We now return to the Maxwell eigenproblem introduced in \Cref{Maxwell Sect}.  Recall that \eqref{max op} is normal. Thus, its $\epsilon$-pseudospectrum is again the union of $\epsilon$-balls centred at each spectral value of the operator.
 
 For our numerical experiment, we use \Cref{outerloop} to compute the $\epsilon = 0.2$ pseudospectrum of the Maxwell operator \eqref{max op}. To do so,
 we consider the region $\mathcal{D} = [2, 4] \times [-1, 1]$ in the complex plane. For our initial triangulation $\mathcal{T}_0$, we partition $\mathcal{D}$ into a $10 \times 10$ array of squares and subdivide each square into two triangles (see \Cref{Triang}). Furthermore, we set $h_{\text{tol}} = 0.02$ for the outer tolerance. 
@@ -2133,7 +2133,7 @@ With this result in mind, to implement \Cref{outerloop} we iterate over each rea
 
 \input{figures/maxwell_results}
 
-The results of this numerical experiment are displayed in \Cref{maxwell sweeps}. The algorithm performed five levels of outer refinement before the diameter of the remaining triangles met the outer diameter tolerance and were taken to approximate the pseudospectral contour. Similar to the previous example, we observe a deterioration in the resolution of the pseudospectral contour as $\operatorname{Re}(z)$ increases. Once again, we attribute this behaviour to the increasingly oscillatory nature of the eigenfunctions as $\operatorname{Re}(z) $ increases. 
+The results of this numerical experiment are displayed in \Cref{maxwell sweeps}. The algorithm performed five levels of outer refinement before the remaining triangles met the outer diameter tolerance and were taken to approximate the pseudospectral contour. Similar to the previous example, we observe a deterioration in the resolution of the pseudospectral contour as $\operatorname{Re}(z)$ increases. Once again, we attribute this behaviour to the increasingly oscillatory nature of the eigenfunctions as $\operatorname{Re}(z) $ increases.
 
 
 % The results of this numerical experiment are displayed in Figure \ref{maxwell sweeps}. The algorithm performed five levels of outer refinement before the diameter of the remaining triangles met the outer tolerance, causing them to be classified as lying on the pseudospectral contour. Similar to the previous example, we observe a deterioration in the resolution of the pseudospectral contour as $\operatorname{Re}(z)$ increases. Once again, we attribute this behaviour to the increasingly oscillatory nature of the eigenfunctions as $\operatorname{Re}(z) $ increases. 
