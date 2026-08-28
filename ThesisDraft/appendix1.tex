@@ -8,11 +8,14 @@ Define the left and right shift operators on $\ell^2(\mathbb{N})$ as
 \end{equation}
 respectively. 
 
-Notice that $L^* = R,$ and that their operator norms satisfy $\| R \| = \|L\| = 1.$
-When an operator $A$ is bounded, we have that 
- $\operatorname{Sp}(A) \subset \{ z \in \mathbb{C} \mid |z| \le \|A\| \}$ \cite{krey}.
+Notice that $L^* = R,$ and that their operator norms satisfy $\| R \|_{\mathcal{B}(\ell^2(\mathbb{N}))} = \|L\|_{\mathcal{B}(\ell^2(\mathbb{N}))} = 1.$
+When an operator $A \in \mathcal{B}(\H)$, we have that 
+ $\operatorname{Sp}(A) \subset \{ z \in \mathbb{C} \mid |z| \le \|A\|_{\mathcal{B}(\H)} \}$ \cite[Theorem~7.3-4]{krey}.
 Thus,
- $$ \operatorname{Sp}(L),  \operatorname{Sp}(R) \subset \{ z \in \mathbb{C} \mid |z| \le 1 \}.$$
+\begin{equation}
+    \operatorname{Sp}(L),  \operatorname{Sp}(R) \subset \{ z \in \mathbb{C} \mid |z| \le 1 \}.
+\end{equation}
+ % $$ \operatorname{Sp}(L),  \operatorname{Sp}(R) \subset \{ z \in \mathbb{C} \mid |z| \le 1 \}.$$
 
 
  The eigenvalues of $L$ are found by solving $Lx = \lambda x$ for a $\lambda \in \mathbb{C}$ and a nonzero $x \in \ell^2(\mathbb{N}).$

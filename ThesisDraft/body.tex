@@ -245,6 +245,12 @@ We provide an overview of the spectral theory required for this project. In the 
 \subsection{The Spectra of Linear Operators}
 
 
+% Let $\H$ be a Hilbert space with inner product $(\cdot, \cdot)_{\H}$ and norm $\|\cdot \|_{\H}.$
+% We say that a linear operator $A$ is \textit{bounded} on $\H$, denoted $A \in \mathcal{B}(\H),$ if there exists a constant $c>0$ such that $\|Ax\|_{\H} \le c \|x\|_{\H}$ for all $x \in D(A).$ A \emph{bounded linear functional} is a linear functional from $\H$ to $\mathbb{R}$ or $\mathbb{C}$ that is bounded.
+
+% bounded operator with range on the real line or in the complex plane \cite{krey}. Furthermore, a linear map frim $\H$ called a bounded linear functional when 
+
+
 Let $\H$ be a Hilbert space with inner product $(\cdot, \cdot)_{\H}$ and norm $\|\cdot \|_{\H}.$
 We consider a linear operator $A : D(A) \rightarrow \H$ defined on a subspace $D(A) \subset \H.$ We use $D(A)$ and $R(A)$ to denote the domain and range of $A,$ respectively. Furthermore, we use $N(A)$ to denote the null space, or kernel, of $A.$
 
@@ -300,9 +306,11 @@ If the linear operator $A$ is closed and densely defined, the spectrum of $A$ ca
 \end{equation}
 The norm of the resolvent provides information about the distance from $z\notin \Sp{A}$ to the spectrum of $A.$ In particular,
 \begin{equation}
-    \| (A-zI)^{-1} \|_\H^{-1} \le \operatorname{dist}(z, \Sp{A}), 
+    \| (A-zI)^{-1} \|_{\mathcal{B}(\H)}^{-1} \le \operatorname{dist}(z, \Sp{A}), 
 \end{equation}
-where, here,  $\|\cdot\|_{\H}$ denotes the operator norm with respect to $\H,$ and where
+where,  $\mathcal{B}(\H)$ denotes the space of bounded linear operators on $\H$ and $\|\cdot\|_{\mathcal{B}(\H)}$ denotes the operator norm induced by $\|\cdot \|_{\H}.$ 
+
+% with respect to $\H,$ and where
 % \begin{equation}
 %     \| (A-zI)^{-1} \|_{\H} = \sup_{u \in \H \setminus \{0\}} \frac{\|}
 % \end{equation}
@@ -314,13 +322,12 @@ where, here,  $\|\cdot\|_{\H}$ denotes the operator norm with respect to $\H,$ a
 \end{equation}
 If the operator $A$ is normal, we have equality:
 \begin{equation}
-    \| (A-zI)^{-1} \|_\H^{-1} = \operatorname{dist}(z, \Sp{A}). 
+    \| (A-zI)^{-1} \|_{\mathcal{B}(\H)}^{-1} = \operatorname{dist}(z, \Sp{A}). 
 \end{equation}
 Hence, when $A$ is a normal operator, the norm of the resolvent can be used to characterise the spectrum of $A$ \cite[Section~1.3.2]{Matt}.
 
-\Maggie{Edited based on comments: Should the norm be the operator norm? The thing being measured is an endomorphism on a Hilbert space, not an element of the Hilbert space. 
-NOTE: Is what I have done ok? Or should I denote the oeprator norm differently?}
-\pef{I think it's really jarring to use $\| \cdot \|_\H$ for the operator norm, that notation is naturally for the norm on the Hilbert space. Use maybe $\| \cdot \|_{\mathcal{B}(\H)}$?}
+\Maggie{Edited based on comments: Operator norm issues}
+% \pef{I think it's really jarring to use $\| \cdot \|_\H$ for the operator norm, that notation is naturally for the norm on the Hilbert space. Use maybe $\| \cdot \|_{\mathcal{B}(\H)}$?}
 
 
 % We begin with an overview of the spectral theory that is relevant to the project.
@@ -472,16 +479,16 @@ Recall that $B$ is a normal matrix when $B^*B=BB^*,$ where $B^*$ denotes the con
 In infinite dimensions, we consider a closed and densely defined linear operator $A : D(A) \subset \H \rightarrow 
 \H,$ on a Hilbert space $\H.$ For each $\epsilon>0,$ the $\epsilon$-pseudospectrum of $A$ is the following set:\footnote{Notice that in infinite dimensions, the equality in \eqref{eps B} need not hold. This is because in infinite dimensions, the resolvent norm of an unbounded operator on a Hilbert space can be constant on open sets \cite[Section~1.1.4]{Matt}.}
 \begin{equation}
-    \Spe{A} = \operatorname{Cl}\left( \{ z \in \mathbb{C} : \|(A-zI)^{-1}\|_{\H}^{-1} < \epsilon \}  \right).
+    \Spe{A} = \operatorname{Cl}\left( \{ z \in \mathbb{C} : \|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} < \epsilon \}  \right).
 \end{equation}
-As before, we adopt the convention that if $z \in \Sp{A},$ then $\|(A-zI)^{-1}\|_{\H}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{\H} = \infty$ \cite[Section~1.1.4]{Matt}.
+As before, we adopt the convention that if $z \in \Sp{A},$ then $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{\H} = \infty$ \cite[Section~1.1.4]{Matt}.
 Similarly to \eqref{eps stab B}, the $\epsilon$-pseudospectrum of $A$ can be defined as follows:
 \begin{equation} 
-    \Spe{A} = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(\H), \|E\|_\H < \epsilon} \operatorname{Sp}(A+E) \right).
+    \Spe{A} = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(\H), \|E\|_{\mathcal{B}(\H)} < \epsilon} \operatorname{Sp}(A+E) \right).
 \end{equation}
 % As before, this second definition tells us that the pseudospectra of $A$ describe how far perturbations in $A$ impact its spectral values. Th
 
-As is the case in finite dimensions, the pseudospectra of $A$ can be used to explore the conditioning of the spectrum of $A.$ When $A$ is a normal operator, $ \|(A-zI)^{-1} \|_\H^{-1} = \operatorname{dist}(z, \Sp{A}).$ In this case,
+As is the case in finite dimensions, the pseudospectra of $A$ can be used to explore the conditioning of the spectrum of $A.$ When $A$ is a normal operator, we have that $ \|(A-zI)^{-1} \|_{\mathcal{B}(\H)}^{-1} = \operatorname{dist}(z, \Sp{A}).$ In this case,
 \begin{equation}
     \Spe{A} = \Sp{A} + \mathfrak{B}_{\epsilon}(0),
 \end{equation}
@@ -561,8 +568,14 @@ Notice that for nonzero values of $\omega$, the eigenfunctions of \eqref{3D var 
 
 % \footnote{The zero eigenspace may also contain the space of non-vanishing vector fields $\mathbf{u}$  with $\bcurl \, \mathbf{u} = \mathbf{0}, $  $\operatorname{div} \mathbf{u} = 0 \in \Omega,$ and $\mathbf{u} \times \mathbf{n} = 0$ \cite{Boffi}.}
 
-\Maggie{Added a footnote based on: If I saw this I would ask is the eigenspace at zero $\textbf{grad}(\mathbf{H}_0^1(\Omega))$ or is it different. }
-\pef{You should know (you may or may not) that the other functions in the kernel depend on the topology of the domain. For simply connected domains the kernel of curl is the range of grad. You would get one extra element of the nullspace for every tunnel through the domain.}
+
+
+
+% \Maggie{Added a footnote based on: If I saw this I would ask is the eigenspace at zero $\textbf{grad}(\mathbf{H}_0^1(\Omega))$ or is it different. }
+% \pef{You should know (you may or may not) that the other functions in the kernel depend on the topology of the domain. For simply connected domains the kernel of curl is the range of grad. You would get one extra element of the nullspace for every tunnel through the domain.}
+
+
+
 % \pef{If I saw this I would ask is the eigenspace at zero $\textbf{grad}(\mathbf{H}_0^1(\Omega))$ or is it different.}
 
 % To compute a Galerkin discretisation of \eqref{3D var max}, we consider a sequence of finite-dimensional subspaces $V_h \subset \mathbf{H}_0(\bcurl; \Omega).$ Then, we seek $\omega_h \in \mathbb{R}$ and nonzero $\mathbf{u}_h \in V_h$ such that
@@ -718,9 +731,9 @@ The following lemma explains why we refer to $\gamma$ as the inverse resolvent n
 \begin{lemma}[Injection Moduli and Resolvent Norms {\cite[Lemma~1.2.5]{Matt}}] \label[lemma]{gamma and norm}
    Let $A$ be a closed and densely defined operator on a Hilbert space $\H.$ We have that
    \begin{equation} \label{gamma}
-       \gamma(z, A) = \|(A-zI)^{-1}\|_\H^{-1},
+       \gamma(z, A) = \|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1},
    \end{equation}
-   where we adopt the convention that $\|(A-zI)^{-1}\|_\H^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
+   where we adopt the convention that $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} = 0$ if $z \in \Sp{A}.$ Furthermore, if $z \notin \Sp{A},$ then $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I).$
 \end{lemma}
 
 In finite dimensions, we have that $\sigma_{\inf}(A-zI) = \sigma_{\inf}(A^*-\overline{z}I)$ for every $z \in \mathbb{C}.$ However, in infinite dimensions, it is possible to have $z \in \Sp{A}$ and $\sigma_{\inf}(A-zI) \ne \sigma_{\inf}(A^*-\overline{z}I).$ To see this, consider the right-shift operator as defined in \eqref{right shift}, i.e., the operator $R:\ell^2(\mathbb{N}) \rightarrow \ell^2(\mathbb{N})$ defined by $R(x_1, x_2, \dots) = (0, x_1, x_2, \dots).$ This operator satisfies $\|Rx\|_{\ell^2(\mathbb{N})} = \|x\|_{\ell^2(\mathbb{N})}.$ Thus, $\sigma_{\inf}(R) = 1.$ Now consider its Hilbert adjoint $R^*,$ which is the left-shift operator $R^*(x_1, x_2, \dots) = (x_2, x_3, \dots).$ Notice that $R^*(1, 0, \dots) = (0, 0, \dots).$ Hence, $1 = \sigma_{\inf}(R) \ne \sigma_{\inf}(R^*) = 0.$
@@ -897,14 +910,16 @@ through $M^{-1}L.$ Since $M^{-1}$ is only defined on $R(M),$ we can only write $
 
 % However, this is not always possible because $M^{-1}$ is only defined on the range of $M,$ while $L$ maps into $V^*.$ Thus, we can only take $A = M^{-1}L$ on the subspace of $V$ for which $Lu \in R(M).$ Fortunately, this subspace is precisely $D(A)$ in \eqref{strong L}. Thus, we can write $A = M^{-1} L$ on $D(A).$
 
-However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not always be invertible\footnote{For example, consider the mixed formulation of the Dirichlet Laplace eigenproblem in \cite[Section 4.5]{Boffi}.}.
+% footnote{For example, consider the mixed formulation of the Dirichlet Laplace eigenproblem in \cite[Section 4.5]{Boffi}.}.
+
+However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not always be invertible.
 \pef{Hmm, above we fix it my demanding that $Lu \in R(M)$. Is this not a general solution? You can always \emph{force} a linear operator to be invertible by restricting its domain to the orthogonal complement of its kernel, and restricting its range?}
-As a result, we restrict ourselves to the setting in which $V \defeq D(A)$ and $L : V \rightarrow \H^*,$ rather than $L : V \rightarrow V^*.$ In this restricted setting, we take $M$ to be the Riesz map $M : \H \rightarrow \H^*,$ defined by
+As a result, we restrict ourselves to the setting in and $L : V \rightarrow \H^*,$ rather than $L : V \rightarrow V^*.$ In this restricted setting, we take $M$ to be the Riesz map $M : \H \rightarrow \H^*,$ defined by
 \begin{equation} \label{M form}
     \langle Mu, v\rangle_{\H^*, \H} = (u, v)_{\H} \qquad \Forall u, v \in \H.
 \end{equation}
-Being a Riesz map, we can define $M^{-1} : \H^* \rightarrow \H.$ In doing so, we can construct the operator $A = M^{-1} L : D(A) \subset \H \rightarrow \H$ that fits within the framework of Colbrook's algorithm. 
-Furthermore, we also have that 
+Being a Riesz map, we can define $M^{-1} : \H^* \rightarrow \H.$ In doing so, we can construct the operator $A = M^{-1} L : D(A) \subset \H \rightarrow \H$ and its domain $D(A) \defeq V$ so that $A$ fits within the framework of Colbrook's algorithm. 
+In doing so, we also have that 
 % \begin{equation} \label{L-zM}
 %     L-zM = M(A-zI),
 % \end{equation}
@@ -1747,7 +1762,7 @@ showed that Colbrook's approach avoids the spectral pollution exhibited by the d
 
 To do so, we take the starting mesh to be an unstructured triangular mesh generated by Netgen, with a maximum element diameter of $\pi/32$ \cite{Schoberl1997}. We take $V_h$ to be the space of linear Lagrange elements satisfying the zero tangential trace boundary condition in \eqref{Max}. The enriched space $V_h^+$ is obtained by increasing the polynomial degree of $V_h$ by one. As in \Cref{Matt Max}, we take $\operatorname{Grid} \subset \mathbb{R}.$ In particular, we set
 \begin{equation} \label{2grid}
-    \operatorname{Grid} = \{2 + jh : j = 0, \dots, 100\}, \qquad h = 0.02.
+    \operatorname{Grid} = \{2 + j\delta : j = 0, \dots, 100\}, \qquad \delta = 0.02.
 \end{equation}
 Notice that, as opposed to the choice of $\operatorname{Grid}$ in \Cref{Matt Max}, i.e., \eqref{1grid}, we no longer consider test points near $z=0.$ Recall from \Cref{ASSUMPSect} that our adaptive mesh refinement technique can only be applied when the bottom of the spectrum of the folded operator is an eigenvalue with finite multiplicity. For the Maxwell operator \eqref{max op}, the choice of $\operatorname{Grid}$ in \eqref{2grid} avoids the case in which this smallest eigenvalue has infinite multiplicity. Further details on this choice are given in \Cref{AppendMax}.
 
@@ -2079,8 +2094,10 @@ This coupling of our outer and inner refinement techniques is summarised in \Cre
 
 \input{algorithms/Outer}
 
-\pef{It's not clear to me what $\Phi_{h,c}$ is computed for. It doesn't appear to be used later in the algorithm?}
-\Maggie {It's really only used for output. The idea being that if you want $\Phi_h(z, A),$ the best available is the corrected version. How can I make this clearer? Or should I take it out?}
+% \pef{It's not clear to me what $\Phi_{h,c}$ is computed for. It doesn't appear to be used later in the algorithm?}
+% \Maggie {It's really only used for output. The idea being that if you want $\Phi_h(z, A),$ the best available is the corrected version. How can I make this clearer? Or should I take it out?}
+
+\Maggie{Algorithm edited for corrected Phi clarification.}
 
 % begin with a triangulation $\mathcal{T}_0$ and form $\operatorname{Grid} \subset \mathbb{C}$ from the barycentres $z_K$ for each $K \in \mathcal{T}_0.$ Iterating over each barycentre $z_K \in \operatorname{Grid}$, we solve the auxiliary eigenproblems (EQNS) using the adaptive mesh refinement technique outlined in Section \ref{AMR}. In particular, we adapt the mesh that defines the finite element discretisation until the error in the computed smallest eigenvalues satisfies
 % \begin{equation}
@@ -2241,6 +2258,36 @@ As expected, the triangles in the complex plane are refined as we approach the d
 
 % \input{figures/maxwell_results}
 
+\section{The Advection--Diffusion Operator}
+
+For our final example, we consider the following one-dimensional advection--diffusion operator posed on $\Omega = (0, 1)$:
+\begin{equation} \label{advect}
+    Au = - \nu u'' - u', \qquad \nu \defeq 0.1,
+\end{equation}
+where $D(A) = \text{H}^2(0,1) \cap \text{H}_0^1(0, 1)$ is dense in $\H = L^2(\Omega)$ \cite[Section 3.12]{Nick}.
+
+In PAPER, it is shown that the eigenvalues and the eigenfunctions of \eqref{advect} are 
+\begin{equation}
+    \lambda = \frac{1}{4} \nu^{-1} + \nu n^2 \pi^2, \qquad u(x) = e^{-x/2\nu} \sin(n \pi x), \qquad n = 1, 2, \dots,
+\end{equation}
+respectively. Furthermore, it is shown that the spectrum of \eqref{advect} consists solely of its eigenvalues. 
+
+The Hilbert-adjoint of \eqref{advect} is 
+\begin{equation}
+    A^* = - \nu u'' + u', \qquad \nu = 0.1, 
+\end{equation}
+where $D(A^*) = D(A).$ Thus, \eqref{advect} is not self-adjoint. As a result, the $\epsilon$-pseudospectrum of \eqref{advect} need not be a collection of $\epsilon$-balls centred at its eigenvalues. In fact, in Paper, it is shown that the pseudospectra of \eqref{advect} fill the region in the $\lambda$-plane bounded by the parabola $\operatorname{Re}(\lambda) = \nu (\operatorname{Im}(\lambda))^2.$ 
+
+For the numerical experiment of this section, we use \Cref{outerloop} to compute the $\epsilon =0.5$ pseudospectrum of \eqref{advect}. To do so, we formulate the auxiliary eigenproblems needed for \Cref{pseudospec} as in \Cref{Fix matt}. That is, we consider $V_h \in D(A), $ and approximate the smallest eigenvalues of \eqref{aux1} and \eqref{aux2}. Then, we compute $\Phi_h(z, A)$ as in \eqref{approx phi}.
+
+To implement \Cref{outerloop}, we consider the region $\mathcal{D} = [0, 15] \times [-10, 10]$ in the complex plane. For our initial triangulation $\mathcal{T}_0,$ we partition $\mathcal{D}$ into an array of $18 \times 24$ squares and subdvide each square into two triangles (see \Cref{Triang}). 
+
+For the initial finite element spaces, we partition $\Omega = (0, 1)$ into sixteen subintervals and take $V_h \subset D(A)$ to be the space of cubic Hermite elements. To implement the adaptive mesh refinement technique in \Cref{outerloop}, we introduce the enriched space $V_h^+$, obtained by increasing the degree of $V_h$ by one. To solve for the smallest eigenvalues of the auxiliary eigenproblems at each barycentre $z_K$ of a triangle $K \in \mathcal{T}_K,$ we employ SLEPc's shift-and-invert Krylov--Schur method \cite{slep}. We then compute the DWR error estimates for each eigenvalue. 
+
+Using the Our current implementation of Rognes and Logg's localization procedure is not suited for the fourth-order auxiliary eigenproblems. Thus, for this example, we employ uniform mesh refinement until the stopping criteria \eqref{inner crit} have been satisfied. 
+
+
+The results of this numerical experiment are displayed in ??. The algorithm performed eight levels of outer refinement before the remaining unclassified triangles reached the outer diameter tolerance and were taken to approximate the pseudospectral contour. As was the case with our last two examples, the triangles in the complex plane are refined as we approach the desired $\epsilon$-pseudospectral contour. Thus, our coupling of inner and outer refinement focuses the computational effort near the pseudospectral contour of interest. Furthermore, as with our last two examples, we observe a slight deterioration of in the resolution of the contour as $\operatorname{Re}(z)$ increases. Again, we attribute this behaviour to the increasingly oscillatory nature of the eigenfunctions as $\operatorname{Re}(z)$ increases.
 
 
 
