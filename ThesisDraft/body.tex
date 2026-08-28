@@ -2261,28 +2261,28 @@ For our final example, we consider the following one-dimensional advection--diff
 \begin{equation} \label{advect}
     Au = - \nu u'' - u', \qquad \nu \defeq 0.1,
 \end{equation}
-where $D(A) = \text{H}^2(0,1) \cap \text{H}_0^1(0, 1)$ is dense in $\H = L^2(\Omega)$.
+where $D(A) = \text{H}^2(\Omega) \cap \text{H}_0^1(\Omega)$ is dense in $\H = L^2(\Omega)$.
 
 
 This operator is the negative of the advection--diffusion operator considered in  \cite[Section 3.12]{Nick}. As a result, its eigenvalues and eigenfunctions are 
 \begin{equation}
     \lambda = \frac{1}{4} \nu^{-1} + \nu n^2 \pi^2, \qquad u(x) = e^{-x/2\nu} \sin(n \pi x), \qquad n = 1, 2, \dots,
 \end{equation}
-respectively. Furthermore, in \cite{AdvectPaper} it is shown that the spectrum of \eqref{advect} consists solely of its eigenvalues. 
+respectively. Furthermore, \cite[Theorem~1]{AdvectPaper} can be used to show that the spectrum of \eqref{advect} consists solely of its eigenvalues. 
 
 The Hilbert-adjoint of \eqref{advect} is 
 \begin{equation}
-    A^* = - \nu u'' + u', \qquad \nu = 0.1, 
+    A^* = - \nu u'' + u', \qquad \nu \defeq 0.1, 
 \end{equation}
 where $D(A^*) = D(A).$ Since \eqref{advect} is not self-adjoint,  its $\epsilon$-pseudospectrum of \eqref{advect} need not be a collection of $\epsilon$-balls centred at its eigenvalues. In fact, in \cite[Section 3.12]{Nick}, it is shown that the pseudospectra of \eqref{advect} fill the region in the $\lambda$-plane bounded by the parabola $\operatorname{Re}(\lambda) = \nu (\operatorname{Im}(\lambda))^2.$ 
 
 For the numerical experiment of this section, we use \Cref{outerloop} to compute the $\epsilon =0.5$ pseudospectrum of \eqref{advect}. To do so, we formulate the auxiliary eigenproblems needed for \Cref{pseudospec} as in \Cref{Fix matt}. That is, we consider $V_h \in D(A), $ and approximate the smallest eigenvalues of \eqref{aux1} and \eqref{aux2}. Then, we compute $\Phi_h(z, A)$ as in \eqref{approx phi}.
 
-To implement \Cref{outerloop}, we consider the region $\mathcal{D} = [0, 15] \times [-10, 10]$ in the complex plane. For our initial triangulation $\mathcal{T}_0,$ we partition $\mathcal{D}$ into an array of $18 \times 24$ squares and subdvide each square into two triangles (see \Cref{Triang}). For the outer diameter tolerance, we take $h_{\text{tol}} = 0.01$
+To implement \Cref{outerloop}, we consider the region $\mathcal{D} = [0, 15] \times [-10, 10]$ in the complex plane. For our initial triangulation $\mathcal{T}_0,$ we partition $\mathcal{D}$ into an array of $18 \times 24$ squares and subdvide each square into two triangles (see \Cref{Triang}). For the outer diameter tolerance, we take $h_{\text{tol}} = 0.01.$
 
 For the initial finite element discretisation, we partition $\Omega = (0, 1)$ into sixteen subintervals and take $V_h \subset D(A)$ to be the space of cubic Hermite polynomials. To implement the adaptive mesh refinement technique in \Cref{outerloop}, we introduce the enriched space $V_h^+$, obtained by increasing the degree of $V_h$ by one. To solve for the smallest eigenvalues of the auxiliary eigenproblems at each barycentre $z_K$ of a triangle $K \in \mathcal{T}_K,$ we employ SLEPc's shift-and-invert Krylov--Schur method \cite{slep}. We then compute the DWR error estimates for each eigenvalue. 
 
- Our current implementation of Rognes and Logg's localization procedure is not suited for the fourth-order auxiliary eigenproblems that arise from folding a second-order , such as \eqref{advect}. Thus, for this example, we employ uniform mesh refinement until the stopping criteria \eqref{inner crit} have been satisfied. 
+ Our current implementation of Rognes and Logg's localization procedure is not suited for the fourth-order auxiliary eigenproblems that arise from folding a second-order operator, such as \eqref{advect} \cite{logg}. Thus, for this example, we employ uniform mesh refinement until the stopping criteria \eqref{inner crit} are satisfied. 
 
  
 The results of this numerical experiment are displayed in Figure ??.  The algorithm performed eight levels of outer refinement before the remaining unclassified triangles reached the outer diameter tolerance and were taken to approximate the pseudospectral contour. As was the case with our last two examples, the triangles in the complex plane are refined as we approach the desired $\epsilon$-pseudospectral contour. Thus, our coupling of inner and outer refinement focuses the computational effort near the pseudospectral contour of interest. Furthermore, as with our last two examples, we observe a slight deterioration of in the resolution of the contour as $\operatorname{Re}(z)$ increases. Again, we attribute this behaviour to the increasingly oscillatory nature of the eigenfunctions as $\operatorname{Re}(z)$ increases. To further confirm that our methodology approximates the expected pseudospectral contour, in Figure ?? we overlay a reference pseudospectral contour computed using \texttt{Pseudospectra.jl} (CITE?EXPLAIN MORE?).
