@@ -8,7 +8,7 @@
 
 With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, it is hard to overstate the importance of spectra in applied mathematics \cite{NickEssay}. 
 % \Maggie{I think this opening sentence flows a bit better than ``It is hard to overstate the importance of spectra in applied mathematics. As noted by Nick Trefethen in \cite{NickEssay}, at least twenty Nobel Prizes in Physics have been awarded for phenomena associated with eigenvalues." What do you think?}
-Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see the introduction of \cite{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in \Cref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite[Chapter~1]{Nick}.
+Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see \cite[Chapter 1]{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in \Cref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite[Chapter~1]{Nick}.
 % spectroscopy figure
 \input{figures/fraunhofer}
 
@@ -76,6 +76,8 @@ His work is based on the idea that deferring discretization to the last opportun
 
 % drawn from a grid of points in the complex plane
 
+
+
  Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra, so we consider it first.  Let $A$ be a linear operator on a Hilbert space $\H.$
  % Let $A: \H \to \H$ be a linear operator defined on a Hilbert space $\H.$ 
  Colbrook's algorithm considers a set of complex numbers $z$ and computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ 
@@ -83,6 +85,15 @@ His work is based on the idea that deferring discretization to the last opportun
  Discretisation enters Colbrook's algorithm at this stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretisations. The benefit of discretising the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
 The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretise-then-solve approach \cite[Section~3.4.1]{Matt}. 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% I CHANGED SHIFT OPERATOR SO NOW A IS STILL DEFINED AS BEING ON HILBERT SPACE. THAT OK?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%  Colbrook's algorithm for computing spectra begins with his algorithm for computing pseudospectra, so we consider it first.  Given a set of complex numbers $z$, this algorithm computes bounds on the distance from $z$ to $\operatorname{Sp}(A).$ These bounds are obtained from the smallest spectral values of the \textit{folded operators} $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*,$ where $(A-zI)^*$ is the adjoint operator of $A-zI.$ 
+%  % \pef{$A$ is still fixed in notation to be the right-shift operator. You need to redefine $A$ to be an endomorphism on a Hilbert space.} 
+%  Discretisation enters Colbrook's algorithm at this stage, where the smallest spectral values of the folded operators are approximated by the smallest eigenvalues of their finite-dimensional discretisations. The benefit of discretising the folded operators as opposed to the original operator is that, when $A$ is closed and densely defined, the folded operators are non-negative and self-adjoint.
+% The smallest spectral value of a non-negative self-adjoint operator is typically much easier to compute than other parts of its spectrum, and is less prone to the pitfalls of the discretise-then-solve approach \cite[Section~3.4.1]{Matt}. 
 
 % Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. 
 Under certain conditions on the operator, Colbrook's algorithm yields a convergent approximation of the spectrum that captures the continuous components of the spectrum and does not suffer from spectral pollution or spectral invisibility. This success, however, comes at a significant computational cost because it requires solving eigenproblems at potentially many points in the complex plane. Furthermore, as we will see, coarse discretisations of the folded operators can produce poor approximations of the bound on the distance to the spectrum. 
@@ -166,7 +177,7 @@ To investigate the effectiveness of our methodology, we apply it to numerical ex
 
 The main contributions of this work can be summarised as follows:
 
-\begin{itemize}
+\begin{itemize}[itemsep=0.05em, topsep=0.1em]
     \item We specialise Colbrook's algorithm for computing pseudospectra to the variational setting.
     \item We develop an adaptive mesh refinement technique that applies the DWR method for symmetric eigenproblems to the auxiliary eigenproblems that arise in Colbrook's algorithm. To do so, we extend the  DWR eigenvalue error estimate in \cite{Bangerth, Heuveline} to eigenvalues of multiplicity greater than one.  We also use our DWR eigenvalue error estimate to derive an error estimate for Colbrook's approximate bounds on the distance to the spectrum.
     % \pef{What does `current' mean? Make it clear you have improved the formulae published in the literature.}
@@ -203,9 +214,9 @@ The main contributions of this work can be summarised as follows:
 
 
 All code is implemented using the complex version of Firedrake \cite{Firedrake}.
-Our implementation of an adaptive mesh refinement technique for Colbrook's algorithm builds upon an existing Firedrake branch that provides a general implementation of DWR-based adaptivity for nonlinear variational problems \cite{pablo}. To this branch, we added the DWR-based adaptive eigensolver developed in Joseph Flood's MMSC thesis from last year \cite{joe}. We then extended both implementations so that they can be applied to the auxiliary eigenproblems in Colbrook's algorithm.
+Our implementation of an adaptive mesh refinement technique for Colbrook's algorithm builds upon an existing Firedrake branch that provides a general implementation of DWR-based adaptivity for nonlinear variational problems \cite{pablo}. To this branch, we added the DWR-based adaptive eigensolver developed in Joseph Flood's MMSC dissertation from last year \cite{joe}. We then extended both implementations so that they can be applied to the auxiliary eigenproblems in Colbrook's algorithm. The resulting implementation, along with the numerical examples presented below, is available at LINK.
 
-The code used to produce each numerical example presented below is available at LINK. The filenames indicate the relevant figure numbers.
+% The code used to produce each numerical example presented below is available at LINK. The filenames indicate the relevant figure numbers.
 
 % \Maggie{I am planning on organizing the repo so that it is easy to access and understand by the examiners. When that is done, I will replace LINK with the actual repo link.}
 
@@ -223,7 +234,7 @@ and explore its application to our finite element realisation of Colbrook's algo
 
 In Chapter 3, we develop our adaptive methodology. We first construct an adaptive mesh refinement technique for the auxiliary eigenproblems arising in Colbrook's algorithm. We then develop an approach for adaptively selecting test points in the complex plane. Chapter 3 ends with our main new algorithm, which couples these two levels of adaptivity. 
 
-In Chapter 4, we apply our adaptive algorithm to a Dirac-type system that is closely related to the one-dimensional Laplacian, to the two-dimensional Maxwell eigenproblem, and to the one-dimensional advection--diffusion operator. In Chapter 5, we summarise our work and discuss some potential directions for future research.
+In Chapter 4, we apply our adaptive algorithm to a one-dimensional Dirac operator, to the two-dimensional Maxwell eigenproblem, and to the one-dimensional advection--diffusion operator. In Chapter 5, we summarise our work and discuss some potential directions for future research.
 
 
 
@@ -246,8 +257,11 @@ In Chapter 4, we apply our adaptive algorithm to a Dirac-type system that is clo
 In this chapter, we present all necessary background material. We begin with an overview of the relevant definitions and results from spectral theory. We then describe the common pitfalls of the discretise-then-solve approach. To illustrate one of these pitfalls, we consider the famous Maxwell eigenproblem. When discretised using standard linear Lagrange finite elements, this problem exhibits spurious eigenvalues, even as the underlying mesh is refined. 
 % piecewise-linear Lagrange finite elements.
 
-Having explored the limitations of the discretise-then-solve approach, we introduce Matthew Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. When applied to the Maxwell eigenproblem, this approach avoids spurious eigenvalues, even when discretised with linear Lagrange finite elements. However, when the discretisation is coarse, Colbrook's 
-bounds on the distance to the spectrum may not be sharp. In an effort to quantify the error in these approximations, and to improve them without expensive uniform refinement, we explore the DWR method for eigenproblems and investigate its application to Colbrook's algorithm. 
+Having explored the limitations of the discretise-then-solve approach, we introduce Matthew Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. When applied to the Maxwell eigenproblem, this approach avoids spurious eigenvalues, even when discretised with linear Lagrange finite elements. 
+% However, when the discretisation is coarse, Colbrook's pseudospectral approximations may be inaccurate. 
+However, when the discretisation is coarse, Colbrook's 
+approximate bounds on the distance to the spectrum may not be sharp. 
+In an effort to quantify the error in these approximations, and to improve them without expensive uniform refinement, we explore the DWR method for eigenproblems and investigate its application to Colbrook's algorithm. 
 
 % \pef{You've already defined the acronym, just use it. Only define acronyms once}
 
@@ -256,11 +270,11 @@ bounds on the distance to the spectrum may not be sharp. In an effort to quantif
 
 \section{An Introduction to Spectral Theory}
 
-We provide an overview of the spectral theory required for this project. In the first subsection, we recall several standard results from functional analysis and introduce the basic concepts needed to define the spectrum of a linear operator. In the second subsection, we extend this discussion to the $\epsilon$-pseudospectrum of an operator. 
+Here, we provide an overview of the spectral theory required for this dissertation. In \Cref{SpecSec}, we recall several standard results from functional analysis and introduce the basic concepts needed to define the spectrum of a linear operator. In \Cref{pseudo sec}, we extend this discussion to the $\epsilon$-pseudospectrum of an operator. 
 
 % In the final subsection, we specialize the preceeding theory to bounded linear operators that map a Hilbert space to its antidual. This is the functional-analytic setting that is relevant to the problems considered in this project.
 
-\subsection{The Spectra of Linear Operators}
+\subsection{The Spectra of Linear Operators} \label{SpecSec}
 
 
 % Let $\H$ be a Hilbert space with inner product $(\cdot, \cdot)_{\H}$ and norm $\|\cdot \|_{\H}.$
@@ -274,7 +288,7 @@ We consider a linear operator $A : D(A) \rightarrow \H$ defined on a subspace $D
 
 % We say that $A$ is \textit{bounded} on $\H$, denoted $A \in \mathcal{B}(\H),$ if there exists a constant $c>0$ such that $\|Ax\|_{\H} \le c \|x\|_{\H}$ for all $x \in D(A).$ A \emph{bounded linear functional} is a bounded operator with range on the real line or in the complex plane. 
 % \pef{It feels odd to introduce bounded linear functionals here: everything before and after is about endomorphisms on Hilbert spaces, but a bounded linear functional is not an endomorphism.}
-We say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:\H \rightarrow D(A)$ such that $AB=I$ and $BA = I,$ where $I$ denotes the identity operator. In this case, $B$ is called the \textit{inverse} of $A$ \cite[Appendix~A.3]{Matt}.  For example, consider the operator $A = 2I,$ where $I$ is the identity operator on $\H.$ This operator is boundedly invertible with inverse $A^{-1} = \frac{1}{2} I.$ 
+We say that $A$ is \textit{boundedly invertible} if there exists a bounded operator $B:\H \rightarrow D(A)$ such that $AB=I$ and $BA = I,$ where $I$ denotes the identity operator. In this case, $B$ is called the \textit{inverse} of $A,$ which we denote by $A^{-1}$ \cite[Appendix~A.3]{Matt}.  For example, consider the operator $A = 2I,$ where $I$ is the identity operator on $\H.$ This operator is boundedly invertible with inverse $A^{-1} = \frac{1}{2} I.$ 
 
 
 We say that $A$ is \textit{closed} if and only if it has the following property: whenever $\{x_n\}_{n \in \mathbb{N}}$ is a sequence in $D(A)$ such that $x_n \rightarrow x$ and $A x_n \rightarrow y,$ then $x \in D(A)$ and $Ax=y$ \cite[Theorem~4.13-3]{krey}.
@@ -291,7 +305,7 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
  \end{equation}
  The Hilbert adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self-adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal}. For example, consider the one-dimensional Dirichlet Laplacian defined on $\Omega = (0, \pi),$
  \begin{equation}
-     A = \frac{d^2}{dx^2}, \qquad D(A) = \text{H}^2(\Omega) \cap \text{H}_0^1(\Omega).
+     A = - \Delta, \qquad D(A) = \text{H}^2(\Omega) \cap \text{H}_0^1(\Omega).
  \end{equation}
  This operator is closed and densely defined on $L^2(\Omega).$ Furthermore, it is self-adjoint and thus normal. 
 
@@ -482,7 +496,7 @@ This pattern of thinking leads to the analysis of the \textit{pseudospectra} of 
 \begin{equation} \label{eps B}
     \operatorname{Sp}_{\epsilon}(B) = \{z \in \mathbb{C}:\|(B-zI)^{-1} \|^{-1} \le \epsilon \} = \operatorname{Cl} \left(\{z \in \mathbb{C} : \|(B-zI)^{-1} \|^{-1} < \epsilon \} \right),
 \end{equation}
-where $\operatorname{Cl}$ denotes closure. Here, we adopt the convention that if $z \in \operatorname{Sp}(B),$ then $\|(B-zI)^{-1}\|^{-1} = 0,$ or $\|(B-zI)^{-1}\| = \infty$ \cite[Section~1.1.4]{Matt}. 
+where $\operatorname{Cl}$ denotes the closure. Here, we adopt the convention that if $z \in \operatorname{Sp}(B),$ then $\|(B-zI)^{-1}\|^{-1} = 0,$ or $\|(B-zI)^{-1}\| = \infty$ \cite[Section~1.1.4]{Matt}. 
 % \pef{I'm going to stop writing Big Book Principle now. Please look for all citations to big books and apply it}
 
 The $\epsilon$-pseudospectrum of $B$ can be equivalently defined as follows:
@@ -535,7 +549,7 @@ The most common approach for computing the spectrum of an infinite-dimensional o
     \end{equation}
 \end{definition}Spectral pollution is a more dangerous phenomenon than spurious eigenvalues of a fixed discretisation. A spurious eigenvalue of a fixed discretisation may move or disappear as the discretisation is refined. However, spectral pollution can occur when there is a sequence of spurious eigenvalues that converge to a value not in the spectrum. This convergence is deceiving, as it makes the spurious limit seem like a genuine spectral value. 
 
-Spectral invisibility occurs when the discretisation of the infinite-dimensional operator causes us to miss parts of its spectrum, even as the size of the discretisation increase. This failure mode is formally defined as follows:
+Spectral invisibility occurs when the discretisation of the infinite-dimensional operator causes us to miss parts of its spectrum, even as the size of the discretisation increases. This failure mode is formally defined as follows:
 \begin{definition}[Spectral Invisibility {\cite[Definition~1.1.2]{Matt}}]
     Let $\Gamma_n(A) \subset \mathbb{C}$ denote an approximation of $\Sp{A}$ for $n \in \mathbb{N}.$ We say that the sequence of approximations $\{\Gamma_n(A)\}_{n \in \mathbb{N}}$ suffers from spectral invisibility if there exists $\lambda \in \Sp{A}$ such that 
         \begin{equation}
@@ -610,7 +624,7 @@ For simplicity, we consider the two-dimensional counterpart of \eqref{3D Max}, w
     \mathbf{E} \cdot \mathbf{t} &= 0, \qquad &\text{on } \partial \Omega. 
 \end{align}
 \end{subequations}
-Here, $\rot \, \mathbf{E} = \partial_x E_2 - \partial_y E_1,$ where $\mathbf{E} = (E_1, E_2)^T,$ and $\brot H = (\partial_y H, -\partial_x H)^T.$
+Here, $\rot \, \mathbf{E} = \partial_x E_2 - \partial_y E_1,$ where $\mathbf{E} = (E_1, E_2)^T\!,$ and $\brot H = (\partial_y H, -\partial_x H)^T.$
 Furthermore, we use $\mathbf{t}$ to denote the unit tangent to $\partial \Omega,$ $\text{H}(\brot; \Omega)$ to denote the space of functions in $L^2(\Omega)$ whose $\brot$ belongs to $L^2(\Omega)^2,$  $\mathbf{H}(\rot ; \Omega)$ to denote the space of functions in $L^2(\Omega)^2$ whose $\rot$ belongs to $L^2(\Omega)$, and $\mathbf{H}_0(\rot ; \Omega)$ to denote the elements of $\mathbf{H}(\rot ; \Omega)$ that have zero tangential trace on $\partial \Omega.$ 
 
 % and  $\mathbf{H}_0(\rot ; \Omega)$ to denote the elements of $\mathbf{H}(\rot ; \Omega)$ that have zero tangential trace on $\partial \Omega$ 
@@ -625,7 +639,7 @@ It has been shown that the nonzero eigenvalues of \eqref{Max} coincide with thos
     (m,n)\neq(0,0).
 \end{equation}
 
-To discretise \eqref{Max} with the finite element method, we consider the two-dimensional counterpart of \eqref{3D var max}, that is, we seek $\omega \in \mathbb{R}$ and nonzero $\mathbf{u} \in \mathbf{H}_0(\rot; \Omega)$ such that
+To discretise \eqref{Max} with the finite element method, we consider the two-dimensional counterpart of \eqref{3D var max}. That is, we seek $\omega \in \mathbb{R}$ and nonzero $\mathbf{u} \in \mathbf{H}_0(\rot; \Omega)$ such that
 \begin{equation} \label{2D var max}
     ( \rot\, \mathbf{u}, \rot \, \mathbf{v})_{L^2(\Omega)} = \omega^2(\mathbf{u}, \mathbf{v})_{L^2(\Omega)}, \qquad \Forall \mathbf{v} \in \mathbf{H}_0(\rot; \Omega).
 \end{equation}
@@ -744,7 +758,7 @@ One of the main tools in Colbrook's algorithm is the following function of $z
 \end{equation}
 The following lemma identifies  $\gamma(z, A)$ with the inverse resolvent norm.
 % \pef{End sentences before lemmas/theorems/etc.}
-\begin{lemma}[Injection Moduli and Resolvent Norms{\cite[Lemma~1.2.5]{Matt}}] \label[lemma]{gamma and norm}
+\begin{lemma}[Injection Moduli and Resolvent Norms {\cite[Lemma~1.2.5]{Matt}}] \label[lemma]{gamma and norm}
    Let $A$ be a closed and densely defined operator on a Hilbert space $\H.$ We have that
    \begin{equation} \label{gamma}
        \gamma(z, A) = \|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1},
@@ -1006,7 +1020,8 @@ With this result, for any $u \in V \setminus\{0\},$ the Rayleigh quotient in \eq
     %&\defeq \frac{a_z^{(1)}(f, f)}{m(f, f)}.
 \end{align}
 
-To obtain an analogous formulation of the Rayleigh quotient in \eqref{R2},  we set $W \defeq D(A^*),$ consider the operator $S: W \rightarrow \H^*,$ and construct $A^* = M^{-1}S.$
+To obtain an analogous formulation of the Rayleigh quotient in \eqref{R2},  we set $W \defeq D(A^*)$ and construct the operator $S: W \rightarrow \H^*$ from $S = MA^*.$
+% consider the operator $S: W \rightarrow \H^*,$ and construct $A^* = M^{-1}S.$
 Since 
 \begin{equation}
     M^{-1} (S - \overline{z} M) = (A - zI)^*,
@@ -1399,7 +1414,7 @@ For each $z \in \operatorname{Grid},$ we assemble \eqref{max aux} in Firedrake a
 \Cref{FirstMatt} shows that \Cref{pseudospec} does not approximate the spurious spectral value $\sqrt{6} \approx 2.45.$ Thus, despite the same choice of linear Lagrange elements, 
 \Cref{pseudospec} avoids the spectral pollution exhibited by the discretise-then-solve approach in \Cref{Maxwell Sect}. However, notice that for coarse discretisations, the computed bound on the distance to the spectrum is poor, and refinement is required to increase the accuracy of the bound. 
 
-However, extensive uniform refinement at each $z \in \operatorname{Grid}$ can make \Cref{pseudospec} computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling \Cref{pseudospec} with an adaptive mesh refinement technique driven by the DWR method 
+Extensive uniform refinement at each $z \in \operatorname{Grid}$ can make \Cref{pseudospec} computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling \Cref{pseudospec} with an adaptive mesh refinement technique driven by the DWR method 
 % \pef{Again, stop repeatedly defining the acronym} 
 for symmetric eigenproblems. We discuss this next.
 % that focuses the computational effort of solving the auxiliary eigenproblems in regions of the domain where the approximation of $\mu_h(z)$ is poor. 
@@ -1409,7 +1424,7 @@ for symmetric eigenproblems. We discuss this next.
 
 In this section, we provide an overview of the DWR method that we apply to the auxiliary eigenproblems in \Cref{pseudospec}. In the first subsection, we discuss the role of \textit{a posteriori} error estimates in constructing adaptive finite element methods. In the subsections that follow, we introduce the DWR error estimate for symmetric eigenproblems and discuss its localisation for adaptive mesh refinement.
 
-\subsection{Adaptive Finite Element Methods}
+\subsection{Adaptive Finite Element Methods} 
 
 Since the finite element methodology provides an approximation to the solution of an underlying infinite-dimensional variational problem, we may want to measure, control, and effectively minimise the approximation error \cite{Oden}. To do so, we turn to \textit{a posteriori} error estimates. Given a computed solution, \textit{a posteriori} error estimates provide an estimate of the error in that particular approximation. These error estimates are often used to determine how the current discretisation should be modified to reduce the error in the corresponding approximation.
 
@@ -1509,7 +1524,7 @@ As previously discussed, the DWR method introduces a dual problem whose solution
     \mathcal{A}^* u^* = \lambda^*\mathcal{M}u^*, 
 \end{equation}
 where $\mathcal{A}^*$ denotes the Hilbert adjoint of $\mathcal{A}$. In the present setting, however, the auxiliary eigenproblems we consider in \Cref{pseudospec} are symmetric. When considering symmetric eigenproblems, the primal and dual eigenproblems coincide. This leads to the following symmetric version of the DWR error estimate, which is stated and proved in \cite{Bangerth, Heuveline}:
-\begin{corollary}[DWR Method for a Symmetric Eigenproblem \cite{Bangerth, Heuveline}]
+\begin{corollary}[DWR Method for a Symmetric Eigenproblem \cite{Bangerth, Heuveline}] \label{LemDWR}
     Consider an eigenpair $(u_h, \lambda_h) \in V_h \times \mathbb{R}$ that solves \eqref{gal eig}. 
     Define the primal eigenvalue residual as
     \begin{equation} \label{resid}
@@ -1520,7 +1535,7 @@ where $\mathcal{A}^*$ denotes the Hilbert adjoint of $\mathcal{A}$. In the prese
         (\lambda - \lambda_h)(1 - \xi_h) = \rho(u_h, \lambda_h)(u - \varphi_h),
     \end{equation}
     for an arbitrary $\varphi_h \in V_h,$ with the remainder term
-    \begin{equation}
+    \begin{equation} \label{remain}
         \xi_h = \frac{1}{2} m(u-u_h, u-u_h).
     \end{equation}
 
@@ -1577,7 +1592,7 @@ Notice that by applying Galerkin orthogonality, the primal residual in \eqref{re
 
 Two common choices for $\varphi_h$ are $\varphi_h \defeq u_h$ and $\varphi_h  \defeq I_h u,$ where $I_hu$ denotes the interpolation of $u$ onto $V_h.$ These choices give the weights $u - u_h$ and $u - I_h u$ in \eqref{DWR} and \eqref{local eta}, respectively. The first represents the discretisation error in the eigenfunction, while the second represents the component of $u$ that is not represented by its interpolant in $V_h.$ In \cite{balance_errs}, it is shown that choosing $\varphi_h \defeq u_h$ allows for the separation of the error incurred by discretisation and the error incurred from inexactly solving \eqref{gal eig}. As a result, we adopt the first choice and take $u- \varphi_h = u - u_h$ in our error estimates\footnote{We note that both choices were tested numerically and produced similar results.}.
 
-To compute either $u-u_h$ or $u - I_h u$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be no need to approximate it. Thus, for the practical computation of \eqref{DWR} and \eqref{local eta}, we have to approximate the terms involving $u.$ In particular, we have to approximate $e \defeq u-u_h$ in the remainder term of \eqref{DWR}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
+To compute either $u-u_h$ or $u - I_h u$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be no need to approximate it. Thus, for the practical computation of \eqref{DWR} and \eqref{local eta}, we have to approximate the terms involving $u.$ In particular, we have to approximate $e \defeq u-u_h$ in the remainder term \eqref{remain}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
 
 There are many strategies for approximating $e$ and $e_h$, each of which is discussed in \cite{Bangerth, Heuveline}. The most common approaches approximate $u$ in an `enriched' finite element space, $V_h^+,$  that is obtained by increasing the degree of the piecewise polynomial basis used to construct $V_h.$ To obtain an `enriched' approximation $u_h^+$ to $u$ in $V_h^+,$ there are two common approaches. We discuss both in turn:
 \begin{enumerate}
@@ -1604,8 +1619,11 @@ We use \eqref{new DWR} and its localisation to drive an adaptive mesh refinement
 
 
 \chapter{Methodology}
-
-In this chapter, we develop our methodology for combining an inner adaptive mesh refinement technique with an outer refinement technique for selecting the test points used in \Cref{pseudospec}. In \Cref{Sect31}, we couple \Cref{pseudospec} with our adaptive mesh refinement technique. In \Cref{Sect32}, we combine this methodology with an outer refinement procedure. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
+In this chapter, we develop our methodology for coupling inner and outer adaptivity with \Cref{pseudospec}.
+% In this chapter, we develop our methodology for combining an inner adaptive mesh refinement technique with outer adaptive refinement of the test points used in
+% outer adaptive refinement technique for selecting the test points used in 
+In \Cref{Sect31}, we develop our method of inner adaptivity, which 
+couples \Cref{pseudospec} with the adaptive mesh refinement technique of \Cref{AMR}. In \Cref{Sect32}, we combine this inner adaptivity with our method of outer adaptivity, which adaptively selects test points in the complex plane. In doing so, we develop an algorithm for computing pseudospectra both accurately and efficiently. 
 
 % \pef{I find the section references here a bit confusing. Maybe just say what Section 3.1 and Section 3.2 and ... do.}
 
@@ -1674,7 +1692,10 @@ When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approx
 
 % To overcome this challenge, w
 
-To this end, we propose a novel least-squares approach for matching $u_h$ with an enriched approximation $u_h^+.$ In particular,  given the computed enriched basis $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ we take $u_h^+$ to be the solution of the following problem:
+To this end, we propose a novel least-squares approach for matching $u_h$ with an enriched approximation $u_h^+.$ In particular,  given the computed enriched basis 
+\mbox{$E_h^+ := \{u_{h,1}^+,u_{h,2}^+,\ldots,u_{h,m}^+\}$},
+% $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ 
+we take $u_h^+$ to be the solution of the following problem:
 \begin{equation}\label{least}
     \underset{v\in \operatorname{span}(E_h^+)}{\arg\min} \|u_h-v\|_{\H},
 \end{equation}
@@ -1700,7 +1721,7 @@ which we solve for the coefficients $\alpha_1, \alpha_2, \dots, \alpha_m,$ that 
 
 
 In solving \eqref{matrix least}, we obtain an enriched approximation $u_h^+$ that represents the chosen primal eigenfunction $u_h$ within the computed enriched eigenbasis. This allows us to apply the DWR error estimate \eqref{new DWR} to eigenvalues with multiplicity greater than one.
-As a result, \eqref{new DWR} can be used to estimate the error in the smallest eigenvalues arising in \Cref{pseudospec}. The details of this implementation are discussed in the next subsection.
+As a result, \eqref{new DWR} can be used to estimate the error in the smallest eigenvalues arising in \Cref{pseudospec}. The details of this implementation are discussed next.
 
 
 
@@ -1771,7 +1792,7 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a fixed $z\in \
     \item \textbf{Refine:} Refine the marked cells, thereby defining a new finite element function space for the $j$-th auxiliary eigenproblem. To refine our marked cells, we employ Netgen's refinement technique, as implemented by Umberto Zerbinati \cite{NGSolve, Schoberl1997, pablo}.
 
 \end{enumerate}
-To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a user-defined stopping criterion has been satisfied. In the next subsection, we demonstrate the success of this methodology by applying it to the Maxwell eigenproblem. 
+To implement this procedure, we iterate between Steps 1 $\rightarrow$ 4 until a user-defined stopping criterion has been satisfied. Next, we demonstrate the success of this methodology by applying it to the Maxwell eigenproblem. 
 % The procedure is summarised in Algorithm ?.
 % \input{algorithms/amr}
 
@@ -1794,10 +1815,10 @@ Notice that, as opposed to the choice of $\operatorname{Grid}$ in \Cref{Matt Max
 
 
 
-To couple \Cref{pseudospec} with the adaptive mesh refinement technique of \Cref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem, \eqref{max aux}, posed on $V_h$ and $V_h^+,$ respectively. We solve the resulting generalised eigenproblem using the same Krylov--Schur method with a shift-and-invert spectral transformation as before.
-We then solve the least-squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with the enriched $u_h^+ \in V_h^+.$
+To couple \Cref{pseudospec} with the adaptive mesh refinement technique of \Cref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem \eqref{max aux} posed on $V_h$ and $V_h^+,$ respectively. We solve the resulting generalised eigenproblem using the same Krylov--Schur method with a shift-and-invert spectral transformation as before.
+We then solve the least-squares problem \eqref{least} to match the computed eigenfunction $u_h(z) \in V_h$ with the enriched $u_h^+(z) \in V_h^+.$
 
-Using $u_h$ and $u_h^+$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
+Using $u_h(z)$ and $u_h^+(z)$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
 
 Using the localisation procedure of Rognes and Logg, we compute a local error indicator $\eta_T(z)$ for each cell $T$ of the mesh that defines $V_h$ and $V_h^+$. We then mark and refine all cells for which \eqref{mark} holds. This results in a new mesh and, consequently, a new $V_h$ and $V_h^+$ for the discretisation of the auxiliary eigenproblem. 
 %%%%% Therefore, we --> Then we. and enriched eigenfucntion ---> the enriched
@@ -1812,7 +1833,7 @@ This process is repeated for each $z \in \operatorname{Grid}$ until a user-defin
 
 % (outer) felt weird
 
-With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in \Cref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane? Since the $\epsilon$-pseudospectrum is the closure of the region in which $\gamma(z, A) < \epsilon,$ we want to pick test points so that the computational effort of \Cref{pseudospec} is concentrated near the pseudospectral contour $\gamma(z, A) = \epsilon$.  Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little in computing an excessively accurate approximation of $\gamma(z, A).$
+With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in \Cref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane? Since the $\epsilon$-pseudospectrum is the closure of the region in which $\gamma(z, A) < \epsilon,$ we want to pick test points so that the computational effort of \Cref{pseudospec} is concentrated near the pseudospectral contour $\gamma(z, A) = \epsilon$.  Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in computing an excessively accurate approximation of $\gamma(z, A).$
 
 % With the adaptive mesh refinement technique in hand, we can efficiently solve the inner eigenproblems that arise in \Cref{pseudospec}. However, two questions remain. First, how should we pick the test points in the complex plane so that the computational effort of \Cref{pseudospec} is concentrated near the $\epsilon$-pseudospectrum? In particular, we ask how to pick test points so that the computational effort is concentrated near the $\epsilon$-pseudospectral contour $\gammaa(z,A)= \epsilon.$ Second, for a given test point $z,$ to what accuracy should we solve the inner auxiliary eigenproblems? For example, if $z$ is far from the $\epsilon$-pseudospectrum, there is little benefit in considering nearby points in the complex plane, or in computing an excessively accurate approximation of $\gamma(z, A).$
 
@@ -1842,7 +1863,7 @@ This technique makes use of error estimates for the computed eigenvalues of the 
 \end{equation}
 Furthermore, we want to use the error in $\Phi_h(z, A)$ to drive the adaptive mesh refinement technique of \Cref{AMR}.
 
-To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a, b, c \in \mathbb{R}$ with $a, b \ge 0,$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound for
+To use \eqref{eta ests} to construct an error bound for \eqref{phi err}, we first note that for scalars $a, b, c \in \mathbb{R}$ with $a, b, c \ge 0,$ $|a-b| \le c$ implies that $|\sqrt{a} - \sqrt{b}| \le \sqrt{c}.$ Thus, to construct an error bound for \eqref{phi err}, we can construct an error bound for
 \begin{equation} \label{square bound}
     | \gamma^2(z, A) - \Phi_h^2(z, A)| = \left| \min \{ \mu^{(1)}(z), \mu^{(2)}(z)\}  - \min \{ \mu_h^{(1)}(z), \mu_h^{(2)}(z)\} \right|.
 \end{equation}
@@ -1872,6 +1893,18 @@ Thus, we can write \eqref{square bound} as
 %         &= \left| \frac{\mu^{(1)}(z) + \mu^{(2)}(z) - |\mu^{(1)}(z)-\mu^{(2)}(z)|}{2} \\ &- \frac{\mu_h^{(1)}(z) + \mu^{(2)}_n(z) - |\mu^{(1)}_n(z)-\mu^{(2)}_n(z)|}{2}  \right|.
 % \end{align}
 Rearranging and applying the triangle inequality yields
+% \begin{align}
+%     \left| \gamma^2(z,A) - \Phi_h^2(z,A) \right|
+%     &\leq \frac{1}{2} \Big(
+%     \left|\mu^{(1)}(z)-\mu_h^{(1)}(z)\right|
+%     + \left|\mu^{(2)}(z)-\mu_h^{(2)}(z)\right| \notag\\
+%     &\qquad\qquad
+%     + \left|
+%     \left|\mu^{(1)}(z)-\mu^{(2)}(z)\right|
+%     - \left|\mu_h^{(1)}(z)-\mu_h^{(2)}(z)\right|
+%     \right|
+%     \Big).
+% \end{align}
 \begin{align}
     \left| \gamma^2(z,A) - \Phi_h^2(z,A) \right|
     &\leq \frac{1}{2} \Big(
@@ -1879,8 +1912,8 @@ Rearranging and applying the triangle inequality yields
     + \left|\mu^{(2)}(z)-\mu_h^{(2)}(z)\right| \notag\\
     &\qquad\qquad
     + \left|
-    \left|\mu^{(1)}(z)-\mu^{(2)}(z)\right|
-    - \left|\mu_h^{(1)}(z)-\mu_h^{(2)}(z)\right|
+    \bigl|\mu^{(1)}(z)-\mu^{(2)}(z)\bigr|
+    - \bigl|\mu_h^{(1)}(z)-\mu_h^{(2)}(z)\bigr|
     \right|
     \Big).
 \end{align}
@@ -1960,6 +1993,8 @@ Thus, for each triangle $ K \in \mathcal{T}_k,$ we consider the barycentre $z_K$
 
 
 Consider a triangle $K \in \mathcal{T}_k$ with barycentre $z_K,$ as illustrated in \Cref{Triang}. We want to determine whether the $\epsilon$-pseudospectral contour, $\gamma(z, A) = \epsilon,$ passes through this triangle. To do so, we first make use of the following result.
+
+% \newpage
 
 
 
@@ -2059,15 +2094,14 @@ Rearranging, we obtain
 From this result, we obtain three cases that we can use to determine whether $K$ can be classified as lying inside or outside the $\epsilon$-pseudospectrum, or whether $K$ should be refined. We discuss each case in turn:
 \begin{enumerate}[label=\textbf{\arabic*}.] 
 
-\item \textbf{Triangle $\boldsymbol{K}$ lies entirely within the $\mathbf{\epsilon}$-pseudospectrum.}
+\item \textbf{Triangle $\boldsymbol{K}$ lies entirely within the $\boldsymbol{\epsilon}$-pseudospectrum.}
 This occurs when
 \begin{equation}\label{case 1}
     \Phi_h(z_K,A) + R < \epsilon,
 \end{equation}
 which indicates that $\gamma(w,A) < \epsilon$ for all $w \in K$.
 
-\item \textbf{Triangle $\boldsymbol{K}$ lies entirely outside the $\mathbf{\epsilon}$-pseudospectrum.}
-This occurs when
+\item \textbf{Triangle $\boldsymbol{K}$ lies entirely outside the $\boldsymbol{\epsilon}$-pseudospectrum.} This occurs when
 \begin{equation}\label{case 2}
     \Phi_h(z_K,A) - R > \epsilon,
 \end{equation}
@@ -2092,7 +2126,7 @@ Hence, we do not have enough information to decide whether the pseudospectral co
 % and we do not have enough information to decide whether the pseudospectral contour $\gamma(z, A) = \epsilon$ passes through $K.$ In this case, we refine $K$ and re-check the three cases for each sub-triangle. 
 \end{enumerate}
 
-In the next subsection, we construct a coupling between the adaptive mesh refinement technique of \Cref{AMR} and the outer refinement strategy developed in this section. In doing so, we construct an efficient method for computing pseudospectra with \Cref{pseudospec}. 
+Next, we construct a coupling between the adaptive mesh refinement technique of \Cref{AMR} and the outer refinement strategy developed in this section. In doing so, we obtain an efficient method for computing pseudospectra with \Cref{pseudospec}. 
 
 % \pef{Again, beautifully written.}
 
@@ -2165,7 +2199,7 @@ For $\lambda \ne 0,$ we can solve for $\sigma$ in \eqref{eq2} and substitute the
 \begin{equation} \label{pois}
     -u'' = \lambda^2u.
 \end{equation}
-Notice that \eqref{pois} is the one-dimensional Dirichlet Laplacian eigenproblem. Thus, 
+Notice that \eqref{pois} is the one-dimensional Dirichlet Laplace eigenproblem. Thus, 
 \begin{equation} \label{eigs dirac}
     \lambda = \pm n, \qquad n = 1, 2, \dots
 \end{equation}
