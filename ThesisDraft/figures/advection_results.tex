@@ -2,20 +2,19 @@
     \centering
 
     % Main figure
-    \includegraphics[width=0.94\textwidth]{images/advection_sweeps_combined (9).png}
+    \includegraphics[width=1.0\textwidth]{images/advection_sweeps_combined.png}
 
     \vspace{-1.3em}
 
     % Bottom row
-    \begin{minipage}[t]{0.66\textwidth}
+    \begin{minipage}[t]{0.69\textwidth}
         \vspace{-0.03pt}
         \setlength{\abovecaptionskip}{0pt}
-        \caption[The Computed $\epsilon = 0.5$ Pseudospectral Picture for the One-Dimensional Advection--Diffusion Operator.]{
+        \caption[The Computed $\epsilon = 0.5$ Pseudospectral Picture for the One-Dimensional Advection--Diffusion Operator]{
             Outer-refinement levels $k=0,3,7$ for
             \Cref{outerloop} applied to the $\epsilon = 0.5$ pseudospectrum of the
             one-dimensional advection--diffusion operator \eqref{advect}.
             The colour scheme is as in \Cref{dirac results}. The purple dashed curve is a reference contour computed using \texttt{Pseudospectra.jl} \cite{PseudospectraJL}.
-            \pef{I had to really zoom in on $\mathcal{T}_7$ to see the purple dashed curve was still there, is there a way to make it more obvious for 65 year old examiners with glasses?}
             A magnified view of the $\mathcal{T}_7$ result over $[1.8, 5.1] \times [-1.6, 1.6]$ is shown to the right.}
         \label{advection results}
     \end{minipage}
@@ -23,7 +22,7 @@
     \begin{minipage}[t]{0.30\textwidth}
         \vspace{0pt}
         \centering
-        \includegraphics[width=\textwidth]{images/advection_zoom_standalone (6).png}
+        \includegraphics[width=\textwidth]{images/advection_zoom_standalone.png}
     \end{minipage}
 \label{advectresults}
 \end{figure}

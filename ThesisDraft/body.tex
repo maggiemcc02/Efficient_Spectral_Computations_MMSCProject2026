@@ -6,7 +6,7 @@
 
 % It is hard to overstate the importance of spectra in applied mathematics. As noted by Nick Trefethen in \cite{NickEssay}, at least twenty Nobel Prizes in Physics have been awarded for phenomena associated with eigenvalues.
 
-With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, it is hard to overstate the importance of spectra in applied mathematics \cite{NickEssay}. 
+With at least twenty Nobel Prizes in Physics coming from phenomena associated with eigenvalues, it is hard to overstate the importance of spectra in applied mathematics~\cite{NickEssay}. 
 % \Maggie{I think this opening sentence flows a bit better than ``It is hard to overstate the importance of spectra in applied mathematics. As noted by Nick Trefethen in \cite{NickEssay}, at least twenty Nobel Prizes in Physics have been awarded for phenomena associated with eigenvalues." What do you think?}
 Spectra play a major role in numerous fields, such as acoustics, chemical analysis, dynamical systems, fluid mechanics, quantum mechanics, and partial differential equations\footnote{For an overview of the history and applications of eigenvalue problems, which are a subset of spectral problems, see \cite[Chapter 1]{Nick} and the references therein.}. A particularly interesting example can be found in spectroscopy. As displayed in \Cref{spec pic}, the black `Fraunhofer lines' that appear in spectroscopic images of the sun's light correspond to the differences of eigenvalues of the Schrödinger operator for atoms such as H, Fe, Ca, Na, and Mg. Spectroscopic measurements such as these allowed for the measurement of redshifts of distant galaxies, leading to the discovery of the expanding universe \cite[Chapter~1]{Nick}.
 % spectroscopy figure
@@ -40,10 +40,10 @@ spectrum of an infinite-dimensional operator includes the set of its eigenvalues
 
 As a result, new phenomena are present in the spectra of infinite-dimensional operators that make them much harder to reliably compute. To see this, consider the right-shift operator, 
 \begin{equation}\label{right shift}
-R(x_1, x_2, \dots) = (0, x_1, x_2, \dots),
+R(x_1, x_2, \dots) \defeq (0, x_1, x_2, \dots),
 \end{equation}
 that acts on square-summable sequences\footnote{The set of square-summable sequences is
-    $\ell^2(\mathbb{N}) = \{z = \{x_n\}_{n \in \mathbb{N}}: \sum_{n=1}^{\infty} |x_n|^2 < \infty\}.$}. This operator's spectrum is the unit disc, but it has no eigenvalues\footnote{For more information on this example, see \Cref{Shift Appendix}.}.
+    $\ell^2(\mathbb{N}) = \{\{x_n\}_{n \in \mathbb{N}}: \sum_{n=1}^{\infty} |x_n|^2 < \infty\}.$}. This operator's spectrum is the unit disc, but it has no eigenvalues\footnote{For more information on this example, see \Cref{Shift Appendix}.}.
 
 The standard approach for computing the spectrum of an infinite-dimensional operator is often referred to as the \textit{discretise-then-solve} approach \cite[Chapter~1]{Matt}. 
 % \pef{Big Book Principle} 
@@ -60,7 +60,7 @@ Even if the discretisation manages to avoid both spectral pollution and spectral
 
 These drawbacks of the discretise-then-solve approach motivate the development of alternative methods for computing the spectra of infinite-dimensional operators. This challenge has been taken up in the recent work of Matthew Colbrook \cite{Matt}. 
 % \pef{E.g. this big book citation is fine.}
-His work is based on the idea that deferring discretization to the last opportunity is cruicial to the succesful computation of spectra \cite{Forward}. This leads to an algorithm that computes the spectrum of an infinite-dimensional operator by discretising auxiliary subproblems rather than the operator itself.
+His work is based on the idea that deferring discretization to the last opportunity is crucial to the succesful computation of spectra \cite{Forward}. This leads to an algorithm that computes the spectrum of an infinite-dimensional operator by discretising auxiliary subproblems rather than the operator itself.
 
 % his deference manifests as algorithms that 
 % His work is based on the idea of deferring discretisation to the last opportunity: he devises algorithms that compute spectra at the infinite-dimensional level, then discretises the subproblems \cite{Forward}. 
@@ -110,7 +110,7 @@ As a result, further refinement, and thus more expensive computations, may be ne
 % Furthermore, as we shall see, coarse discretisations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
 
 
-In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{dual-weighted residual} (DWR) method, which uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Bangerth, Heuveline, Becker}. In our setting, the quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem. Thus, we consider DWR error estimates for eigenvalue errors. With these estimates, we can both improve the computed approximations in Colbrook's algorithm and drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
+In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{dual-weighted residual} (DWR) method, which uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Giles97, Becker, ActaGiles,Bangerth}. In our setting, the quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem. Thus, we consider DWR error estimates for eigenvalue errors \cite{Heuveline}. With these estimates, we can both improve the computed approximations in Colbrook's algorithm and drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
 % resulting eigenvalue error estimates are used both to improve the computed approximations in Colbrook's algorithm, and to drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
  We refer to this pairing of Colbrook's algorithm with mesh adaptivity at each test point in the complex plane as \textit{inner adaptivity}.
  
@@ -304,9 +304,9 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
  \begin{equation}
      (Av, w)_{\H} = (v, u)_{\H}, \qquad \Forall v \in D(A).
  \end{equation}
- The Hilbert adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self-adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal}. For example, consider the one-dimensional Dirichlet Laplacian defined on $\Omega = (0, \pi),$
+ The Hilbert adjoint of $A$ is defined as the linear operator $A^*$ that satisfies $u = A^*w.$ When $A^* = A,$ the linear operator $A$ is said to be \textit{self-adjoint}. Furthermore, when $A$ is closed and densely defined, $A^*A$ and $AA^*$ are self-adjoint. In this case, if $AA^* = A^*A,$ then $A$ is called \textit{normal} \cite[Appendix~A.3]{Matt}. For example, consider the one-dimensional Dirichlet Laplacian defined on $\Omega = (0, \pi),$
  \begin{equation}
-     A = - \Delta, \qquad D(A) = \text{H}^2(\Omega) \cap \text{H}_0^1(\Omega).
+     A \defeq - \Delta, \qquad D(A) = \text{H}^2(\Omega) \cap \text{H}_0^1(\Omega).
  \end{equation}
  This operator is closed and densely defined on $L^2(\Omega).$ Furthermore, it is self-adjoint and thus normal. 
 
@@ -315,7 +315,7 @@ We note that when $A$ is closed, being boundedly invertible is equivalent to $N(
 
 
 
-In this setting, the spectrum of a densely defined operator $A,$ as stated in \eqref{SpA}, can be equivalently formulated as the following set:
+In this setting, the spectrum of a densely defined linear operator $A,$ as stated in \eqref{SpA}, can be equivalently formulated as the following set:
 \begin{equation}\label{SpA2}
     \Sp{A} = \{z \in \mathbb{C} : A-zI \text{ is not boundedly invertible}\}.
 \end{equation}
@@ -327,7 +327,7 @@ As is the case in finite dimensions, $z \in \mathbb{C}$ is an \textit{eigenvalue
 
 % \pef{These two failure modes coincide in finite dimensions because of the rank-nullity theorem.}
 
-If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugate of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI)^{-1}.$  
+If the linear operator $A$ is closed and densely defined, the spectrum of $A$ can be related to the spectrum of its Hilbert adjoint $A^*.$ In this case, $\operatorname{Sp}(A^*) = \{\overline{z} : z \in \Sp{A}\},$ where $\overline z$ denotes the complex conjugate of $z \in \mathbb{C}.$ Moreover, if $z \notin \Sp{A}$ then $(A-zI)^{-1}$ exists and $[(A-zI)^{-1}]^* = (A^* - \overline zI)^{-1}$ \cite[Appendix~A.3]{Matt}.  
 
 % With these properties in mind, every operator we will consider going forward is assumed to be linear, closed, and densely defined on a Hilbert space $H.$ 
 % Furthermore, when $A$ is closed and densely defined, both $A^*A$ and $AA^*$ are self-adjoint.
@@ -510,7 +510,7 @@ Recall that $B$ is a normal matrix when $B^*B=BB^*,$ where $B^*$ denotes the con
 
 
 In infinite dimensions, we consider a closed and densely defined linear operator $A : D(A) \subset \H \rightarrow 
-\H,$ on a Hilbert space $\H.$ For each $\epsilon>0,$ the $\epsilon$-pseudospectrum of $A$ is the following set:\footnote{Notice that in infinite dimensions, the equality in \eqref{eps B} need not hold. This is because in infinite dimensions, the resolvent norm of an unbounded operator on a Hilbert space can be constant on open sets \cite[Section~1.1.4]{Matt}.}
+\H$ on a Hilbert space $\H.$ For each $\epsilon>0,$ the $\epsilon$-pseudospectrum of $A$ is the following set:\footnote{Notice that in infinite dimensions, the equality in \eqref{eps B} need not hold. This is because in infinite dimensions, the resolvent norm of an unbounded operator on a Hilbert space can be constant on open sets \cite[Section~1.1.4]{Matt}.}
 \begin{equation}
     \Spe{A} = \operatorname{Cl}\left( \{ z \in \mathbb{C} : \|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} < \epsilon \}  \right).
 \end{equation}
@@ -527,7 +527,7 @@ As is the case in finite dimensions, the pseudospectra of $A$ can be used to exp
 \end{equation}
 where $\mathfrak{B}_{\epsilon}(0)$ denotes the closed ball of radius $\epsilon$ centred at zero \cite[Section~1.1.4]{Matt}. Thus,  a perturbation of $A$ with a norm less than $\epsilon$ cannot have spectral values that are further than an $\epsilon$-distance from the spectrum of $A.$ In this sense, the spectrum of $A$ is well-conditioned. 
 
-When $A$ is not a normal operator, its $\epsilon$-pseudospectrum may be much larger than $\Sp{A} + \mathfrak{B}_{\epsilon}(0).$ In this case, perturbations of $A$ with norm less than $\epsilon$  may have spectral values that are much further than an $\epsilon$-distance from the spectrum of $A,$ indicating that the spectrum of $A$ is ill-conditioned.
+When $A$ is not a normal operator, its $\epsilon$-pseudospectrum may be much larger than $\Sp{A} + \mathfrak{B}_{\epsilon}(0).$ In this case, perturbations of $A$ with norm less than $\epsilon$  may have spectral values that are much further than an $\epsilon$-distance from the spectrum of $A,$ indicating that the spectrum of $A$ is ill-conditioned \cite[Section~1.1.4]{Matt}.
 
 Before moving on, we note that pseudospectra have many applications beyond the analysis of the conditioning of spectra. For example, as we will see, Colbrook's algorithm uses concepts related to pseudospectra to enable the reliable computation of spectra.
 %  Thus, the $\epsilon$-pseudospectra of $A$ can be
@@ -558,9 +558,9 @@ Spectral invisibility occurs when the discretisation of the infinite-dimensional
     \end{equation}
 \end{definition}
 
-Even when the discretise-then-solve approach avoids both spectral pollution and spectral invisibility, there is a fundamental issue that arises when an infinite-dimensional operator is replaced by a finite-dimensional discretisation. For general operators, the \textit{essential spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in an `infinite-dimensional' way\footnote{We omit a formal definition of the essential spectrum because there are at least five technical definitions for non-normal operators. The curious reader can consult \cite[Ch. 8]{Matt}.}. The \textit{discrete spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in a `finite-dimensional' way. 
+Even when the discretise-then-solve approach avoids both spectral pollution and spectral invisibility, there is a fundamental issue that arises when an infinite-dimensional operator is replaced by a finite-dimensional discretisation. For general operators, the \textit{essential spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in an `infinite-dimensional' way\footnote{We omit a formal definition of the essential spectrum because there are at least five technical definitions for non-normal operators. The curious reader can consult \cite[Chapter~8]{Matt}.}. The \textit{discrete spectrum} refers to the $z \in \Sp{A}$ for which $A-zI$ fails to be invertible in a `finite-dimensional' way. 
 % Thus, the discrete spectrum can be thought of as the subset of $\Sp{A}$ that contains the eigenvalues of $A$ with finite multiplicity. 
-Immediately discretising $A$ with a finite matrix results in a finite, discrete set of eigenvalues. As a result, the discretise-then-solve approach may struggle to capture the essential spectrum of an operator, and to distinguish it from the discrete spectrum.  
+Immediately discretising $A$ with a finite matrix results in a finite, discrete set of eigenvalues. As a result, the discretise-then-solve approach may struggle to capture the essential spectrum of an operator, and to distinguish it from the discrete spectrum \cite[Section~1.1]{Matt}.  
 % \pef{What has this got to do with doing things `too quickly'? Even if I discretise slowly the same phenomenon would happen?}
 
 \subsection{The Maxwell Eigenproblem and Spectral Pollution}\label{Maxwell Sect}
@@ -686,11 +686,11 @@ Notice that \Cref{spect pollute} contains a sequence of eigenvalues converging t
 
 % Notice that this methodology produces a sequence of eigenvalues converging to $\omega^2 = 6,$ which is not a valid eigenvalue of the infinite-dimensional problem \eqref{Max}. Thus, this methodology suffers from spectral pollution. If we did not know the exact eigenvalues of \eqref{Max}, the apparently convergent sequence of eigenvalues could lead us to incorrectly conclude that $\omega^2=6$ is an eigenvalue of \eqref{Max}. 
 
-In general, for the Maxwell eigenproblem, whether spectral pollution occurs depends on the choice of mesh and finite elements. For example, spectral pollution can be avoided if we employ Nédélec elements as opposed to our current discretisation \cite{Nedelec1980}. 
+In general, for the Maxwell eigenproblem, whether spectral pollution occurs depends on the choice of mesh and finite elements. For example, spectral pollution can be avoided if we employ Nédélec elements as opposed to our current discretisation~\cite{Nedelec1980}. 
 % \pef{Citation for Nedelec. Call them Nedelec elements rather than edge elements, they're only edge elements at lowest order.} 
 The success of Nédélec elements for the Maxwell eigenproblem can be understood through finite element exterior calculus (FEEC).
 % \pef{I would say Arnold's book is a much more natural choice of citation here.} 
-FEEC captures the essential geometric, topological, and algebraic structures of a problem at the discrete level. This linking of the continuous and discrete formulation of a problem enables the construction of stable and convergent finite element discretisations. For the Maxwell eigenproblem, the success of Nédélec elements can be explained by the fact that they fit within the framework of FEEC, while our current discretisation does not \cite[Chapter~1]{bookArnold}.  In particular, Nédélec elements preserve the de Rham complex at the discrete level, while linear Lagrange elements do not. Furthermore, Nédélec elements satisfy a discrete compactness property that ensures the convergence of the corresponding finite element discretization without spectral pollution \cite[Section~20]{Boffi}.
+FEEC captures the essential geometric, topological, and algebraic structures of a problem at the discrete level. This linking of the continuous and discrete formulation of a problem enables the construction of stable and convergent finite element discretisations. For the Maxwell eigenproblem, the success of Nédélec elements can be explained by the fact that they fit within the framework of FEEC, while our current discretisation does not~\mbox{\cite[Chapter~1]{bookArnold}}.  In particular, Nédélec elements preserve the de Rham complex at the discrete level, while linear Lagrange elements do not. Furthermore, Nédélec elements satisfy a discrete compactness property that ensures the convergence of the corresponding finite element discretization without spectral pollution \cite[Section~20]{Boffi}.
 
 % More precisely, edge elements preserve the de Rham complex and satisfy the discrete compactness property, which provides the compactness required for spectral convergence of the Maxwell eigenproblem and prevents the appearance of spurious eigenvalues; standard nodal Lagrange elements do not, in general, satisfy this property
 
@@ -749,13 +749,13 @@ Let $A: D(A) \subset \H \rightarrow \H$ be a closed and densely defined linear o
     \sigma_{\inf}(A) = \inf\{ \|Ax\|_\H : x \in D(A), \|x\|_\H = 1\}.
 \end{equation}
 % The injection modulus is a quantitative measure of `how injective' an operator is \cite{Matt}. In this way, it
-The injection modulus of an operator is often viewed as a generalisation of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite[Section 1.2.3]{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors, $\{x_n\}_{n \in \mathbb{N}}$, such that $\|A x_n \|_\H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_\H=0.$ 
+The injection modulus of an operator is often viewed as a generalisation of the smallest singular value of a finite-dimensional matrix. However, we must be careful not to confuse the injection modulus with the smallest singular value, since infinite-dimensional operators can exhibit behaviours that are quite different from those of finite-dimensional operators \cite[Section 1.2.3]{Matt}. For example, an infinite-dimensional operator $A$ can be injective but have $\sigma_{\inf}(A)=0.$ This may happen when there is a sequence of unit vectors $\{x_n\}_{n \in \mathbb{N}} \subset D(A)$ such that $\|A x_n \|_\H \rightarrow 0$ but there is no nonzero $x \in D(A)$ that satisfies $\|Ax\|_\H=0.$ 
 % \pef{So it isn't a quantitative measure of `how injective' an operator is? This seems contradictory.}
 
 One of the main tools in Colbrook's algorithm is the following function of $z 
 \in \mathbb{C},$
 \begin{equation}
-    \gamma(z, A) = \min \left\{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \right\}.
+    \gamma(z, A) \defeq \min \left\{ \sigma_{\inf}(A-zI), \sigma_{\inf}(A^* - \overline{z}I) \right\}.
 \end{equation}
 The following lemma identifies  $\gamma(z, A)$ with the inverse resolvent norm.
 % \pef{End sentences before lemmas/theorems/etc.}
@@ -796,7 +796,7 @@ Colbrook's algorithm for computing the pseudospectra of an operator $A$ relies o
 
 % \pef{Clarify that the new assumption here is separability (if I understand correctly).}
 
-To satisfy this assumption, we introduce \textit{operator folding} \cite[Section 3.4]{Matt}. Suppose that $A$ is a closed and densely defined operator on a Hilbert space $\H.$ In addition, we now assume that $\H$ is separable, i.e., that it contains a countable orthonormal basis. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$. 
+To satisfy this assumption, we introduce \textit{operator folding} \cite[Section 3.4]{Matt}. Suppose that $A$ is a closed and densely defined linear operator on a Hilbert space $\H.$ In addition, we now assume that $\H$ is separable, i.e., that it contains a countable orthonormal basis. Let $\{\mathcal{P}_n\}$ be orthogonal projections such that $\mathcal{P}_n^*\mathcal{P}_n$ strongly converges to the identity as $n \rightarrow \infty$. 
 % \pef{You don't need to cite Matt's book on consecutive sentences. Just cite the section on operator folding at the start of the section.} 
 The key idea behind operator folding is to approximate $\gamma(z, A)$ using the following relation:
 \begin{equation}
@@ -804,19 +804,19 @@ The key idea behind operator folding is to approximate $\gamma(z, A)$ using the 
 \end{equation}
 That is, we approximate $\gamma(z, A)$ with 
 \begin{equation} \label{phi Pn}
-    \Phi_n(z, A) = \min \left\{\sigma_{\inf}((A-zI) \mathcal{P}_n^*), \sigma_{\inf}((A-zI)^*\mathcal{P}_n^*) \right\},
+    \Phi_n(z, A) \defeq \min \left\{\sigma_{\inf}((A-zI) \mathcal{P}_n^*), \sigma_{\inf}((A-zI)^*\mathcal{P}_n^*) \right\},
 \end{equation}
-which satisfies \Cref{assump} under suitable conditions on $D(A)$ and $D(A^*)$ \cite[Chapter~3]{kato}. 
+which satisfies \Cref{assump} under suitable conditions on $D(A)$ and $D(A^*)$~\cite[Chapter~3]{kato}. 
 
 To compute $\Phi_n(z, A)$ in \eqref{phi Pn}, we consider the following quadratic forms:
 \begin{align}
-    Q_{z, A}^{(1)}(u, v)&= ((A-zI)u, (A-zI)v)_{\H}, &\quad u, v &\in D(A),\label{Q1}\\
-    Q_{z, A}^{(2)}(u, v) &= ((A-zI)^*u, (A-zI)^*v)_{\H}, &\qquad u, v &\in D(A^*),\label{Q2}
+    Q_{z, A}^{(1)}(u, v)&\defeq ((A-zI)u, (A-zI)v)_{\H}, &\quad u, v &\in D(A),\label{Q1}\\
+    Q_{z, A}^{(2)}(u, v) &\defeq ((A-zI)^*u, (A-zI)^*v)_{\H}, &\qquad u, v &\in D(A^*),\label{Q2}
 \end{align}
 which induce the Rayleigh quotients
 \begin{align}
-\mathcal{R}_{z, A}^{(1)}(u) &= \frac{Q_{z, A}^{(1)}(u, u)}{(u, u)_\H} = \frac{\|(A-zI)u\|_\H^2}{\|u\|_\H^2}, \label{R1}\\
-\mathcal{R}_{z, A}^{(2)}(u) &= \frac{Q_{z, A}^{(2)}(u, u)}{(u, u)_\H} = \frac{\|(A-zI)^*u\|_\H^2}{\|u\|_\H^2}.\label{R2}
+\mathcal{R}_{z, A}^{(1)}(u) &\defeq \frac{Q_{z, A}^{(1)}(u, u)}{(u, u)_\H} = \frac{\|(A-zI)u\|_\H^2}{\|u\|_\H^2}, \label{R1}\\
+\mathcal{R}_{z, A}^{(2)}(u) &\defeq \frac{Q_{z, A}^{(2)}(u, u)}{(u, u)_\H} = \frac{\|(A-zI)^*u\|_\H^2}{\|u\|_\H^2}.\label{R2}
 \end{align}
 These Rayleigh quotients can be used to characterise the injection modulus of $A-zI$ and $(A - zI)^*$ in the following way:
 % \begin{align}
@@ -824,8 +824,8 @@ These Rayleigh quotients can be used to characterise the injection modulus of $A
 % \sigma_{\inf}(A^*-\overline{z}I) &= \sqrt{ \inf_{f \in D(A^*)\setminus\{0\}} R_{z, A}^{(2)}(f) }.
 % \end{align}
 \begin{align}
-\sigma_{\inf}(A-zI) &= \sqrt{ \mu^{(1)}(z) }, \qquad \mu^{(1)}(z) = \inf_{u \in D(A)\setminus\{0\}} \mathcal{R}_{z, A}^{(1)}(u),\\
-\sigma_{\inf}(A^*-\overline{z}I) &= \sqrt{ \mu^{(2)}(z) }, \qquad \mu^{(2)}(z) = \inf_{u \in D(A^*)\setminus\{0\}} \mathcal{R}_{z, A}^{(2)}(u).
+\sigma_{\inf}(A-zI) &= \sqrt{ \mu^{(1)}(z) }, \qquad \mu^{(1)}(z) \defeq \inf_{u \in D(A)\setminus\{0\}} \mathcal{R}_{z, A}^{(1)}(u),\\
+\sigma_{\inf}(A^*-\overline{z}I) &= \sqrt{ \mu^{(2)}(z) }, \qquad \mu^{(2)}(z) \defeq \inf_{u \in D(A^*)\setminus\{0\}} \mathcal{R}_{z, A}^{(2)}(u).
 \end{align}
 With this, $\gamma(z, A)$ can be written as 
 % \begin{equation} \label{var gamma}
@@ -1011,46 +1011,46 @@ The computation of $\mu_n^{(1)}(z)$ and $\mu_n^{(2)}(z)$ needed for \Cref{old ps
 % Recall that Colbrook's formulation begins from a closed and densely defined operator $A : D(A) \subset \H \rightarrow 
 % \H.$ However, this is not the natural setting for variational problems, which are typically formulated for operators of the form $L : V \rightarrow V^*,$ where $V^*$ is the dual (or anti-dual in complex arithmetic) of $V.$
 
-In the previous subsection, we represented $\gamma(z, A)$ using the bottoms of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ This formulation of $\gamma(z, A)$ assumes that $A$ is a closed and densely defined operator on the Hilbert space $\H.$ However, many operators of interest, such as differential operators, are formulated in a variational setting. In this setting, we typically consider an operator of the form  $L : V \rightarrow V^*,$ where $V$ is a Hilbert space and $V^*$ is its dual in real arithmetic and its anti-dual in complex arithmetic.
+In the previous subsection, we represented $\gamma(z, A)$ using the bottoms of the spectrum of the two folded operators $(A-zI)^*(A-zI)$ and $(A-zI)(A-zI)^*.$ This formulation of $\gamma(z, A)$ assumes that $A$ is a closed and densely defined operator on the Hilbert space $\H.$ However, many operators of interest, such as differential operators, are formulated in a variational setting. In this setting, we typically consider an operator of the form  $L : V \rightarrow V^*,$ where $V$ is a Hilbert space and $V^*$ is its dual in real arithmetic, or its anti-dual in complex arithmetic.
 
 % These spectral bottoms are obtained from the Rayleigh quotients in \eqref{R1} and \eqref{R2}. 
 
 
 
-To see this discrepancy, consider the \textit{Dirichlet Laplacian} on $\H = L^2(\Omega),$ defined as
+To see this discrepancy, consider the \textit{Dirichlet Laplacian} on a bounded domain  $\Omega \subset \mathbb{R}^d,$ 
 \begin{equation} \label{strong L}
     A \defeq -\Delta, \qquad D(A) = \{u \in \mathrm{H}_0^1(\Omega) : -\Delta u \in L^2(\Omega)\}.
 \end{equation}
-This is a closed and densely defined operator on $\H.$ Thus, it fits within the framework of Colbrook's algorithm. However, $D(A)$ is not easily discretised using standard finite element spaces. As a result, it is often preferable to work with a variational formulation of the Dirichlet Laplacian.
+This is a closed and densely defined linear operator on $\H = L^2(\Omega).$ Thus, it fits within the framework of Colbrook's algorithm. However, $D(A)$ is not easily discretised using standard finite element spaces. As a result, it is often preferable to work with a variational formulation of the Dirichlet Laplacian.
 
 
 % However, it is preferable to work with a variational formulation, because $D(A)$ is very difficult to discretise.
-Let $\Omega \subset \mathbb{R}^d$ be a bounded domain, $V = \text{H}_0^1(\Omega),$ and $\H = L^2(\Omega).$ The \textit{weak Dirichlet Laplacian} is defined as the operator $L : V \rightarrow V^*$ that satisfies
+Let $V =\text{H}_0^1(\Omega).$ The \textit{weak Dirichlet Laplacian} is the operator $L : V \rightarrow V^*$ that satisfies
 \begin{equation} \label{weak L}
-    \langle Lu, v \rangle_{V^*, V} \defeq (\nabla u, \nabla v)_{L^2(\Omega)}, \qquad \Forall u, v \in V,
+    \langle Lu, v \rangle_{V^*, V} = (\nabla u, \nabla v)_{L^2(\Omega)}, \qquad \Forall u, v \in V,
 \end{equation}
-where $\langle \cdot, \cdot \rangle_{V^*, V}$ denotes the action of an element of $V^*$ on an element of $V.$ To write the variational eigenproblem, we introduce the mass operator $M : L^2(\Omega) \rightarrow V^*$ that satisfies
+where $\langle \cdot, \cdot \rangle_{V^*, V}$ denotes the action of an element of $V^*$ on an element of $V.$ To write the variational eigenproblem, we introduce the \textit{mass operator} $M : \H \rightarrow V^*\!$, and the corresponding \textit{mass form} $m(\cdot, \cdot),$ defined by
 \begin{equation}
-    \langle Mu, v \rangle_{V^*, V} = (u, v)_{L^2(\Omega)}, \qquad \Forall u, v \in V.
+    m(u,v) \defeq \langle Mu, v \rangle_{V^*, V} = (u, v)_{\H}, \qquad \Forall u \in \H,  \, \Forall v \in V.
 \end{equation}
 With this, the standard variational eigenproblem seeks $\lambda \in \mathbb{C}$ and nonzero $u \in V$ such that
 \begin{equation}
     Lu = \lambda M u, \qquad \text{in } V^*\!.
 \end{equation}
-Notice that this formulation considers operators $L : V \rightarrow V^*$ and $M : L^2(\Omega) \rightarrow V^*$, whereas Colbrook's algorithm is formulated for a closed and densely defined operator $A : D(A) \subset \H \rightarrow \H.$ As a result, we seek to connect these two formulations so that Colbrook's algorithm can be applied in the variational setting. To do so, we ask how the operator $A$ required by Colbrook's algorithm can be recovered from $L$ and $M.$
+Notice that this formulation considers operators $L : V \rightarrow V^*$ and $M : \H \rightarrow V^*$, whereas Colbrook's algorithm is formulated for a closed and densely defined operator $A : D(A) \subset \H \rightarrow \H.$ As a result, we seek to connect these two formulations so that Colbrook's algorithm can be applied in the variational setting. To do so, we ask how the operator $A$ required by Colbrook's algorithm can be recovered from $L$ and $M.$
 
 In the case of the Dirichlet Laplacian,  the strong operator $A$ in \eqref{strong L} can be recovered from $L$ in \eqref{weak L} 
-through setting $A = M^{-1}L.$ Since $M^{-1}$ is only defined on $R(M),$ we can only write $A = M^{-1}L$ for the $u \in V$ such that $Lu \in R(M).$ In fact, for the Dirichlet Laplacian this subspace is precisely $D(A)$ \eqref{strong L}. Thus, we can write $A = M^{-1}L$ on $D(A).$
+through setting $A = M^{-1}L.$ Since $M^{-1}$ is only defined on $R(M),$ we can only write $A = M^{-1}L$ for the $u \in V$ such that $Lu \in R(M).$ For the Dirichlet Laplacian, this subspace is precisely $D(A)$ in \eqref{strong L}. Thus, we can write $A = M^{-1}L$ on $D(A).$
 
 % However, this is not always possible because $M^{-1}$ is only defined on the range of $M,$ while $L$ maps into $V^*.$ Thus, we can only take $A = M^{-1}L$ on the subspace of $V$ for which $Lu \in R(M).$ Fortunately, this subspace is precisely $D(A)$ in \eqref{strong L}. Thus, we can write $A = M^{-1} L$ on $D(A).$
 
-However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not always be invertible\footnote{For example, consider the mixed formulation of the Dirichlet Laplace eigenproblem in \cite[Section~4.5]{Boffi}.}.
+However, this construction of $A$ from $M^{-1}L$ is not always possible because the general mass operator $M : \H \rightarrow V^*$ need not always be invertible\footnote{An example is the mixed formulation of the Dirichlet Laplace eigenproblem in~\cite[Section~4.5]{Boffi}.}.
 As a result, we restrict ourselves to the setting in which $L : V \rightarrow \H^*,$ rather than $L : V \rightarrow V^*\!.$ In this restricted setting, we take $M$ to be the Riesz map $M : \H \rightarrow \H^*,$ defined by
 \begin{equation} \label{M form}
     \langle Mu, v\rangle_{\H^*, \H} = (u, v)_{\H} \qquad \Forall u, v \in \H.
 \end{equation}
-Being a Riesz map, we can define $M^{-1} : \H^* \rightarrow \H.$ With this, we can construct the operator $A \defeq M^{-1} L : D(A) \subset \H \rightarrow \H$ and its domain $D(A) \defeq V$ so that $A$ fits within the framework of Colbrook's algorithm. 
-In doing so, we also have that 
+Being a Riesz map, we can define $M^{-1} : \H^* \rightarrow \H.$ With this, we can construct the operator $A \defeq M^{-1} L : D(A) \subset \H \rightarrow \H$ with the domain $D(A) = V$ so that $A$ fits within the framework of Colbrook's algorithm. 
+In doing so, we have that 
 % \begin{equation} \label{L-zM}
 %     L-zM = M(A-zI),
 % \end{equation}
@@ -1123,7 +1123,7 @@ With this result, for any $u \in V \setminus\{0\},$ the Rayleigh quotient in \eq
     %&\defeq \frac{a_z^{(1)}(f, f)}{m(f, f)}.
 \end{align}
 
-To obtain an analogous formulation of the Rayleigh quotient in \eqref{R2},  we set $W \defeq D(A^*)$ and construct the operator $S: W \rightarrow \H^*$ from $S = MA^*.$
+To obtain an analogous formulation of the Rayleigh quotient in \eqref{R2},  we set $W \defeq D(A^*)$ and construct the operator $S: W \rightarrow \H^*$ from $S \defeq MA^*.$
 % consider the operator $S: W \rightarrow \H^*,$ and construct $A^* = M^{-1}S.$
 Since 
 \begin{equation}
@@ -1174,9 +1174,9 @@ Thus, $\mu_h^{(2)}(z)$ can be obtained from the smallest eigenvalue of the follo
 \end{equation}
 
 The advantage of formulating our approximations in this way is that the sesquilinear representations of 
-$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, v_h),$ and $m(u_h, v_h)$ can be assembled directly in Firedrake. As a result, we can employ Firedrake and SLEPc to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
+$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, w_h),$ $m(u_h, v_h),$ and $m(u_h, w_h),$ can be assembled directly in Firedrake. As a result, we can employ Firedrake and SLEPc to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
 \begin{equation} \label{approx phi}
-    \Phi_h(z, A) = \sqrt{ \min \left\{ \mu_h^{(1)}(z), \mu_h^{(2)}(z) \right\} }.
+    \Phi_h(z, A) \defeq \sqrt{ \min \left\{ \mu_h^{(1)}(z), \mu_h^{(2)}(z) \right\} }.
 \end{equation}
 Here, we use the subscript $h,$ rather than Colbrook's index $n$ in \Cref{old pseudospec}, to emphasise that the approximation of $\gamma(z, A)$ is obtained using the finite element method. Thus, $\Phi_h(z, A)$ is to be viewed as the finite element realisation of Colbrook's $\Phi_n(z, A).$ In this new setting, the limit $h \rightarrow 0$ plays the role of $n \rightarrow \infty$ in Colbrook's abstract formulation.
 Following this line of thinking, \Cref{pseudospec} reformulates Colbrook's algorithm, \Cref{old pseudospec}, in our finite element setting.
@@ -1471,9 +1471,9 @@ We believe that this limitation ultimately arises from Colbrook's starting abstr
 
 \subsection{Application to the Maxwell Eigenproblem} \label{Matt Max}
 
-To demonstrate the success of Colbrook's algorithm, we apply it to the Maxwell eigenproblem \eqref{Max} of \Cref{Maxwell Sect}. To do so, we consider the closed and densely defined operator $A: D(A) \subset \H \rightarrow \H,$ where
+To demonstrate the success of Colbrook's algorithm, we apply it to the Maxwell eigenproblem \eqref{Max} of \Cref{Maxwell Sect}. To do so, we consider the closed and densely defined linear operator $A: D(A) \subset \H \rightarrow \H,$ where
 \begin{equation} \label{max op}
-    A(\mathbf{E}, H) = (i \brot H, - i \rot \mathbf{E}).
+    A(\mathbf{E}, H) \defeq (i \brot H, - i \rot \mathbf{E}).
 \end{equation}
 Here, $\Omega = (0, \pi)^2,$ $\H = L^2(\Omega)^2 \times L^2(\Omega),$ and $D(A) = \mathbf{H}_0(\rot ; \Omega) \times \text{H}(\brot;\Omega).$
 
@@ -1487,7 +1487,8 @@ To formulate the auxiliary eigenproblem used to compute $\Phi_h(z, A)$ at each $
     Q_{z, A}(u, v) \defeq  ((A-zI) u, (A-zI) v)_{\H}.
 \end{align}
 %&Q_{z, A}(u, v) \defeq Q_{z, A}^{(1)}(z,A)(u,v) = Q_{z, A}^{(2)}(z,A)(u, v) = ((A-zI) u, (A-zI) v)_{\H}.
-With this, 
+With this,
+% $\gamma^2(z, A) = \operatorname{dist}^2(z, \Sp{A}) = \inf_{u \in D(A)\setminus \{0\}} \frac{Q_{z, A}(u, u)}{m(u, u)}.$
 \begin{equation}
     \gamma^2(z, A) = \operatorname{dist}^2(z, \Sp{A}) = \inf_{u \in D(A)\setminus \{0\}} \frac{Q_{z, A}(u, u)}{m(u, u)}.
 \end{equation}
@@ -1519,13 +1520,14 @@ For each $z \in \operatorname{Grid},$ we assemble \eqref{max aux} in Firedrake a
 \Cref{FirstMatt} shows that \Cref{pseudospec} does not approximate the spurious spectral value $\sqrt{6} \approx 2.45.$ Thus, despite the same choice of linear Lagrange elements, 
 \Cref{pseudospec} avoids the spectral pollution exhibited by the discretise-then-solve approach in \Cref{Maxwell Sect}. However, notice that for coarse discretisations, the computed bound on the distance to the spectrum is poor, and refinement is required to increase the accuracy of the bound. 
 
-Extensive uniform refinement at each $z \in \operatorname{Grid}$ can make \Cref{pseudospec} computationally expensive. In an effort to efficiently compute accurate bounds on the distance to the spectrum, we propose coupling \Cref{pseudospec} with an adaptive mesh refinement technique driven by the DWR method 
+Extensive uniform refinement at each $z \in \operatorname{Grid}$ can make \Cref{pseudospec} computationally expensive. In an effort to 
+efficiently compute accurate bounds on the distance to the spectrum, we propose coupling \Cref{pseudospec} with an adaptive mesh refinement technique driven by the DWR method 
 % \pef{Again, stop repeatedly defining the acronym} 
 for symmetric eigenproblems. We discuss this next.
 % that focuses the computational effort of solving the auxiliary eigenproblems in regions of the domain where the approximation of $\mu_h(z)$ is poor. 
 
 
-\section{The DWR Method for Symmetric Eigenproblems} \label{DWR sect}
+\section[The DWR Method for Symmetric Eigenproblems]{The DWR Method for Symmetric\\ Eigenproblems} \label{DWR sect}
 
 In this section, we provide an overview of the DWR method that we apply to the auxiliary eigenproblems in \Cref{pseudospec}. In the first subsection, we discuss the role of \textit{a posteriori} error estimates in constructing adaptive finite element methods. In the subsections that follow, we introduce the DWR error estimate for symmetric eigenproblems and discuss its localisation for adaptive mesh refinement.
 
@@ -1540,17 +1542,17 @@ Since the finite element methodology provides an approximation to the solution o
 
 % \Maggie{Changed `used adaptively to determine' in the last sentence because it did not make sense to me. Also changed `$V_h,$ that aims to be' because the space doesn't aim?}
 
-This idea gives rise to adaptive finite-element methods (AFEMs), which are techniques for choosing a finite-dimensional space, $V_h,$ that is optimal with respect to computational complexity and accuracy. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to adaptive mesh refinement techniques (AMRs) \cite[Section~8.6]{Scott}.
+This idea gives rise to \textit{adaptive finite element methods}, which are techniques for choosing a finite-dimensional space, $V_h,$ that is optimal with respect to computational complexity and accuracy. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to \textit{adaptive mesh refinement techniques} \cite[Section~8.6]{Scott}.
 These adaptive mesh refinement techniques are particularly useful when the error is concentrated in certain regions of the domain\footnote{For example, the error may be concentrated in regions where a solution exhibits singularities.}. In this case, choosing a fine uniform mesh may be a waste of computational effort. In contrast, adaptive mesh techniques aim to refine the mesh only where necessary, making them useful tools for improving the accuracy and efficiency of computed approximations.
 
 
 
-When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived quantity of interest, rather than in the solution field over the whole domain \cite{Bangerth, Becker, Heuveline}. 
+When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived \textit{quantity of interest}, rather than in the solution field over the whole domain \cite{Giles97, Becker, ActaGiles}. 
 % \pef{Cite Mike's papers here, Becker \& Rannacher \dots Joe's thesis is not the canonical reference for this claim} 
 For example, when solving a problem in fluid dynamics, we may be interested in the vorticity of an eddy, rather than the velocity field \cite[Section~8.6]{Scott}. In the case of \Cref{pseudospec}, our quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem.
 % we are interested in the error in the computed eigenvalues of the auxiliary eigenproblems, rather than in the computed eigenfunctions. 
 
-Following this line of thinking, it may be more beneficial to compute and control error estimates in a prescribed quantity of interest rather than in the solution field itself. This idea gives rise to the DWR method, which provides \textit{a posteriori} error estimates for prescribed quantities of interest.
+Following this line of thinking, it may be more beneficial to compute and control error estimates in a prescribed quantity of interest rather than in the solution field itself. This idea gives rise to the DWR method, which provides \textit{a posteriori} error estimates for prescribed quantities of interest \cite{Becker, Bangerth}.
 
 
 % Classical \textit{a posteriori} error analysis consists of estimating the error of the solution field in the $L^2$ or energy norms \cite{Becker}. In contrast, the Dual-Weighted Residual (DWR) method provides error estimates for prescribed quantities of interest. Thus, to efficiently resolve the auxiliary eigenproblems in Algorithm \ref{pseudospec}, we use the DWR method to drive adaptive mesh refinement based on the estimated error in the computed eigenvalues. 
@@ -1570,7 +1572,7 @@ Let $u$ denote the solution of the underlying infinite-dimensional problem, ofte
 \end{equation}
 
  
-To estimate this error, the DWR method embeds the given problem into the framework of optimal control \cite{Becker}. To do so, the method introduces an associated \textit{dual problem} that depends on the chosen quantity of interest. Using the solution of the dual problem, the method provides an error estimate in the form of a primal residual weighted by a `sensitivity parameter' obtained from the dual solution.  In this way, the dual solution is used to describe sensitivity of the quantity of interest to errors in the computed primal solution. This allows for mesh adaptation driven by the error in the computed quantity of interest rather than by the error in the computed primal solution \cite{Becker}.
+To estimate this error, the DWR method embeds the given problem into the framework of optimal control \cite{Becker}. To do so, the method introduces an associated \textit{dual problem} that depends on the chosen quantity of interest. Using the solution of the dual problem, the method provides an error estimate in the form of a primal residual weighted by a `sensitivity parameter' obtained from the dual solution.  In this way, the dual solution is used to describe sensitivity of the quantity of interest to errors in the computed primal solution. This allows for mesh adaptation driven by the error in the computed quantity of interest rather than by the error in the computed primal solution \cite{Giles97, Giles1998Adjoint, Becker, Bangerth}.
 
 
 % In this way, the dual solution is used to describe sensitivity of the quantity of interest to errors in the computed primal solution, thereby allowing for mesh adaptation driven by the error in the computed quantity of interest rather than by the error in the computed primal solution \cite{Becker}.
@@ -1616,7 +1618,7 @@ As usual, we prefer the variational formulation
 where $a(\cdot, \cdot)$ and $m(\cdot, \cdot)$ are the sesquilinear forms induced by $\mathcal{A}$ and $\mathcal{M},$ respectively.
 Furthermore, all eigenfunctions that satisfy \eqref{var eig} are assumed to be normalised by $m(u, u) = 1.$
 
-To discretise this eigenproblem, we introduce the finite-dimensional subspace $V_h \subset V$ and seek $\lambda_h \in \mathbb{C}$ and nonzero $u_h \in V_h$ that satisfy
+To discretise this eigenproblem, we introduce the finite-dimensional subspace \mbox{$V_h \subset V$} and seek $\lambda_h \in \mathbb{C}$ and nonzero $u_h \in V_h$ that satisfy
 \begin{equation} \label{gal eig}
     a(u_h, v_h) = \lambda_h m(u_h, v_h) \qquad \Forall v_h \in V_h,
 \end{equation}
@@ -1683,7 +1685,7 @@ which yields the approximate local error indicators
 \end{equation}
 These local error indicators can be used to indicate the regions of the mesh that contribute the most to the error in the desired quantity of interest. As a result, they can be used to drive an adaptive mesh refinement technique based on the error in the desired quantity of interest. 
 
-Rognes and Logg's automated localisation procedure was implemented in Firedrake as a part of Joseph Flood's Master's thesis \cite{joe}. This implementation has since been further developed by Patrick Farrell and Pablo Brubeck \cite{pablo}. For this project, we build upon the existing implementation and adapt it to the auxiliary eigenproblems arising in \Cref{pseudospec}. We therefore omit the details of the local problems used to obtain \eqref{local eta} and refer the reader to \cite{joe, logg, pablo} for further details on the localisation procedure and its implementation.
+Rognes and Logg's automated localisation procedure was implemented in Firedrake as a part of Joseph Flood's Master's thesis \cite{joe}. This implementation has since been further developed by Patrick Farrell and Pablo Brubeck \cite{pablo}. In this dissertation, we build upon the existing implementation and adapt it to the auxiliary eigenproblems arising in \Cref{pseudospec}. We therefore omit the details of the local problems used to obtain \eqref{local eta} and refer the reader to \cite{joe, logg, pablo} for further details on the localisation procedure and its implementation.
 
 
 \subsection{Approximating the Exact Errors}
@@ -1699,7 +1701,7 @@ Two common choices for $\varphi_h$ are $\varphi_h \defeq u_h$ and $\varphi_h  \d
 
 To compute either $u-u_h$ or $u - I_h u$, we need the eigenfunction $u$ of the infinite-dimensional problem \eqref{eig prob}. In practice, we do not have access to $u.$ If we did, there would be no need to approximate it. Thus, for the practical computation of \eqref{DWR} and \eqref{local eta}, we have to approximate the terms involving $u.$ In particular, we have to approximate $e \defeq u-u_h$ in the remainder term \eqref{remain}, as well as $e_h \defeq u - \varphi_h$ in \eqref{DWR} and \eqref{local eta}. 
 
-There are many strategies for approximating $e$ and $e_h$, each of which is discussed in \cite{Bangerth, Heuveline}. The most common approaches approximate $u$ in an `enriched' finite element space, $V_h^+,$  that is obtained by increasing the degree of the piecewise polynomial basis used to construct $V_h.$ To obtain an `enriched' approximation $u_h^+$ to $u$ in $V_h^+,$ there are two common approaches. We discuss both in turn:
+There are many strategies for approximating $e$ and $e_h$, each of which is discussed in \cite{Becker, Bangerth, Heuveline}. The most common approaches approximate $u$ in an \textit{enriched finite element space}, $V_h^+,$  that is obtained by increasing the degree of the piecewise polynomial basis used to construct $V_h.$ To obtain an enriched approximation $u_h^+$ to $u$ in $V_h^+,$ there are two common approaches. We discuss both in turn:
 \begin{enumerate}
     \item \textbf{Global Higher-Order Approximation.}
     The simplest approach is to solve for $u_h^+$ by solving \eqref{gal eig} with the choice of $V_h^+$ instead of $V_h.$ An advantage of this approach is that it is easy to implement in Firedrake, which takes care of the finite element assembly, solvers, and interpolation required for $\varphi_h = I_h u_h^+.$ A disadvantage is the cost of re-solving \eqref{gal eig} in a more expensive space. 
