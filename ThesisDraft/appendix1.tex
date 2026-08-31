@@ -8,8 +8,12 @@ Define the left and right shift operators on $\ell^2(\mathbb{N})$ as
 \end{equation}
 respectively. 
 
-Notice that $L^* = R,$ and that their operator norms satisfy $\| R \|_{\mathcal{B}(\ell^2(\mathbb{N}))} = \|L\|_{\mathcal{B}(\ell^2(\mathbb{N}))} = 1.$
-When an operator $A \in \mathcal{B}(\H)$, we have that 
+Notice that $L^* = R,$ and that their operator norms satisfy 
+\begin{equation*}
+    \| R \|_{\mathcal{B}(\ell^2(\mathbb{N}))} = \|L\|_{\mathcal{B}(\ell^2(\mathbb{N}))} = 1.
+\end{equation*}
+% $\| R \|_{\mathcal{B}(\ell^2(\mathbb{N}))} = \|L\|_{\mathcal{B}(\ell^2(\mathbb{N}))} = 1.$
+For $A \in \mathcal{B}(\H)$, we have that
  $\operatorname{Sp}(A) \subset \{ z \in \mathbb{C} \mid |z| \le \|A\|_{\mathcal{B}(\H)} \}$ \cite[Theorem~7.3-4]{krey}.
 Thus,
 \begin{equation}
@@ -33,7 +37,7 @@ Thus,
  \end{equation}
 
 
-Since the spectrum of a bounded operator is closed, the closed disk must also be in $\operatorname{Sp}(L)$ \cite[Theorem~7.3-2]{krey}. Thus,  $ \operatorname{Sp}(L) \supset \{ z \in \mathbb{C} \mid |z| \le 1 \},$  $ \operatorname{Sp}(L) \subset \{ z \in \mathbb{C} \mid |z| \le 1 \}$ and so
+Since the spectrum of a bounded operator is closed, the closed disk must also be in $\operatorname{Sp}(L)$ \cite[Theorem~7.3-2]{krey}. Thus,  $ \operatorname{Sp}(L) \supset \{ z \in \mathbb{C} \mid |z| \le 1 \},$  $ \operatorname{Sp}(L) \subset \{ z \in \mathbb{C} \mid |z| \le 1 \},$ and so
  $$ \operatorname{Sp}(L) = \{ z \in \mathbb{C} \mid |z| \le 1 \}.$$
 
 
@@ -49,7 +53,7 @@ Since the spectrum of a bounded operator is closed, the closed disk must also be
     % $$ \lambda x_1 = 0, \,\, \lambda x_2 = x_1, \,\, .\dots$$
    The only solution is $x=0,$ which cannot be an eigenvector. Thus, $R$ has no eigenvalues.
 
-   Recall that when an operator $A$ is closed and densely defined, $\operatorname{Sp}(A^*) = \{\overline{z} \mid z \in \operatorname{Sp}(A) \}$ \cite{Matt}. Here, $L$ and $R$ are bounded operators on all of $\ell^2(\mathbb{N})$ and $L^* = R$. Thus, 
+   Recall that when an operator $A$ is closed and densely defined, $\operatorname{Sp}(A^*) = \{\overline{z} \mid z \in \operatorname{Sp}(A) \}$ \cite[Appendix~A.3]{Matt}. Here, $L$ and $R$ are bounded operators on all of $\ell^2(\mathbb{N})$ and $L^* = R$. Thus, 
    \begin{equation}
        \operatorname{Sp}(R) = \{\overline{z} \mid z \in \operatorname{Sp}(L) \} = \{ z \in \mathbb{C} \mid |z| \le 1 \}.
    \end{equation}

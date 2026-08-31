@@ -1,10 +1,10 @@
 \chapter{Choosing the Grid in Section \ref{DWRMatt}}\label{AppendMax}
 
-In this appendix, we explore the effect of restricting $\operatorname{Grid} \subset \mathbb{C}$ to complex numbers $z$ satisfying $\operatorname{Re}(z) \ge 2.$ We consider this restriction when applying our adaptive mesh refinement technique of \Cref{AMR} to the auxiliary eigenproblems that arise when applying \Cref{pseudospec} to the Maxwell operator \eqref{max op}. 
+In this appendix, we explore the effect of restricting $\operatorname{Grid} \subset \mathbb{C}$ to complex numbers $z$ satisfying $\operatorname{Re}(z) \ge 2.$ We consider this restriction when applying our adaptive mesh refinement technique of \Cref{AMR} to the auxiliary eigenproblems that arise when applying \Cref{pseudospec} to the Maxwell operator in \eqref{max op}. 
 
 % In this appendix, we investigate the effect of restricting Grid⊂C to points z satisfying ℜ(z)≥2. We consider this restriction when applying our adaptive mesh refinement technique to the auxiliary eigenproblems arising in Colbrook's algorithm, Algorithm \operatorname{Re}f{pseudospec}, for the Maxwell operator \eqref{max op}.
 
-Let $A$ denote the self-adjoint Maxwell operator given by \eqref{max op}. Furthermore, let $F(z) \defeq (A-zI)^*(A-zI) = (A-\overline{z}I)(A-zI)$ denote the folded operator for Colbrook's algorithm. Consider $u \in N(A),$ where $N(A)$ denotes the nullspace of $A.$ Applying $F(z)$ to $u$ yields 
+Let $A$ denote the self-adjoint Maxwell operator given by \eqref{max op}. Furthermore, let $F(z) \defeq (A-zI)^*(A-zI) = (A-\overline{z}I)(A-zI)$ denote the folded operator considered by Colbrook's algorithm, \Cref{old pseudospec}. Consider $u \in N(A),$ where $N(A)$ denotes the nullspace of $A.$ Applying $F(z)$ to $u$ yields 
 \begin{align}
     F(z) u &= (A-\overline{z}I)(A-zI) u = (A-\overline{z}I)(-zu) = |z|^2 u.
 \end{align}
@@ -35,4 +35,4 @@ Since $\lambda_j > 0,$ the desired condition is
 \begin{equation}
     x > \lambda_j / 2.
 \end{equation}
-Thus, if there exists a positive eigenvalue $\lambda_j$ of $A$ such that $\operatorname{Re}(z) > \lambda_j / 2,$ then $|z|^2$ will not be the smallest eigenvalue of the folded operator. The smallest nonzero eigenvalue of $A$ is $\lambda = 1.$ So, as long as we can guarantee that for every test point $z,$ $\operatorname{Re}(z) > 1/2,$ then $|z|^2$ will not be at the bottom of the spectrum of $F(z).$ Following this line of thought, for the numerical experiments of this dissertation, we considered test points $z$ satisfying $\operatorname{Re}(z) \ge 2.$ In this way, we avoid computing the infinite-multiplicity eigenvalue $|z|^2$ at the bottom of the spectrum. 
+Thus, if there exists a positive eigenvalue $\lambda_j$ of $A$ such that $\operatorname{Re}(z) > \lambda_j / 2,$ then $|z|^2$ will not be the smallest eigenvalue of the folded operator. The smallest positive eigenvalue of $A$ is $\lambda = 1.$ So, as long as we can guarantee that for every test point $z,$ $\operatorname{Re}(z) > 1/2,$ then $|z|^2$ will not be at the bottom of the spectrum of $F(z).$ Following this line of thought, for the numerical experiments of \Cref{DWRMatt} and \Cref{maxwell results}, we considered test points $z$ satisfying $\operatorname{Re}(z) \ge 2.$ In this way, we avoid computing the infinite-multiplicity eigenvalue $|z|^2$ at the bottom of the spectrum. 
