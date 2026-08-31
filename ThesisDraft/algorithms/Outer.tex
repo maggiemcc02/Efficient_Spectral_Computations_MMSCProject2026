@@ -45,11 +45,11 @@ $\epsilon>0$, outer tolerance $h_{\mathrm{tol}}>0$, maximum number of degrees of
             %         \right\}
             %     }.$
 
-            \State Compute $R$ as in \eqref{R}.
+            \State Compute $R_K$ as in \eqref{R}.
 
-            \If{$\Phi_h(z_K,A)+R<\epsilon$}
+            \If{$\Phi_h(z_K,A)+R_K<\epsilon$}
                 \State Classify $K$ as \textsc{inside}.
-            \ElsIf{$\Phi_h(z_K,A)-R>\epsilon$}
+            \ElsIf{$\Phi_h(z_K,A)-R_K>\epsilon$}
                 \State Classify $K$ as \textsc{outside}.
             \ElsIf{$h_K<h_{\mathrm{tol}}$}
                 \State Classify $K$ as \textsc{contour}.

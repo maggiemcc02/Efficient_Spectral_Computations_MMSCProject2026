@@ -22,7 +22,7 @@
   organization = {Imperial College London and University of Oxford and Baylor University and University of Washington},
   edition      = {First},
   year         = {2023},
-  month        = {5},
+  month        = may,
   doi          = {10.25561/104839},
 }
 
@@ -96,7 +96,7 @@ doi     = {10.1023/A:1014291224961}
   title     = {Perturbation Theory for Linear Operators},
   series    = {Classics in Mathematics},
   volume    = {132},
-  edition   = {2},
+  edition   = {Second},
   publisher = {Springer},
   address   = {Berlin, Heidelberg},
   year      = {1995},
@@ -109,14 +109,14 @@ doi     = {10.1023/A:1014291224961}
   author = {{Netgen/NGSolve}},
   title  = {Adaptive Mesh Refinement},
   year   = {2026},
-  url    = {https://docu.ngsolve.org/latest/whetting_the_appetite/adaptive.html},
+  howpublished = {\url{https://docu.ngsolve.org/latest/whetting_the_appetite/adaptive.html}},
   note   = {Accessed 13 August 2026}
 }
 
 
 @article{Schoberl1997,
   author  = {Sch{\"o}berl, J.},
-  title   = {NETGEN: An Advancing Front 2{D}/3{D}-Mesh Generator Based on Abstract Rules},
+  title   = {{NETGEN}: An Advancing Front 2{D}/3{D}-Mesh Generator Based on Abstract Rules},
   journal = {Computing and Visualization in Science},
   volume  = {1},
   pages   = {41--52},
@@ -205,14 +205,22 @@ eprint = {
     year         = {2026},
     howpublished = {\url{https://github.com/firedrakeproject/firedrake/tree/7b7b7799f0a6dc13a9f056616d2c28aa6b4deb45}},
     note         = {Branch \nolinkurl{pbrubeck/goal-adaptive-solver}.
-                    Commit \nolinkurl{7b7b7799f0a6dc13a9f056616d2c28aa6b4deb45}},
+                    Commit \nolinkurl{7b7b7799f0a6dc13a9f056616d2c28aa6b4deb45}. Accessed 31 August 2026},
 }
 
-@misc{PseudospectraJL,
+@misc{OldPseudospectraJL,
     title        = {{Pseudospectra.jl}},
     year         = {2026},
     howpublished = {\url{https://ralphas.github.io/Pseudospectra.jl/dev/}},
     note         = {Documentation for the \texttt{Pseudospectra.jl} Julia package},
+}
+
+@misc{PseudospectraJL,
+    title        = {{Pseudospectra.jl}},
+    key          = {Pseudospectra.jl},
+    year         = {2026},
+    howpublished = {\url{https://ralphas.github.io/Pseudospectra.jl/stable/}},
+    note         = {Documentation for the \texttt{Pseudospectra.jl} Julia package. Accessed 31 August 2026},
 }
 
 @article{logg,
@@ -250,14 +258,22 @@ doi     = {10.1137/10081962X},
     year        = {1997},
 }
 
-@incollection{Giles1998Adjoint,
+@incollection{oldGiles1998Adjoint,
     author    = {Giles, M. B.},
-    title     = {On adjoint equations for error analysis and optimal grid adaptation},
+    title     = {On adjoint equations for error analysis and optimal grid adaptation in {CFD}},
     booktitle = {Frontiers of Computational Fluid Dynamics 1998},
     editor    = {Caughey, D. A. and Hafez, M. M.},
     pages     = {155--170},
     publisher = {World Scientific},
     year      = {1998},
+}
+@techreport{Giles1997Adjoint,
+    author      = {Giles, M. B.},
+    title       = {On Adjoint Equations for Error Analysis and Optimal Grid Adaptation in {CFD}},
+    institution = {Oxford University Computing Laboratory},
+    number      = {NA-97/11},
+    year        = {1997},
+    url         = {https://people.maths.ox.ac.uk/~gilesm/files/NA-97-11.pdf},
 }
 
 
@@ -334,7 +350,7 @@ doi     = {10.1017/S0962492901000010},
 
 @article{Oden,
 abstract = {This monograph presents a summary account of the subject of a posteriori error estimation for finite element approximations of problems in mechanics. The study primarily focuses on methods for linear elliptic boundary value problems. However, error estimation for unsymmetrical systems, nonlinear problems, including the Navier-Stokes equations, and indefinite problems, such as represented by the Stokes problem are included. The main thrust is to obtain error estimators for the error measured in the energy norm, but techniques for other norms are also discussed.},
-author = {Ainsworth, M. and Oden, J.},
+author = {Ainsworth, M. and Oden, J. T.},
 address = {Amsterdam},
 copyright = {1997},
 issn = {0045-7825},
@@ -351,7 +367,7 @@ year = {1997},
 
 
 @mastersthesis{joe,
-  author = {Flood, J.},
+  author = {Flood, J. T.},
   title  = {Automating Goal-Based Adaptive Refinement for Partial Differential Equations and Eigenvalue Problems},
   school = {University of Oxford},
   year   = {2025},
@@ -559,7 +575,7 @@ year = {2005},
   url     = {https://people.maths.ox.ac.uk/trefethen/dec11.pdf}
 }
 
-@misc{GriffithObservatory1,
+@misc{oldGriffithObservatory1,
   author       = {{Griffith Observatory}},
   title        = {Solar Absorption Spectrum, 390--540 Nanometres},
   year         = {2021},
@@ -569,7 +585,25 @@ year = {2005},
   note         = {From the exhibit ``Fingerprints of Elements in Sunlight.'' Accessed 2 August 2026}
 }
 
+@misc{GriffithObservatory1,
+  author       = {{Griffith Observatory}},
+  title        = {Solar Absorption Spectrum, 390--540 Nanometres},
+  year         = {2021},
+  month        = mar,
+  howpublished = {Digital image, \url{https://griffithobservatory.lacity.gov/wp-content/uploads/2021/03/310_WR_SP_04-1.jpg}},
+  note         = {From the exhibit ``Fingerprints of Elements in Sunlight.'' Accessed 2 August 2026}
+}
+
 @misc{GriffithObservatory2,
+  author       = {{Griffith Observatory}},
+  title        = {Solar Absorption Spectrum, 540--680 Nanometres},
+  year         = {2021},
+  month        = mar,
+  howpublished = {Digital image, \url{https://griffithobservatory.lacity.gov/wp-content/uploads/2021/03/310_WR_SP_04-2.jpg}},
+  note         = {From the exhibit ``Fingerprints of Elements in Sunlight.'' Accessed 2 August 2026}
+}
+
+@misc{oldGriffithObservatory2,
   author       = {{Griffith Observatory}},
   title        = {Solar Absorption Spectrum, 540--680 Nanometres},
   year         = {2021},

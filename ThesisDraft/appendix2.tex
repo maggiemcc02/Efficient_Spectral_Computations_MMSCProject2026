@@ -10,7 +10,7 @@ Let $A$ denote the self-adjoint Maxwell operator given by \eqref{max op}. Furthe
 \end{align}
 Since $N(A)$ is infinite-dimensional, $|z|^2$ is an eigenvalue of the folded operator with infinite multiplicity. 
 
-More generally, if $\lambda_j$ is a positive eigenvalue of $A$ with corresponding eigenfunction $u_j,$ then,
+More generally, if $\lambda_j$ is a positive eigenvalue of $A$ with corresponding eigenfunction $u_j,$ then
 \begin{align}
     F(z) u_j &= (A-\overline{z}I)(A-zI) u_j = |\lambda_j - z|^2 u_j.
 \end{align}
@@ -35,4 +35,4 @@ Since $\lambda_j > 0,$ the desired condition is
 \begin{equation}
     x > \lambda_j / 2.
 \end{equation}
-Thus, if there exists a positive eigenvalue $\lambda_j$ of $A$ such that $\operatorname{Re}(z) > \lambda_j / 2,$ then $|z|^2$ will not be the smallest eigenvalue of the folded operator. The smallest positive eigenvalue of $A$ is $\lambda = 1.$ So, as long as we can guarantee that for every test point $z,$ $\operatorname{Re}(z) > 1/2,$ then $|z|^2$ will not be at the bottom of the spectrum of $F(z).$ Following this line of thought, for the numerical experiments of \Cref{DWRMatt} and \Cref{maxwell results}, we considered test points $z$ satisfying $\operatorname{Re}(z) \ge 2.$ In this way, we avoid computing the infinite-multiplicity eigenvalue $|z|^2$ at the bottom of the spectrum. 
+Thus, if there exists a positive eigenvalue $\lambda_j$ of $A$ such that $\operatorname{Re}(z) > \lambda_j / 2,$ then $|z|^2$ will not be the smallest eigenvalue of the folded operator. The smallest positive eigenvalue of $A$ is $\lambda = 1.$ So, as long as we can guarantee that for every test point $z,$ $\operatorname{Re}(z) > 1/2,$ $|z|^2$ will not be at the bottom of the spectrum of $F(z).$ Following this line of thought, for the numerical experiments of \Cref{DWRMatt} and \Cref{maxwell results}, we considered test points $z$ satisfying $\operatorname{Re}(z) \ge 2.$ In this way, we avoid computing the infinite-multiplicity eigenvalue $|z|^2$ at the bottom of the spectrum. 
