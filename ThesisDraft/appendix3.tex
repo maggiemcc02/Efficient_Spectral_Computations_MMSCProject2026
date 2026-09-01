@@ -36,7 +36,7 @@ Plugging in $z = x +iy$ and expanding, we obtain
 %     B(z) = B(x) + y^2 M.
 % \end{equation}
 
-Next we consider the quadratic form 
+Next, we consider the quadratic form 
 \begin{equation}
     Q_{z, A}(u, v) \defeq ((A-zI)u, (A-zI)v)_\H,
 \end{equation}
@@ -66,15 +66,15 @@ Then, taking the infimum over unit vectors, we can write \eqref{var gamma} as
 
 
 Considering an appropriate finite element space $V_h,$ we have that
-\begin{align}
+\begin{align} \label{C10}
     Q_{z, A}(u_h, v_h) &= Q_{x, A}(u_h, v_h) + y^2 m(u_h, v_h).
 \end{align}
-Thus, to seek $\lambda_h(z)$ and nonzero $u_h(z) \in V_h$ to satisfy
+Making the $z$-dependence explicit, the auxiliary eigenproblem, \eqref{max aux}, seeks $\lambda_h(z)$ and nonzero $u_h(z) \in V_h$ that satisfy
 \begin{equation} \label{zval}
-    Q_{z, A}(u_h(z), v_h) = \lambda_h(z) m(u_h(z), v_h), 
+    Q_{z, A}(u_h(z), v_h) = \lambda_h(z) m(u_h(z), v_h).
 \end{equation}
-for all $v_h \in V_h,$
-we can instead seek $\lambda_h(x)$ and nonzero $u_h(x) \in V_h$ to satisfy
+for all $v_h \in V_h.$
+By \eqref{C10}, this is equivalent to seeking $\lambda_h(x)$ and nonzero $u_h(x) \in V_h$ that satisfy
 \begin{align} \label{xval}
     Q_{x, A}(u_h(x), v_h) &= (\lambda_h(z) - y^2) m(u_h(x), v_h) = \lambda_h(x) m(u_h(x), v_h), 
 \end{align}

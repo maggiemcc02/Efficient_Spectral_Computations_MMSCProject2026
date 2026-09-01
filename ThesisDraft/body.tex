@@ -516,7 +516,7 @@ In infinite dimensions, we consider a closed and densely defined linear operator
 \begin{equation}
     \Spe{A} = \operatorname{Cl}\left( \{ z \in \mathbb{C} : \|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} < \epsilon \}  \right).
 \end{equation}
-As before, we adopt the convention that if $z \in \Sp{A},$ then $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} = \infty$ \cite[Section~1.1.4]{Matt}.
+As before, we adopt the convention that if $z \in \Sp{A},$ then $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)}^{-1} = 0,$ or $\|(A-zI)^{-1}\|_{\mathcal{B}(\H)} = \infty$ \cite[Section~1.1.4]{Matt}.
 Similarly to \eqref{eps stab B}, the $\epsilon$-pseudospectrum of $A$ can be defined as follows:
 \begin{equation} 
     \Spe{A} = \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(\H), \|E\|_{\mathcal{B}(\H)} < \epsilon} \operatorname{Sp}(A+E) \right).
@@ -600,7 +600,7 @@ The common variational formulation of \eqref{3D u max} seeks $\omega \in \mathbb
 \end{equation}
 % \pef{Latex tip: \textbackslash forall $\Forall$ makes the spacing really ugly by default. Instead, use \textbackslash DeclareMathOperator\{Forall\}\{forall\} in your preamble and use \textbackslash Forall. The same is true for \textbackslash exists $\exists$.}
 where $(\cdot, \cdot)_{L^2(\Omega)}$ denotes the $L^2(\Omega)$ inner product, i.e., $(\mathbf{u}, \mathbf{v})_{L^2(\Omega)} = \int_{\Omega} \mathbf{u} \cdot \overline{\mathbf{v}} \, d \mathbf{x}.$
-Notice that for nonzero values of $\omega$, the eigenfunctions of \eqref{3D var max} are also solutions of \eqref{3D u max}. However,  at $\omega = 0,$ \eqref{3D var max} has an infinite-dimensional eigenspace that contains $\textbf{grad}(\mathbf{H}_0^1(\Omega))$\footnote{To be specific, the zero eigenspace consists of all vector fields $\mathbf{u} \in \mathbf{H}_0(\bcurl;\Omega)$ for which $\bcurl \, \mathbf{u} = 0.$ A subset of this space is the infinite-dimensional space  $\textbf{grad}(\mathbf{H}_0^1(\Omega))$.} \cite[Section~5]{Boffi}. 
+Notice that for nonzero values of $\omega$, the eigenfunctions of \eqref{3D var max} are also solutions of \eqref{3D u max}. However,  at $\omega = 0,$ \eqref{3D var max} has an infinite-dimensional eigenspace that contains $\textbf{grad}(\text{H}_0^1(\Omega))$\footnote{To be specific, the zero eigenspace consists of all vector fields $\mathbf{u} \in \mathbf{H}_0(\bcurl;\Omega)$ for which $\bcurl \, \mathbf{u} = 0.$ A subset of this space is the infinite-dimensional space  $\textbf{grad}(\text{H}_0^1(\Omega))$.} \cite[Section~5]{Boffi}. 
 
 
 % \footnote{The zero eigenspace may also contain the space of non-vanishing vector fields $\mathbf{u}$  with $\bcurl \, \mathbf{u} = \mathbf{0}, $  $\operatorname{div} \mathbf{u} = 0 \in \Omega,$ and $\mathbf{u} \times \mathbf{n} = 0$ \cite{Boffi}.}
@@ -633,9 +633,10 @@ Here, $\rot \, \mathbf{E} = \partial_x E_2 - \partial_y E_1,$ where $\mathbf{E} 
 Furthermore, we use $\mathbf{t}$ to denote the unit tangent to $\partial \Omega,$ $\text{H}(\brot; \Omega)$ to denote the space of functions in $L^2(\Omega)$ whose $\brot$ belongs to $L^2(\Omega)^2,$  $\mathbf{H}(\rot ; \Omega)$ to denote the space of functions in $L^2(\Omega)^2$ whose $\rot$ belongs to $L^2(\Omega)$, and $\mathbf{H}_0(\rot ; \Omega)$ to denote the elements of $\mathbf{H}(\rot ; \Omega)$ that have zero tangential trace on $\partial \Omega.$ 
 
 % and  $\mathbf{H}_0(\rot ; \Omega)$ to denote the elements of $\mathbf{H}(\rot ; \Omega)$ that have zero tangential trace on $\partial \Omega$ 
+% It has been shown that the nonzero values of $\omega^2$ in \eqref{Max} coincide with the nonzero eigenvalues of the Neumann Laplacian \cite[Section~5]{Boffi}. Consequently, the nonzero values of 
 
-It has been shown that the nonzero eigenvalues of $\omega^2$ in \eqref{Max} coincide with the nonzero eigenvalues of the Neumann Laplacian \cite[Section~5]{Boffi}. Consequently, the nonzero values of $\omega^2$ are
-% eigenvalues of \eqref{Max} are
+It has been shown that the squares of the nonzero eigenvalues of \eqref{Max} coincide with the nonzero eigenvalues of the Neumann Laplacian \cite[Section~5]{Boffi}. Consequently, the nonzero values of
+$\omega^2$ are
 \begin{equation}\label{exact eigs}
     \omega^2 = m^2+n^2,
     \qquad
@@ -864,6 +865,8 @@ Under \Cref{assump}, we have that
 \begin{equation}
     \Gamma_n^{\epsilon}(A) \subset \{z \in \mathbb{C} : \gamma(z, A) < \epsilon\} \subset \Spe{A}.
 \end{equation}
+% Furthermore, Colbrook shows that $\Gamma_n^{\epsilon}(A)$ converges to $\Spe{A}$ as the chosen $\operatorname{Grid}$ is extended to approximate all of $\mathbb{C}$ and as  $n \rightarrow \infty$ \cite[Theorem~3.2.3]{Matt}. 
+% \input{algorithms/pseudospec}
 Furthermore, Colbrook shows that the output of \Cref{old pseudospec}, i.e., $\Gamma_n^{\epsilon}(A),$ converges to $\Spe{A}$ as the chosen $\operatorname{Grid}$ is extended to approximate all of $\mathbb{C}$ and as  $n \rightarrow \infty$ \cite[Theorem~3.2.3]{Matt}. 
 \input{algorithms/pseudospec}
 
@@ -1177,7 +1180,7 @@ Thus, $\mu_h^{(2)}(z)$ can be obtained from the smallest eigenvalue of the follo
 \end{equation}
 
 The advantage of formulating our approximations in this way is that the sesquilinear representations of 
-$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, w_h),$ $m(u_h, v_h),$ and $m(u_h, w_h),$ can be assembled directly in Firedrake. As a result, we can employ Firedrake and SLEPc to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems, \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
+$Q_{z, A}^{(1)}(u_h, v_h),$  $Q_{z, A}^{(2)}(u_h, w_h),$ $m(u_h, v_h),$ and $m(u_h, w_h)$ can be assembled directly in Firedrake. As a result, we can employ Firedrake and SLEPc to compute the smallest eigenvalues, $\mu_h^{(1)}(z)$ and $\mu_h^{(2)}(z),$ of the auxiliary eigenproblems \eqref{aux1} and \eqref{aux2}, respectively. In doing so, our approximation of $\gamma(z, A)$ is
 \begin{equation} \label{approx phi}
     \Phi_h(z, A) \defeq \sqrt{ \min \left\{ \mu_h^{(1)}(z), \mu_h^{(2)}(z) \right\} }.
 \end{equation}
@@ -1186,7 +1189,7 @@ Following this line of thinking, \Cref{pseudospec} reformulates Colbrook's algor
 
 \input{algorithms/new_pseudospec}
 
-Before moving on, we emphasise that our variational formulation of Colbrook's algorithm applies to operators, $L: V \rightarrow \H^*$ and $S: W \rightarrow \H^*,$ rather than to the more general operators, $L: V \rightarrow V^*$ and $S: W\rightarrow W^*.$ This restriction allows us to work with the Riesz map $M : \H \rightarrow \H^*$ and its inverse $M^{-1}:\H^* \rightarrow \H.$  As a result, our formulation of Colbrook's algorithm is limited to densely defined operators on $\H$ whose variational realisations map into $\H^*.$ All of the operators considered in this work satisfy this requirement. However, many standard operators do not. For example, the weak Dirichlet Laplacian in \eqref{weak L} does not satisfy this requirement because it maps into $(\text{H}_0^1(\Omega))^*,$ whose elements need not belong to $(L^2(\Omega))^*.$ As a result, Colbrook's algorithm can be applied to the strong Dirichlet Laplacian only on the domain $D(A)$ in \eqref{strong L}, where the weak Dirichlet Laplacian maps into $(L^2(\Omega))^*.$ 
+Before moving on, we emphasise that our variational formulation of Colbrook's algorithm applies to the operators $L: V \rightarrow \H^*$ and $S: W \rightarrow \H^*,$ rather than to the more general operators $L: V \rightarrow V^*$ and $S: W\rightarrow W^*.$ This restriction allows us to work with the Riesz map $M : \H \rightarrow \H^*$ and its inverse $M^{-1}:\H^* \rightarrow \H.$  As a result, our formulation of Colbrook's algorithm is limited to densely defined operators on $\H$ whose variational realisations map into $\H^*.$ All of the operators considered in this work satisfy this requirement. However, many standard operators do not. For example, the weak Dirichlet Laplacian in \eqref{weak L} does not satisfy this requirement because it maps into $(\text{H}_0^1(\Omega))^*,$ whose elements need not belong to $(L^2(\Omega))^*.$ As a result, Colbrook's algorithm can be applied to the strong Dirichlet Laplacian only on the domain $D(A)$ in \eqref{strong L}, where the weak Dirichlet Laplacian maps into $(L^2(\Omega))^*.$ 
 
 We believe that this limitation ultimately arises from Colbrook's starting abstraction, and that extending his framework to accommodate a broader class of operators is an important topic of future work.
 
@@ -1595,7 +1598,7 @@ This application of DWR was first proposed by Vincent Heuveline and Rolf Rannach
 % \pef{This was first proposed by Heuveline \& Rannacher \dots}
 Following their approach, we consider a subspace $V$ of a Hilbert space $\H,$ where the embedding $V  \hookrightarrow \H$ is compact.\footnote{
 Let $X$ and $Y$ be normed spaces. The linear operator $T$ is compact if and only if it maps every bounded sequence $\{x_n\}_{n \in \mathbb{N}}$ in $X$ to a sequence  $\{Tx_n\}_{n \in \mathbb{N}}$ in $Y$ that has a convergent subsequence. The embedding $V  \hookrightarrow \H$ is compact when the embedding map from $V$ to $\H$ is compact.} Let $\mathcal{A}$ and $\mathcal{M}$ be linear operators on $V.$
- We seek a  $\lambda \in \mathbb{C}$ and nonzero $u \in V$ such that 
+ We seek  $\lambda \in \mathbb{C}$ and nonzero $u \in V$ such that 
 \begin{equation} \label{eig prob}
     \mathcal{A}u = \lambda \mathcal{M} u,
 \end{equation}
@@ -1803,7 +1806,7 @@ When $\lambda$ has multiplicity $m>1$, the primal and enriched solves may approx
 % To overcome this challenge, w
 
 To this end, we propose a novel least-squares approach for matching $u_h$ with an enriched approximation $u_h^+.$ In particular,  given the computed enriched basis 
-\mbox{$E_h^+ := \{u_{h,1}^+,u_{h,2}^+,\ldots,u_{h,m}^+\}$},
+\mbox{$E_h^+ \defeq \{u_{h,1}^+,u_{h,2}^+,\ldots,u_{h,m}^+\}$},
 % $ E_h^+ \defeq \{u_{h, 1}^+, u_{h, 2}^+, \dots, u_{h, m}^+\},$ 
 we take $u_h^+$ to be the solution of the following problem:
 \begin{equation}\label{least}
@@ -1878,9 +1881,9 @@ Let $j \in \{1, 2\}$ index the $j$-th auxiliary eigenproblem for a fixed $z\in \
 \begin{enumerate}[label=\textbf{\arabic*}.] 
 \setlength{\itemsep}{-0.05\baselineskip}
     \item \textbf{Solve:} For a fixed $z \in \operatorname{Grid}$ in \Cref{pseudospec},
-    solve the $j$-th auxiliary eigenproblem on its current finite element space $V_h^{(j)}.$ Retain the smallest eigenvalue $\mu_h^{(j)}(z)$ and the corresponding discrete eigenfunction $u_h^{(j)}(z).$ Construct the enriched space $V_h^{(j), +}$ by increasing the polynomial degree that defines $V_h^{(j)}.$ Solve the $j$-th auxiliary eigenproblem in the enriched space.
+    solve the $j$-th auxiliary eigenproblem on its current finite element space $V_h^{(j)}.$ Retain the smallest eigenvalue $\mu_h^{(j)}(z)$ and the corresponding discrete eigenfunction $u_h^{(j)}.$ Construct the enriched space $V_h^{(j), +}$ by increasing the polynomial degree that defines $V_h^{(j)}.$ Solve the $j$-th auxiliary eigenproblem in the enriched space.
     
-    \item \textbf{Estimate:} Solve the least-squares problem \eqref{least} to compute the enriched approximation that best matches $u_h^{(j)}(z).$ Apply the DWR error estimate \eqref{new DWR} to obtain the following global error estimate:
+    \item \textbf{Estimate:} Solve the least-squares problem \eqref{least} to compute the enriched approximation that best matches $u_h^{(j)}.$ Apply the DWR error estimate \eqref{new DWR} to obtain the following global error estimate:
     \begin{equation}
         \eta^{(j)}(z) \approx  \mu^{(j)}(z) - \mu_h^{(j)}(z).
     \end{equation}
@@ -1927,9 +1930,9 @@ Notice that, as opposed to the choice of $\operatorname{Grid}$ in \Cref{Matt Max
 
 
 To couple \Cref{pseudospec} with the adaptive mesh refinement technique of \Cref{AMR}, we iterate over each $z \in \operatorname{Grid}.$ At each $z,$ we compute the smallest eigenvalues, $\mu_h(z)$ and $\mu_h^+(z),$ of the auxiliary eigenproblem \eqref{max aux} posed on $V_h$ and $V_h^+,$ respectively. We solve the resulting generalised eigenproblem using the same Krylov--Schur method with a shift-and-invert spectral transformation as before.
-We then solve the least-squares problem \eqref{least} to match the computed eigenfunction $u_h(z) \in V_h$ with an enriched $u_h^+(z) \in V_h^+.$
+We then solve the least-squares problem \eqref{least} to match the computed eigenfunction $u_h \in V_h$ with an enriched $u_h^+ \in V_h^+.$
 
-Using $u_h(z)$ and $u_h^+(z)$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
+Using $u_h$ and $u_h^+$, we compute the DWR error estimate $\eta(z) \approx \mu(z) - \mu_h(z),$ where $\mu(z)$ denotes the target eigenvalue. Using this error estimate, we compute the corrected eigenvalue $\mu_{h, c}(z) \defeq \eta(z) + \mu_h(z).$ Then we compute the corrected approximation $\Phi_{h,c}(z,A) = \sqrt{ \mu_{h,c}(z) }.$ 
 
 Using the localisation procedure of Rognes and Logg, we compute a local error indicator $\eta_T(z)$ for each cell $T$ of the mesh that defines $V_h$ and $V_h^+$. We then mark and refine all cells for which \eqref{mark} holds. This results in a new mesh and, consequently, a new $V_h$ and $V_h^+$ for the discretisation of the auxiliary eigenproblem. 
 %%%%% Therefore, we --> Then we. and enriched eigenfucntion ---> the enriched
@@ -1959,7 +1962,7 @@ In this section, we answer these two questions. Our answer to the first question
 
 \subsection{The Inner Refinement Criteria}
 
-Our adaptive mesh refinement technique in \Cref{AMR} estimates the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in \Cref{pseudospec}. In particular, for the auxiliary eigenproblem, \eqref{aux1} and \eqref{aux2}, we compute 
+Our adaptive mesh refinement technique in \Cref{AMR} estimates the error in the computed smallest eigenvalues of the auxiliary eigenproblems arising in \Cref{pseudospec}. In particular, for the auxiliary eigenproblems \eqref{aux1} and \eqref{aux2}, we compute 
 \begin{equation} \label{eta ests}
     \eta^{(1)}(z) \approx  \mu^{(1)}(z) - \mu_h^{(1)}(z), \text{ and } \eta^{(2)}(z) \approx  \mu^{(2)}(z) - \mu_h^{(2)}(z),
 \end{equation}
