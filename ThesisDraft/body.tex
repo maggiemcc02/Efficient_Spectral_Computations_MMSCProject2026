@@ -110,7 +110,7 @@ As a result, further refinement, and thus more expensive computations, may be ne
 % Furthermore, as we shall see, coarse discretisations of the folded operators can produce poor bounds on the distance to the spectrum, requiring further refinement and thereby increasing the cost of meaningful estimates.
 
 
-In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the \textit{dual-weighted residual} (DWR) method, which uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Giles97, Becker, ActaGiles,Bangerth}. In our setting, the quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem. Thus, we consider DWR error estimates for eigenvalue errors \cite{Heuveline}. With these estimates, we can both improve the computed approximations in Colbrook's algorithm and drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
+In this dissertation, we explore methods for increasing the efficiency of Colbrook's algorithm for computing the pseudospectra of infinite-dimensional operators. We first aim to exploit the structure of the auxiliary eigenproblems in Colbrook's algorithm in an effort to solve them efficiently. To do so, we apply the dual-weighted residual (DWR) method, which uses the solution of the adjoint, or dual, problem to estimate the error in a computed quantity of interest, rather than in the computed solution itself \cite{Giles97, Becker, ActaGiles,Bangerth}. In our setting, the quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem. Thus, we consider DWR error estimates for eigenvalue errors \cite{Heuveline}. With these estimates, we can both improve the computed approximations in Colbrook's algorithm and drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
 % resulting eigenvalue error estimates are used both to improve the computed approximations in Colbrook's algorithm, and to drive adaptive refinement of the meshes used to discretise the auxiliary eigenproblems.
  We refer to this pairing of Colbrook's algorithm with mesh adaptivity at each test point in the complex plane as \textit{inner adaptivity}.
  
@@ -495,7 +495,7 @@ Hence, when $A$ is a normal operator, the norm of the resolvent can be used to c
 To ask whether a $z\in \mathbb{C}$ is an eigenvalue of the matrix $B \in \mathbb{C}^{n \times n},$ we ask whether $B-zI$ is invertible. However, for matrices with an ill-conditioned spectrum, a small perturbation from $B$ can change the answer from `yes' to `no'. Thus, asking whether $B-zI$ is invertible is not a robust question. Instead, we may ask if $\|(B-zI)^{-1}\|$ is large, where $\|\cdot\|$ denotes the matrix norm of interest \cite[Section~1.2]{Nick}.  
 % \pef{Big Book Principle}
 
-This pattern of thinking leads to the analysis of the \textit{pseudospectra} of $B.$ For $\epsilon > 0,$ the $\epsilon$-\textit{pseudospectrum} of $B$ is the following set:
+This pattern of thinking leads to the analysis of the pseudospectra of $B.$ For $\epsilon > 0,$ the $\epsilon$-\textit{pseudospectrum} of $B$ is the following set:
 \begin{equation} \label{eps B}
     \operatorname{Sp}_{\epsilon}(B) = \{z \in \mathbb{C}:\|(B-zI)^{-1} \|^{-1} \le \epsilon \} = \operatorname{Cl} \left(\{z \in \mathbb{C} : \|(B-zI)^{-1} \|^{-1} < \epsilon \} \right),
 \end{equation}
@@ -744,7 +744,7 @@ With this example in mind, it is clear that the pitfalls of the discretise-then-
 
 We now introduce Colbrook's algorithm for computing pseudospectra. We focus on his algorithm for pseudospectral computations rather than his algorithm for spectral computations for three main reasons. First, it applies to a much broader class of operators than his algorithm for spectra. Second, it forms the main computational component of his algorithm for computing spectra. Finally, as discussed in \Cref{pseudo sec}, the pseudospectra of an operator are often more informative than the spectrum alone.
 
-In \Cref{ModSec}, we introduce the fundamental tool for computing pseudospectra, the \textit{injection modulus} of an operator. In \Cref{Fold sect}, we use this tool to construct Colbrook's algorithm for pseudospectra. Then, in \Cref{Fix matt}, we specialise the algorithm to the variational setting and introduce its finite element realisation. Finally, in \Cref{Matt Max}, we demonstrate the success of Colbrook's algorithm by applying it to the Maxwell eigenproblem. 
+In \Cref{ModSec}, we introduce the fundamental tool for computing pseudospectra, the injection modulus of an operator. In \Cref{Fold sect}, we use this tool to construct Colbrook's algorithm for pseudospectra. Then, in \Cref{Fix matt}, we specialise the algorithm to the variational setting and introduce its finite element realisation. Finally, in \Cref{Matt Max}, we demonstrate the success of Colbrook's algorithm by applying it to the Maxwell eigenproblem. 
 
 
 \subsection{Characterising the Spectrum with Injection Moduli} \label{ModSec}
@@ -1021,7 +1021,7 @@ In the previous subsection, we represented $\gamma(z, A)$ using the bottoms of t
 
 
 
-To see this discrepancy, consider the \textit{Dirichlet Laplacian} on a bounded domain  $\Omega \subset \mathbb{R}^d,$ 
+To see this discrepancy, consider the Dirichlet Laplacian on a bounded domain  $\Omega \subset \mathbb{R}^d,$ 
 \begin{equation} \label{strong L}
     A \defeq -\Delta, \qquad D(A) = \{u \in \mathrm{H}_0^1(\Omega) : -\Delta u \in L^2(\Omega)\}.
 \end{equation}
@@ -1545,12 +1545,12 @@ Since the finite element methodology provides an approximation to the solution o
 
 % \Maggie{Changed `used adaptively to determine' in the last sentence because it did not make sense to me. Also changed `$V_h,$ that aims to be' because the space doesn't aim?}
 
-This idea gives rise to \textit{adaptive finite element methods}, which are techniques for choosing a finite-dimensional space, $V_h,$ that is optimal with respect to computational complexity and accuracy. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to \textit{adaptive mesh refinement techniques} \cite[Section~8.6]{Scott}.
+This idea gives rise to adaptive finite element methods, which are techniques for choosing a finite-dimensional space, $V_h,$ that is optimal with respect to computational complexity and accuracy. This is typically done by adaptively refining the mesh used to construct $V_h$ in regions where the error estimate is large, giving rise to adaptive mesh refinement techniques \cite[Section~8.6]{Scott}.
 These techniques are particularly useful when the error is concentrated in certain regions of the domain.\footnote{For example, the error may be concentrated in regions where a solution exhibits singularities.} In this case, choosing a fine uniform mesh may be a waste of computational effort. In contrast, adaptive mesh techniques aim to refine the mesh only where necessary, making them useful tools for improving the accuracy and efficiency of computed approximations.
 
 
 
-When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived \textit{quantity of interest}, rather than in the solution field over the whole domain \cite{Giles97, Becker, ActaGiles}. 
+When applying the finite element methodology to solve a problem arising in application, scientists and engineers are often interested in a derived quantity of interest, rather than in the solution field over the whole domain \cite{Giles97, Becker, ActaGiles}. 
 % \pef{Cite Mike's papers here, Becker \& Rannacher \dots Joe's thesis is not the canonical reference for this claim} 
 For example, when solving a problem in fluid dynamics, we may be interested in the vorticity of an eddy, rather than the velocity field \cite[Section~8.6]{Scott}. In the case of \Cref{pseudospec}, our quantity of interest is the smallest eigenvalue of each auxiliary eigenproblem.
 % we are interested in the error in the computed eigenvalues of the auxiliary eigenproblems, rather than in the computed eigenfunctions. 
